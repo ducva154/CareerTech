@@ -1,0 +1,1773 @@
+body {
+    background-color: #f6f6f6
+}
+
+ol,
+ul {
+    padding: 0
+}
+
+.box-search-company {
+    margin-bottom: 20px
+}
+
+.box-search-company .form-group {
+    margin-bottom: 10px
+}
+
+.box-search-company h1 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 20px
+}
+
+.box-search-company h1 span {
+    font-weight: 400;
+    font-size: 1.1em
+}
+
+.box-search-company .select2-container--default .select2-selection--single {
+    font-size: 14px
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #999
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-right: 30px
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    width: 30px
+}
+
+.btn-topcv {
+    background-color: #00b14f!important;
+    color: #fff!important;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    padding: 9px 15px!important;
+}
+
+.box-search-company .btn {
+    border-radius: 0;
+    padding: 8px 0
+}
+
+.job-wrapper {
+    margin-top: 20px;
+}
+
+#job-section .job-item {
+    padding: 15px 20px;
+    background: #fff;
+    box-shadow: 0 1px 2px 1px #eee;
+    color: #777;
+    margin-top: 15px;
+    margin: 0px;
+}
+
+#job-section .job-title {
+    text-transform: uppercase;
+    font-size: 18px;
+    padding-bottom: 15px;
+    color: #5c5c5c;
+    min-height: 65px;
+}
+
+.box-search-company .box {
+    background-color: #fff;
+    padding-top: 25px
+}
+
+.featured-company {
+    margin-bottom: 20px
+}
+
+#job-box {
+    padding: 15px
+}
+
+#col-company-left .box-recruiter a.link-tuyendung {
+    font-size: 15px;
+    line-height: 30px;
+    color: #00b14f
+}
+
+#col-company-left .box-recruiter .hotline-recruiter .contact-line {
+    position: relative
+}
+
+#col-company-left .box-recruiter .hotline-recruiter .contact-text {
+    position: absolute;
+    text-align: center;
+    top: -10px;
+    background-color: #fff;
+    height: 30px;
+    width: 160px;
+    left: 50%;
+    margin-left: -80px;
+    color: #666
+}
+
+#col-company-left .box-recruiter .hotline-recruiter .highlight {
+    font-size: 25px;
+    color: #666
+}
+
+#col-company-left .box-recruiter .hotline-recruiter .contact-point {
+    font-size: 18px;
+    line-height: 30px;
+    color: #f37124
+}
+
+#col-company-left .search-result {
+    margin-top: 10px;
+    padding: 0 15px
+}
+
+#col-company-left .search-result .company {
+    border-top: 0;
+    padding: 25px 0;
+    margin-bottom: 10px;
+    transition: all .2s ease;
+    outline: 1px solid #efefef
+}
+
+#col-company-left .search-result .company:hover {
+    background-color: #fff;
+    outline: 1px solid #ccc;
+    box-shadow: 0 0 6px #888
+}
+
+#col-company-left .search-result .company:nth-child(2n) {
+    background-color: #f8f8f8
+}
+
+#col-company-left .search-result .company:nth-child(2n):hover {
+    background-color: #fff
+}
+
+.company-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    margin-top: 0
+}
+
+#col-company-left .search-result .job-title a {
+    font-size: 15px
+}
+
+.shortDes {
+    color: #666;
+    font-style: italic
+}
+
+.company-phone,
+.company-size,
+.company-address {
+    color: #666
+}
+
+#col-company-left .search-result .company-name {
+    color: #333;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase
+}
+
+#col-company-left .search-result .job-salary span {
+    display: inline-block;
+    margin-right: 30px;
+    color: #333
+}
+
+#col-company-left .search-result .job-salary .fa {
+    color: #169f81
+}
+
+.item-inline {
+    margin-right: 30px
+}
+
+#col-company-left i.fa {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    margin-right: 5px;
+    color: #777
+}
+
+#col-company-left .search-result i.fa-quote-right {
+    margin-right: 0;
+    margin-left: 5px
+}
+
+i.fa-quote-right,
+i.fa-quote-left {
+    font-size: 12px;
+    font-style: italic
+}
+
+.featured-company-name {
+    font-size: 16px
+}
+
+#col-company-left .box-title {
+    margin: 10px 0;
+    color: #16719f;
+    font-weight: 500;
+    padding-left: 10px;
+    border-left: 5px solid #fb4747;
+    font-size: 20px;
+    text-transform: uppercase
+}
+
+#col-company-left h1.box-title {
+    font-size: 20px
+}
+
+.job-count-wraper {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px
+}
+
+.job-count-label {
+    margin: 0 auto;
+    margin-top: 5px;
+    font-size: 12px;
+    display: inline-block
+}
+
+a.count-job-status {
+    text-decoration: none;
+    color: #666
+}
+
+.company-logo-list {
+    text-align: center
+}
+
+.company-logo-list ul {
+    margin-bottom: 0
+}
+
+.company-logo-list li {
+    display: inline-block;
+    width: 135px;
+    margin-bottom: 10px;
+    padding: 10px
+}
+
+.company-logo-list li img {
+    max-width: 100%;
+    height: 35px
+}
+
+.btn-green {
+    background-color: #169f81;
+    color: #fff
+}
+
+.btn-green:hover {
+    color: #fff;
+    background-color: #14b592
+}
+
+#col-company-left .company-logo-wraper img {
+    width: 100%;
+    min-width: 50px
+}
+
+#col-company-left .company-name-wraper {
+    margin-bottom: 10px
+}
+
+#col-company-left .company-name {
+    text-transform: uppercase;
+    font-size: 20px
+}
+
+#col-company-left .company-info-wraper {
+    width: 100%;
+    line-height: 20px
+}
+
+#col-company-left .company-info {
+    display: inline-block;
+    width: 50%;
+    float: left
+}
+
+#col-company-left .company-job-link {
+    margin-top: 10px
+}
+
+#col-company-left .company-info-wraper i {
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    margin-right: 5px
+}
+
+#company-table .row {
+    padding: 25px
+}
+
+#company-table .company-item:hover {
+    border-color: red
+}
+
+h4.col-right-box-title {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-size: 14px;
+    text-align: center
+}
+
+.share-btns {
+    padding-top: 10px
+}
+
+.share-btns a {
+    width: 50px
+}
+
+#company-detail .company-cov {
+    padding: 0
+}
+
+#company-detail .company-cover img {
+    width: 100%;
+    height: auto
+}
+
+#company-detail .company-cover {
+    position: relative
+}
+
+#company-detail .company-avatar {
+    width: 150px;
+    height: 150px;
+    padding: 5px;
+    position: absolute;
+    top: -25px;
+    left: 20px;
+    background-color: #fff;
+    text-align: center;
+    border: 1px solid #efefef
+}
+
+#company-title {
+    position: relative;
+    overflow: initial
+}
+
+#company-detail .company-avatar img {
+    width: 100%;
+    max-height: 100%;
+    vertical-align: middle
+}
+
+#company-detail .company-name {
+    font-weight: 700;
+    font-size: 25px;
+    text-transform: uppercase
+}
+
+#company-detail .item-inline {
+    margin-right: 30px
+}
+
+#company-detail i.fa-quote-right,
+#company-detail i.fa-quote-left {
+    font-size: 14px;
+    font-style: italic
+}
+
+#company-detail i.fa-quote-right {
+    margin-left: 7px
+}
+
+#company-detail i.fa-quote-left {
+    margin-right: 7px
+}
+
+#company-detail .company-short-quote {
+    font-style: italic;
+    text-align: justify;
+    font-size: 16px
+}
+
+#company-detail .company-description {
+    text-align: justify
+}
+
+#company-detail .company-item {
+    color: #00b14f;
+    font-size: 15px;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    padding: 2px;
+    margin-right: 5px
+}
+
+#job-list .company-logo-wraper {
+    width: 120px;
+    height: 120px;
+    padding: 5px;
+    background-color: #fff;
+    margin: 0 auto
+}
+
+#job-list .company-logo {
+    width: 100%;
+    align-items: center;
+    justify-content: center
+}
+
+#job-list .company-logo img {
+    width: 100%;
+    max-height: 99%
+}
+
+#job-list .paging-meta {
+    margin-bottom: 20px
+}
+
+#job-list .job {
+    border-top: 0;
+    padding: 10px;
+    transition: all .2s ease;
+    outline: 1px solid #efefef;
+    margin-bottom: 10px
+}
+
+#job-list .job:hover {
+    background-color: #fff;
+    outline: 1px solid #ccc;
+    box-shadow: 0 0 6px #888
+}
+
+#job-list .job:nth-child(2n) {
+    background-color: #f8f8f8
+}
+
+#job-list .job:nth-child(2n):hover {
+    background-color: #fff
+}
+
+#job-list .job-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-top: 0;
+    line-height: initial
+}
+
+#job-list .job-title a {
+    color: #00b14f
+}
+
+#job-list .job-salary span {
+    display: inline-block;
+    margin-right: 30px;
+    color: #333
+}
+
+#job-list i.fa {
+    color: #00b14f;
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+    margin-right: 5px
+}
+
+#job-list .skill-tags {
+    margin-top: 10px
+}
+
+#job-list .skill-tags a {
+    display: inline-block;
+    color: #666;
+    background-color: #dfdfdf;
+    padding: 3px 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    vertical-align: middle;
+    margin-top: 5px;
+    white-space: nowrap;
+    font-size: 12px
+}
+
+#job-list a.disable {
+    color: #666;
+    pointer-events: none
+}
+
+.company-logo-helper {
+    height: 100%;
+    vertical-align: middle
+}
+
+#review-box .pie,
+.c100 .bar,
+.c100.p51 .fill,
+.c100.p52 .fill,
+.c100.p53 .fill,
+.c100.p54 .fill,
+.c100.p55 .fill,
+.c100.p56 .fill,
+.c100.p57 .fill,
+.c100.p58 .fill,
+.c100.p59 .fill,
+.c100.p60 .fill,
+.c100.p61 .fill,
+.c100.p62 .fill,
+.c100.p63 .fill,
+.c100.p64 .fill,
+.c100.p65 .fill,
+.c100.p66 .fill,
+.c100.p67 .fill,
+.c100.p68 .fill,
+.c100.p69 .fill,
+.c100.p70 .fill,
+.c100.p71 .fill,
+.c100.p72 .fill,
+.c100.p73 .fill,
+.c100.p74 .fill,
+.c100.p75 .fill,
+.c100.p76 .fill,
+.c100.p77 .fill,
+.c100.p78 .fill,
+.c100.p79 .fill,
+.c100.p80 .fill,
+.c100.p81 .fill,
+.c100.p82 .fill,
+.c100.p83 .fill,
+.c100.p84 .fill,
+.c100.p85 .fill,
+.c100.p86 .fill,
+.c100.p87 .fill,
+.c100.p88 .fill,
+.c100.p89 .fill,
+.c100.p90 .fill,
+.c100.p91 .fill,
+.c100.p92 .fill,
+.c100.p93 .fill,
+.c100.p94 .fill,
+.c100.p95 .fill,
+.c100.p96 .fill,
+.c100.p97 .fill,
+.c100.p98 .fill,
+.c100.p99 .fill,
+.c100.p100 .fill {
+    border-color: #00b14f
+}
+
+#review-box .c100:hover>span {
+    color: #00b14f
+}
+
+#review-box .c100>span {
+    color: #00b14f
+}
+
+#review-box .review-overall-text {
+    margin: 0 0 0 -17px;
+    padding-top: 20px;
+    font-size: 14px
+}
+
+#review-box .overall-rate {
+    font-size: 27px;
+    display: block;
+    margin-top: 10px;
+    color: #00b14f;
+    font-weight: 600
+}
+
+#default-star i:hover {
+    cursor: pointer
+}
+
+.feat-company-wraper {
+    padding: 21px
+}
+
+.feat-company {
+    background: #fff;
+    border: 0;
+    box-shadow: 0 0 1px #ccc;
+    padding: 15px
+}
+
+.featured-image {
+    position: relative;
+    margin: -15px -15px 0
+}
+
+.feat-company .featured-cover {
+    width: 100%;
+    height: 100%
+}
+
+.feat-company .featured-avatar-wraper {
+    width: 80px;
+    height: 80px;
+    background-color: #fff;
+    position: absolute;
+    bottom: -60px;
+    box-shadow: 0 0 1px 0 #b1b1d6;
+    padding: 2px;
+    left: 18px;
+    border-radius: 2px;
+    vertical-align: middle;
+    line-height: 76px
+}
+
+.feat-company .featured-avatar-wraper img {
+    width: 100%
+}
+
+.feat-company .featured-name {
+    min-height: 70px;
+    margin-left: 100px;
+    padding-top: 10px;
+    text-transform: uppercase;
+    font-weight: 600
+}
+
+.feat-company .featured-desc {
+    height: 108px;
+    overflow: hidden;
+    text-align: justify
+}
+
+.feat-company .featured-count {
+    margin-top: 20px
+}
+
+.view-more {
+    margin-top: 10px
+}
+
+.view-more .btn {
+    padding: 8px;
+    border-radius: 0
+}
+
+#company-about {
+    text-align: justify
+}
+
+#company-fixed-box {
+    position: fixed;
+    background: #fff;
+    z-index: 1000;
+    top: 0;
+    padding: 15px;
+    padding-bottom: 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .3)
+}
+
+#company-fixed-box button {
+    line-height: 14px;
+    margin-right: 10px
+}
+
+#fixed-box-name {
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #00b14f;
+    vertical-align: middle
+}
+
+.fixed-box-logo img {
+    width: auto;
+    height: 25px;
+    margin-right: 10px
+}
+
+.spotlight-company {
+    background: #fff;
+    border: 0;
+    padding: 15px 15px 5px
+}
+
+.spotlight-cover-wraper {
+    border-top: 1px solid #ececec;
+    padding-top: 10px
+}
+
+.spotlight-image {
+    position: relative;
+    margin: -15px -15px 0
+}
+
+.spotlight-company .spotlight-cover {
+    width: 100%;
+    height: 100%
+}
+
+.spotlight-company .spotlight-avatar-wraper {
+    width: 90px;
+    height: 90px;
+    background-color: #fff;
+    position: absolute;
+    bottom: -50px;
+    box-shadow: 0 0 1px 0 #b1b1d6;
+    padding: 2px;
+    left: 35%;
+    border-radius: 2px;
+    line-height: 86px
+}
+
+.spotlight-company .spotlight-avatar-wraper img {
+    width: 100%
+}
+
+.spotlight-company .spotlight-name {
+    min-height: 70px;
+    margin-left: 100px;
+    padding-top: 10px;
+    text-transform: uppercase;
+    font-weight: 600
+}
+
+.spotlight-info {
+    margin: 0 -15px 0;
+    padding: 70px 5px 10px
+}
+
+#company-spotlight {
+    text-align: center;
+    margin-bottom: 0
+}
+
+#company-spotlight .spotlight-desc {
+    display: block;
+    display: -webkit-box;
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 22px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    color: #666;
+    text-align: justify
+}
+
+#company-spotlight .job {
+    font-size: 15px;
+    padding: 5px 0;
+    margin: auto;
+    border-top: 1px solid #eee
+}
+
+#company-spotlight .job .box-job-name {
+    margin-bottom: 10px
+}
+
+#company-spotlight .job .job-name {
+    font-size: 13px
+}
+
+#company-spotlight .job .job-salary {
+    font-size: 13px
+}
+
+#company-spotlight .spotlight-count {
+    margin-top: 5px
+}
+
+.spotlight-info .company-name {
+    padding-bottom: 10px
+}
+
+.title-spotlight {
+    margin-top: 10px;
+    padding-bottom: 0;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase
+}
+
+#job-list .job-title p {
+    margin-top: -15px;
+    font-size: 14px
+}
+
+#job-list .job-title p a {}
+
+.job-company .job-title a {
+    color: #444!important
+}
+
+.breadcrumb {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.box-group-title h2 {
+    font-size: 18px;
+    font-weight: 700
+}
+
+.box-group-title h3 {
+    font-size: 18px;
+    margin: 5px auto
+}
+
+#breadcrumb .breadcrumb>li+li:before {
+    padding: 0 5px;
+    color: #212f3f;
+    content: ">";
+    font-weight: 700
+}
+
+.company-cover {
+    background-color: #fff;
+    margin-top: -20px;
+    padding-bottom: 30px;
+}
+
+.company-cover .container {
+    width: 100%
+}
+
+.company-cover .container .cover-img {
+    width: 100%;
+    margin-top: 20px
+}
+
+.company-cover .company-detail-title {
+    position: relative;
+    overflow: initial;
+    margin-bottom: 0;
+    padding-bottom: 10px
+}
+
+.company-cover .company-detail-name {
+    font-weight: 700;
+    font-size: 25px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: 5px
+}
+
+.company-cover .company-detail-overview a:hover {
+    text-decoration: none
+}
+
+.company-cover .company-detail-overview .detail-item i {
+    font-size: 20px;
+    text-align: center;
+    margin-right: 20px;
+    color: #00b14f;
+    float: left
+}
+
+.company-cover .company-detail-overview .detail-item {
+    margin-bottom: 10px;
+    line-height: 20px;
+    color: #666
+}
+
+.company-cover .company-detail-overview button {
+    width: 180px;
+    margin-bottom: 10px;
+    border-radius: 3px
+}
+
+.company-cover .company-detail-overview button a {
+    color: #fff
+}
+
+.company-cover .company-detail-overview a:hover {
+    text-decoration: none
+}
+
+.company-detail-overview #box-btn-follow {
+    padding-right: 0;
+    float: right
+}
+
+#box-btn-follow .btn-unfollow i {
+    margin-right: 5px;
+    font-size: 14px
+}
+
+.box-company-info .col-right .box-title {
+    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 10px;
+    font-size: 16px;
+    text-align: center;
+    margin-top: -5px
+}
+
+#box-review-company {
+    border: 1px solid #d9d9d9
+}
+
+#box-review-company #default-star {
+    color: #ccc;
+    font-size: 35px;
+    position: relative;
+    white-space: nowrap;
+    display: inline-block;
+    margin: 0 auto
+}
+
+#box-review-company #active-star {
+    color: #00b14f;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    overflow: hidden;
+    width: 0%
+}
+
+#review-box #text-show-detail-review {
+    float: left;
+    line-height: 20px
+}
+
+#review-box #text-show-detail-review a i {
+    margin-left: 10px;
+    color: #212f3f;
+    font-size: 20px;
+    float: right
+}
+
+#box-detail-info-company {
+    border: 1px solid #d9d9d9
+}
+
+#box-detail-info-company p {
+    line-height: 20px
+}
+
+#box-detail-info-company p i {
+    font-size: 20px;
+    margin-right: 10px;
+    float: left
+}
+
+#box-company-hot-jobs {
+    margin-top: 20px
+}
+
+#box-company-hot-jobs>h4 {
+    font-size: 17px;
+    margin: auto;
+    padding: 15px;
+    border-bottom: 1px solid #d9d9d9;
+    background-color: #212f3f;
+    border-radius: 3px 3px 0 0;
+    color: #fff;
+    font-weight: 700
+}
+
+#box-company-hot-jobs .job-over-item {
+    background-color: #fff
+}
+
+#box-company-hot-jobs .job-over-item:hover {
+    background-color: #f6f6f6
+}
+
+#box-company-hot-jobs .job-item {
+    padding: 10px 0;
+    margin: auto 15px;
+    border-bottom: 1px solid #eee
+}
+
+#box-list-hot-jobs {
+    margin-bottom: 0;
+    border-left: 1px solid #ececec;
+    border-right: 1px solid #ececec;
+    border-bottom: 1px solid #ececec
+}
+
+#box-list-hot-jobs .company a:hover {
+    color: #00b14f!important
+}
+
+#box-share-info-company {
+    border: 1px solid #ececec;
+    margin-top: 20px
+}
+
+#box-share-info-company .share-btns .btn {
+    margin-right: 20px;
+    width: 30px;
+    height: 30px;
+    padding: 5px 8px
+}
+
+#box-recruiment {
+    padding-bottom: 0;
+    padding-top: 0
+}
+
+#box-recruiment .job-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ececec
+}
+
+#box-recruiment .job-item h5 {
+    margin-bottom: 15px;
+    margin-top: 0;
+    text-transform: uppercase;
+    font-size: 16px
+}
+
+#box-recruiment .job-item h5 a {
+    color: #212f3f
+}
+
+#box-recruiment .job-item h5 a:hover {
+    color: #00b14f!important
+}
+
+#box-recruiment .job-item .job-meta-data {
+    line-height: 20px
+}
+
+#box-recruiment .job-item .job-meta-data i {
+    font-size: 20px;
+    margin-right: 10px;
+    float: left
+}
+
+#box-recruiment #company-common-job span a {
+    padding: 3px 10px;
+    height: 26px;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: #4d4d4d;
+    background: #f2f2f2;
+    border-radius: 5px;
+    border: 1px solid #e2e2e2
+}
+
+.highlight {
+    color: #f07881
+}
+
+.company-detail-overview #company-logo {
+    border: 1px solid #efefef;
+    padding: 5px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    background-color: #fff
+}
+
+.col-left .left-box-title h2 {
+    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 700
+}
+
+.col-left .left-box-title .label {
+    background: #f6f5f6;
+    border: 1px solid #00b14f;
+    color: #00b14f
+}
+
+#recruitment-tỉtle {
+    position: relative
+}
+
+#recruitment-tỉtle #recruitment-job-count {
+    font-size: 8px;
+    position: absolute;
+    left: 140px;
+    top: 5px;
+    padding: 2px 4px
+}
+
+.box-toplist-title .top {
+    margin-bottom: 10px
+}
+
+.box-toplist-title .top img {
+    width: 20px;
+    margin-right: 15px
+}
+
+@media(min-width:768px) {
+    #box-recruiment #company-common-job {
+        margin: 0 -15px
+    }
+    .box-company-info .col-right {
+        margin-top: 60px
+    }
+    .box-search-company-info .box-form-search {
+        width: 70%
+    }
+    .recruiting-companies .col-recruiting-company-info {
+        width: 79%
+    }
+    .box-orverview-company {
+        margin-bottom: 40px
+    }
+    .show-recruiting-companies-all {
+        float: right
+    }
+    .box-recruiting-companies .box-recruiting-company-title {
+        line-height: 65px
+    }
+    .box-recruiting-companies .box-recruiting-company-title h2 {
+        font-size: 18px
+    }
+    .box-result-search-companies .box-latest-company-title h2 {
+        font-size: 18px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-left: 20px
+    }
+    .box-show-keyword-search .suggest-company-count {
+        font-size: 18px;
+        float: right
+    }
+    .box-search-top-list .box-form-search-top-list {
+        width: 70%
+    }
+}
+
+@media(min-width:992px) and (max-width:1199px) {
+    .company-logo-wraper {
+        text-align: center
+    }
+    .featured-company .featured-company-short-quote-wraper {
+        min-height: 80px
+    }
+}
+
+@media(min-width:1200px) {
+    .company-logo-wraper {
+        text-align: center
+    }
+}
+
+@media(min-width:992px) {
+    .company-detail-overview {
+        margin: 15px auto 5px;
+        position: relative
+    }
+    .company-detail-overview #company-logo {
+        height: 175px;
+        width: 175px;
+        position: absolute;
+        top: -40px
+    }
+    .box-search-company div div[class^=col-] {
+        padding-right: 5px;
+        padding-left: 5px
+    }
+    .box-featured-companies h4 {
+        margin: 65px 0 0
+    }
+}
+
+@media(min-width:768px) and (max-width:991px) {
+    .company-cover {
+        margin-bottom: 10px
+    }
+    .company-detail-overview {
+        margin: 10px auto 0;
+        position: relative
+    }
+    .company-detail-overview #company-logo {
+        height: 130px;
+        width: 130px;
+        position: absolute;
+        top: -20px
+    }
+    .company-cover .company-detail-overview button {
+        width: 160px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+        font-size: 12px
+    }
+    .company-cover .company-detail-overview .detail-item {
+        margin-bottom: 5px
+    }
+    #box-recruiment .job-item .job-meta-data {
+        padding: 0;
+        margin-bottom: 10px
+    }
+    #box-review-company #default-star {
+        font-size: 30px
+    }
+    #review-box .overall-rate {
+        font-size: 20px
+    }
+    #company-detail .company-overview {
+        margin-left: 163px
+    }
+    #company-detail .company-avatar {
+        width: 140px;
+        height: 140px
+    }
+    #company-detail .company-avatar {
+        bottom: -115px
+    }
+    #job-list .company-logo {
+        width: 80%
+    }
+    .featured-company .featured-company-short-quote-wraper {
+        min-height: 85px
+    }
+}
+
+@media(max-width:767px) {
+    .company-cover {
+        margin-bottom: 0
+    }
+    #box-recruiment .job-item .job-meta-data {
+        padding: 0;
+        margin-bottom: 10px
+    }
+    #box-recruiment #company-common-job {
+        padding-left: 0
+    }
+    #company-detail .company-avatar {
+        display: none
+    }
+    #company-detail .company-name {
+        text-align: center
+    }
+    .title-table .avatar-col {
+        display: none
+    }
+    .title-table td.company-name-col {
+        padding: 0
+    }
+    .feat-company .featured-cover {
+        display: none
+    }
+    .feat-company .featured-cover-wraper {
+        height: 30px
+    }
+    .company-cover .company-detail-name {
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-top: 10px
+    }
+    .company-cover .company-detail-overview button {
+        width: 120px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+        font-size: 10px;
+        padding: 10px;
+        margin-right: 10px
+    }
+    .company-detail-overview #box-btn-follow {
+        display: flex;
+        justify-content: center;
+        float: unset
+    }
+    #box-recruiment .job-item .job-meta-data {
+        padding: 0;
+        margin-bottom: 10px
+    }
+    .box-search-company-info .box-form-search {
+        width: 100%
+    }
+    .box-orverview-company {
+        margin-bottom: 15px
+    }
+    .box-featured-companies h4 {
+        margin: 15px 0 0
+    }
+    .box-recruiting-companies .box-recruiting-company-title h2 {
+        font-size: 15px
+    }
+    #recruiting-companies-all {
+        margin-bottom: 20px
+    }
+    .box-result-search-companies .box-latest-company-title h2 {
+        font-size: 15px;
+        margin-top: 0
+    }
+    #latest-companies-all {
+        margin-bottom: 15px
+    }
+    .box-show-keyword-search .suggest-company-count {
+        font-size: 18px;
+        float: left
+    }
+}
+
+.box-search-company-info {
+    background-image: url(../images/companies/search_company_bg.png);
+    background-size: cover;
+    margin-top: -20px
+}
+
+.box-search-company-info .box-form-search {
+    background-color: rgba(51, 51, 51, .6);
+    margin: 20px auto
+}
+
+.box-form-search h1 {
+    padding: 15px 20px 0;
+    font-size: 18px;
+    color: #fff
+}
+
+.box-form-search .row-input-search {
+    padding: 0 20px 10px
+}
+
+.row-input-search .input-data {
+    position: relative
+}
+
+.row-input-search .input-data span {
+    position: absolute;
+    left: 15px;
+    top: 7px;
+    font-size: 20px;
+    color: #555;
+    z-index: 1
+}
+
+.row-input-search .input-data #keyword {
+    padding-left: 45px
+}
+
+.row-input-search #btn-search-company {
+    height: 40px;
+    font-size: 16px
+}
+
+.featured-companies {
+    background-color: #f8f8f8
+}
+
+.featured-company-title h2 {
+    font-size: 20px;
+    padding-bottom: 10px
+}
+
+.box-orverview-company {
+    padding: 0;
+    border: 1px solid #e6e6e6;
+    min-height: 350px
+}
+
+.box-orverview-company .company-info {
+    position: relative;
+    height: 75px
+}
+
+.box-orverview-company .company-info .company-logo {
+    position: absolute;
+    top: -15px;
+    width: 75px
+}
+
+.box-orverview-company .company-info .company-logo a {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    padding: 2px
+}
+
+.box-orverview-company .company-info .col-title {
+    display: inline-block;
+    margin-top: 5px;
+    padding-left: 20px
+}
+
+.box-orverview-company .company-info .col-title .featured-company-name {
+    font-size: 15px
+}
+
+.box-orverview-company .company-des {
+    font-size: 13px
+}
+
+.toplist-title img {
+    width: 11px;
+    margin-right: 5px
+}
+
+.toplist-title a {
+    font-size: 11px
+}
+
+.box-orverview-company .company-des {
+    padding: 0 15px;
+    min-height: 95px
+}
+
+.box-orverview-company .company-des p {
+    text-align: justify;
+    color: #888
+}
+
+.box-show-all {
+    padding: 0 15px;
+    position: relative;
+    margin-bottom: 10px
+}
+
+.box-show-all .recruitment-job-count {
+    font-size: 8px;
+    position: absolute;
+    left: 120px;
+    bottom: 3px;
+    padding: 3px 5px
+}
+
+.box-show-all .label {
+    background: #f6f5f6;
+    border: 1px solid #00b14f;
+    color: #00b14f
+}
+
+.recruiting-companies .col-recruiting-company-logo {
+    width: 21%
+}
+
+.recruiting-companies .recruiting-job-count i {
+    font-size: 7px;
+    vertical-align: middle
+}
+
+.recruiting-companies .recruiting-job-count span {
+    font-size: 11px;
+    color: #666
+}
+
+.recruiting-company .col-recruiting-company-info .company-name {
+    font-size: 18px
+}
+
+.recruiting-company .col-recruiting-company-info .company-intro {
+    text-align: justify;
+    color: #888;
+    font-size: 13px
+}
+
+.recruiting-company .col-recruiting-company-info .company-ddress i {
+    font-size: 18px;
+    vertical-align: middle
+}
+
+.box-featured-companies h4 {
+    background-color: #222f3f;
+    color: #fff;
+    padding: 20px
+}
+
+.text_uppercase {
+    text-transform: uppercase
+}
+
+#col-company-left .company {
+    border-bottom: 1px solid #ececec;
+    margin: 0 0 20px
+}
+
+.view-all {
+    padding-bottom: 10px
+}
+
+.featured-company-img a {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    margin: 0 auto 5px;
+    padding: 5px
+}
+
+.featured-company-img a img {
+    max-height: 100%;
+    width: auto
+}
+
+.text_ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.recruiting-company-logo a {
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 5px
+}
+
+.recruiting-company-logo a img {
+    max-height: 100%;
+    width: auto
+}
+
+@media(max-width:479px) {
+    .company-info .col-title {
+        display: inline-block;
+        margin-top: 3px;
+        padding-left: 25px
+    }
+    .featured-company-title h2 {
+        font-size: 18px
+    }
+    #box-top-lists .box-title h2 {
+        font-size: 17px
+    }
+    .top-list .top-list-name h2 {
+        font-size: 14px
+    }
+}
+
+@media(min-width:480px) {
+    #box-top-lists .box-title h2 {
+        font-size: 20px
+    }
+    .top-list .top-list-name h2 {
+        font-size: 16px
+    }
+}
+
+@media(max-width:991px) {
+    .box-featured-companies h4 {
+        margin: 15px 0 0
+    }
+}
+
+.box-show-keyword-search {
+    margin-top: 20px
+}
+
+.box-show-keyword-search .keyword-search {
+    font-size: 18px
+}
+
+.result-search-companies .col-result-search-company-logo {
+    width: 21%
+}
+
+.result-search-company .col-result-search-company-info .company-name {
+    font-size: 18px
+}
+
+.result-search-company .col-result-search-company-info .company-intro {
+    text-align: justify;
+    color: #888;
+    font-size: 13px
+}
+
+.result-search-company .col-result-search-company-info .company-ddress i {
+    font-size: 18px;
+    vertical-align: middle
+}
+
+.result-search-company-logo a {
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 5px
+}
+
+.result-search-company-logo a img {
+    max-height: 100%;
+    width: auto
+}
+
+.result-search-company .recruiting-job-count i {
+    font-size: 7px;
+    vertical-align: middle
+}
+
+.result-search-company .recruiting-job-count span {
+    font-size: 11px;
+    color: #666
+}
+
+.latest-companies .col-latest-company-logo {
+    width: 21%
+}
+
+.latest-companies .latest-job-count i {
+    font-size: 7px;
+    vertical-align: middle
+}
+
+.latest-companies .latest-job-count span {
+    font-size: 11px;
+    color: #666
+}
+
+.latest-company .col-latest-company-info .company-name {
+    font-size: 18px
+}
+
+.latest-company .col-latest-company-info .company-intro {
+    text-align: justify;
+    color: #888;
+    font-size: 13px
+}
+
+.latest-company .col-latest-company-info .company-ddress i {
+    font-size: 18px;
+    vertical-align: middle
+}
+
+.latest-company-logo a {
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 5px
+}
+
+.latest-company-logo a img {
+    max-height: 100%;
+    width: auto
+}
+
+.latest-companies .recruiting-job-count i {
+    font-size: 7px;
+    vertical-align: middle
+}
+
+.latest-companies .recruiting-job-count span {
+    font-size: 11px;
+    color: #666
+}
+
+.box-search-top-list {
+    background-image: url(../images/companies/search_company_bg.png);
+    background-size: cover;
+    margin-top: -20px
+}
+
+.box-search-top-list .box-form-search-top-list {
+    background-color: rgba(51, 51, 51, .6);
+    margin: 20px auto
+}
+
+.box-form-search-top-list h1 {
+    padding: 15px 20px 0;
+    font-size: 18px;
+    color: #fff
+}
+
+.box-form-search-top-list .input-search-top-list {
+    padding: 0 20px 10px
+}
+
+.input-search-top-list .input-data {
+    position: relative
+}
+
+.input-search-top-list .input-data span {
+    position: absolute;
+    left: 15px;
+    top: 7px;
+    font-size: 20px;
+    color: #555;
+    z-index: 1
+}
+
+.input-search-top-list .input-data #keyword {
+    padding-left: 45px
+}
+
+.input-search-top-list #btn-search-top-list {
+    height: 40px;
+    font-size: 16px
+}
+
+#box-top-lists .box-title h2 {
+    margin: 25px auto;
+    color: #212f3f
+}
+
+.top-lists .top-list {
+    padding: 0;
+    border: 1px solid #ececec;
+    border-radius: 3px;
+    min-height: 380px
+}
+
+.top-list .top-list-img {
+    border-bottom: 1px solid #ececec
+}
+
+.top-list .top-list-name {
+    padding: 5px 20px;
+    text-align: center
+}
+
+.top-list .top-list-name h2 {
+    color: #00b14f;
+    text-align: center;
+    margin: 5px 0 0;
+    line-height: 1.4em
+}
+
+.top-list .top-list-des {
+    font-size: 12px;
+    color: #666;
+    padding: 5px 20px;
+    text-align: center
+}
+
+#box-jobfair-contact {
+    border: 1px solid #d9d9d9
+}
+
+.jobfair-contact-item {
+    margin-top: 12px;
+    font-size: 16px
+}
+
+.jobfair-contact-item a:hover {
+    font-weight: 600;
+    color: #00b14f
+}
+
+.jobfair-contact-item i {
+    width: 22px;
+    text-align: left
+}
