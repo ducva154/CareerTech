@@ -1,4 +1,5 @@
 ﻿using CareerTech.Models;
+using CareerTech.Utils;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
@@ -17,17 +18,18 @@ namespace CareerTech
 
         private void createRolesandUsers()
         {
+           
             ApplicationDbContext context = new ApplicationDbContext();
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             // In Startup iam creating first Admin Role and creating a default Admin User
-            if (!roleManager.RoleExists("Admin"))
+            if (!roleManager.RoleExists(RoleNameConstant.ADMIN))
             {
                 // first we create Admin rool
                 var role = new IdentityRole();
-                role.Name = "Admin";
+                role.Name = RoleNameConstant.ADMIN;
                 roleManager.Create(role);
 
                 //Here we create a Admin super user who will maintain the website
@@ -42,25 +44,23 @@ namespace CareerTech
                 //Add default User to Role Admin
                 if (chkUser.Succeeded)
                 {
-                    var result1 = UserManager.AddToRole(user.Id, "Admin");
-
+                    UserManager.AddToRole(user.Id, RoleNameConstant.ADMIN);
                 }
             }
 
-            if (!roleManager.RoleExists("User"))
+            if (!roleManager.RoleExists(RoleNameConstant.USER))
             {
                 var role = new IdentityRole();
-                role.Name = "User";
+                role.Name = RoleNameConstant.USER;
                 roleManager.Create(role);
             }
 
-            if (!roleManager.RoleExists("Partner"))
+            if (!roleManager.RoleExists(RoleNameConstant.PARTNER))
             {
                 var role = new IdentityRole();
-                role.Name = "Partner";
+                role.Name = RoleNameConstant.PARTNER;
                 roleManager.Create(role);
             }
         }
-
     }
 }

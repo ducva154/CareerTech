@@ -65,6 +65,10 @@ namespace CareerTech.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -81,8 +85,13 @@ namespace CareerTech.Models
         public string ConfirmPassword { get; set; }
 
         [Required]
+        [Display(Name = "Phone")]
+        public string Phone { get; set; }
+
+        [Required]
         [Display(Name = "UserRoles")]
         public string UserRoles { get; set; }
+
     }
 
     public class ResetPasswordViewModel

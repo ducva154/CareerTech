@@ -1,0 +1,45 @@
+﻿<li class="no-padding active"><a class="waves-effect waves-grey " href="~/Partner"><i class="material-icons">settings_input_svideo</i>Dashboard</a></li>
+<li class="no-padding active">
+    <a class="waves-effect waves-grey " href="~/Partner/CompanyProfile">
+        <i class="material-icons">apps</i>Company Manage
+    </a>
+</li>
+<li class="no-padding active">
+    <a class="waves-effect waves-grey " href="~/Partner/Recruitment">
+        <i class="material-icons">mode_edit</i>Recruitment
+    </a>
+</li>
+<li class="no-padding active">
+    <a class="waves-effect waves-grey " href="~/Partner/CandidateManage">
+        <i class="material-icons">star_border</i>Candidate Manage
+    </a>
+</li>
+<li class="no-padding active">
+    <a class="waves-effect waves-grey " href="~/Partner/SearchCandidate">
+        <i class="material-icons">search</i>Search Candidate
+    </a>
+</li>
+<li class="no-padding active">
+    <a class="waves-effect waves-grey " href="~/Partner/PartnerProfile">
+        <i class="material-icons">account_circle</i>Profile
+    </a>
+</li>
+@*<li class="no-padding active">
+    <a class="waves-effect waves-grey " href="javascript:document.getElementById('logoutForm').submit()">
+        <i class="material-icons">exit_to_app</i>Sign Out
+    </a>
+</li>*@
+
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+            <li class="no-padding active">
+                <a class="waves-effect waves-grey " href="javascript:document.getElementById('logoutForm').submit()">
+                    <i class="material-icons">exit_to_app</i>Sign Out
+                </a>
+            </li>
+    }
+}
