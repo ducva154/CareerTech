@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CareerTech.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,8 @@ namespace CareerTech.Controllers
     {
         public ActionResult Index()
         {
+            //string rolename = accountService.GetRoleByEmail("cuongnm@gmail.com").Name;
+            //ViewBag.rolename = rolename;
             return View();
         }
 

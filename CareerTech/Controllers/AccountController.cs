@@ -11,6 +11,9 @@ using Microsoft.Owin.Security;
 using CareerTech.Models;
 using System.Collections.Generic;
 using CareerTech.Services;
+using CareerTech.Services.Implement;
+using CareerTech.Utils;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace CareerTech.Controllers
 {
@@ -19,15 +22,20 @@ namespace CareerTech.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private readonly IAccountService<AccountService> accountService =null;
         public AccountController()
         {
+            
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
-        {
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) { 
             UserManager = userManager;
             SignInManager = signInManager;
+        }
+
+        public AccountController(IAccountService<AccountService> accountService)
+        {
+            this.accountService = accountService;
         }
 
         public ApplicationSignInManager SignInManager
@@ -82,12 +90,16 @@ namespace CareerTech.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                   // return RedirectToLocal(returnUrl);
-                    if (AccountService.GetRoleByEmail(model.Email).Name.Equals("Partner"))
+                    // return RedirectToLocal(returnUrl);
+                    IdentityRole userRole = accountService.GetRoleByEmail(model.Email);
+                    Session[SessionConstant.USER_MODEL] = accountService.GetUserByEmail(model.Email);
+                    Session[SessionConstant.ROLE_NAME] = userRole.Name;
+                    Session[SessionConstant.USER_ID] = userRole.Id;
+                    if (userRole.Name.Equals(RoleNameConstant.PARTNER))
                     {
                         return RedirectToAction("Index", "Partner");
                     }
-                    else if (AccountService.GetRoleByEmail(model.Email).Name.Equals("User"))
+                    else if (userRole.Name.Equals(RoleNameConstant.USER))
                     {
                         return RedirectToAction("Index", "User");
                     }
@@ -154,7 +166,7 @@ namespace CareerTech.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            ViewBag.Roles = new SelectList(new ApplicationDbContext().Roles.Where(r => !r.Name.Contains("Admin")).ToList(), "Name", "Name");
+            ViewBag.Roles = new SelectList(new ApplicationDbContext().Roles.Where(r => !r.Name.Contains(RoleNameConstant.ADMIN)).ToList(), "Name", "Name");
             return View();
         }
 
@@ -167,7 +179,7 @@ namespace CareerTech.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email,FullName = model.FullName, PhoneNumber = model.Phone };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -408,6 +420,8 @@ namespace CareerTech.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            
+            Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 
