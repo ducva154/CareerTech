@@ -5,6 +5,7 @@ namespace CareerTech.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web.Mvc;
 
     [Table("Introduction")]
     public partial class Introduction
@@ -19,9 +20,9 @@ namespace CareerTech.Models
         [Required]
         [StringLength(255)]
         public string Title { get; set; }
-
         [Column(TypeName = "Longtext")]
         [Required]
+        [AllowHtml]
         public string Detail { get; set; }
 
         [StringLength(255)]

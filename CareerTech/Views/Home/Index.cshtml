@@ -1,33 +1,76 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<h1>
-    @ViewBag.rolename
-</h1>
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+<div class="page-banner home-banner">
+    <div class="row align-items-center flex-wrap-reverse h-100">
+        <div class="col-md-6 py-5 wow fadeInLeft">
+            <h1 class="mb-4">@ViewBag.Intro.Title</h1>
+            <p class="text-lg text-grey mb-5">
+               @Html.Raw(ViewBag.Intro.Detail.ToString());
+            </p>
+
+        </div>
+        <div class="col-md-6 py-5 wow zoomIn">
+            <div class="img-fluid text-center">
+                <img src="@ViewBag.Intro.Url_Image" alt="">
+            </div>
+        </div>
     </div>
 </div>
+<div class="page-section">
+    <div class="container">
+        <div class="row">
+            @foreach (var sol in ViewBag.Sol)
+            {
+            <div class="col-lg-4">
+                <div class="card-service wow fadeInUp">
+                    <div class="header">
+                        <img src="@sol.Url_image" alt="">
+                    </div>
+                    <div class="body">
+                        <h5 class="text-secondary">@sol.Title</h5>
+                        <p>@sol.Detail</p>
+                    </div>
+                </div>
+            </div>
+           }
+        </div>
+    </div> <!-- .container -->
+</div> <!-- .page-section -->
+<div class="page-section">
+    <div class="container">
+        <div class="text-center wow fadeInUp">
+            <div class="subhead">Pricing Plan</div>
+            <h2 class="title-section">Choose plan the right for you</h2>
+            <div class="divider mx-auto"></div>
+        </div>
+        <div class="row mt-5">
+            @foreach (var s in ViewBag.Subs)
+            {
+                <div class="col-lg-4 py-3 wow zoomIn">
+                    <div class="card-pricing marked">
+                        <div class="header">
+                            <div class="pricing-type">@s.Type</div>
+                            <div class="price">
+                                <span class="dollar">$</span>
+                                <h1>@s.Price</h1>
+                            </div>
+                            <h5>Per @s.Name</h5>
+                        </div>
+                        <div class="body">
+                            <p>25 Analytics <span class="suffix">Campaign</span></p>
+                            <p>1,300 Change <span class="suffix">Keywords</span></p>
+                            <p>Social Media <span class="suffix">Reviews</span></p>
+                            <p>1 Free <span class="suffix">Optimization</span></p>
+                            <p>24/7 <span class="suffix">Support</span></p>
+                        </div>
+                        <div class="footer">
+                            <a href="#" class="btn btn-pricing btn-block">Subscribe</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div> <!-- .container -->
+</div> <!-- .page-section -->

@@ -3,42 +3,60 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewBag.Title</title>
 
+    <link rel="stylesheet" href="@Url.Content("~/Content/Home/css/maicons.css")">
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/Home/css/bootstrap.css")">
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/Home/vendor/animate/animate.css")">
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/Home/css/theme.css")">
+    <style>
+        img {
+            vertical-align: middle;
+            border: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+    <div class="back-to-top"></div>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white sticky" data-offset="500">
+            <div class="container">
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Career Tech", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <div class="navbar-collapse collapse" id="navbarContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">@Html.ActionLink("Home", "Index", "Home", new { @class = "nav-link" })</li>
+                        <li class="nav-item active">@Html.ActionLink("About", "About", "Home", new { @class = "nav-link" })</li>
+                        <li class="nav-item active">@Html.ActionLink("Contact", "Contact", "Home", new { @class = "nav-link" })</li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+        </nav>
+        <div class="container">
+            @RenderBody()
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    </header>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script src="~/Content/Home/js/jquery-3.5.1.min.js"></script>
+
+    <script src="~/Content/Home/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/Content/Home/js/google-maps.js"></script>
+
+    <script src="~/Content/Home/vendor/wow/wow.min.js"></script>
+
+    <script src="~/Content/Home/js/theme.js"></script>
+
 </body>
 </html>

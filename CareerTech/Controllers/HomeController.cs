@@ -1,4 +1,6 @@
 ﻿using CareerTech.Models;
+using CareerTech.Services;
+using CareerTech.Services.Implement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,27 @@ namespace CareerTech.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ISubscriptionManagementService<SubscriptionManagementService> _subscriptionManagementService;
+        private readonly ISolutionManagementService<SolutionManagementService> _solutionManagementService;
+        private readonly IContentService<ContentService> _contentService;
+        public HomeController(ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
+            ISolutionManagementService<SolutionManagementService> solutionManagementService,
+            IContentService<ContentService> contentService)
+        {
+            _subscriptionManagementService = subscriptionManagementService;
+            _solutionManagementService = solutionManagementService;
+            _contentService = contentService;
+        }
         public ActionResult Index()
         {
             //string rolename = accountService.GetRoleByEmail("cuongnm@gmail.com").Name;
             //ViewBag.rolename = rolename;
+            var subscription = _subscriptionManagementService.GetSubscriptions();
+            ViewBag.Subs = subscription;
+            var solution = _solutionManagementService.GetSolutions();
+            ViewBag.Sol = solution;
+            var intro = _contentService.GetIntroduction();
+            ViewBag.Intro = intro;
             return View();
         }
 

@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "ContentManagement";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+}
+
+<main class="mn-inner">
+    <div class="row">
+        <div class="col s12">
+            <div class="page-title">Data Tables</div>
+        </div>
+        <div class="col s12 m12 l12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Content Management</span>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addContent">
+                            Add new Content
+                        </button>
+                    </div>
+                    <table id="example" class="display responsive-table datatable-example">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Detail</th>
+                                <th>Image</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Detail</th>
+                                <th>Image</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach (var intro in ViewBag.Intro)
+                            {
+                            <tr>
+                                <td>@intro.ID</td>
+                                <td>@intro.Title</td>
+                                <td>@intro.Detail</td>
+                                <td>@Html.Raw(@intro.Url_Image).ToString()</td>
+                                <td>
+                                    <a href="EditContent?contentID=@intro.ID">Edit</a>
+                                </td>
+                                <td><a href="deleteContent?contentID=@intro.ID" onclick="return ConfirmDelete()">Delete</a></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div id="addContent" class="modal fade" aria-labelledby="addContent">
+    <div class="modal-dialog" style="min-height=300px;height:475px;overflow:scroll">
+        <div class="modal-content">
+            @using (Html.BeginForm("AddContent", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New SubCription</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input name="title" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Detail</label>
+                        <textarea required name="Des" id="editor1" class="form-control" ></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image</label>
+                        @Html.TextBox("file", "", new { type = "file" }) <br />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-success" value="Add">
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Content/Dashboard/assets/plugins/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor1');
+</script>
+

@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "EditSolution";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+}
+
+<main class="mn-inner">
+    <div class="row">
+        <div class="col s12">
+            <div class="page-title">Form Elements</div>
+        </div>
+        <div class="col s12 m12 l6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Input fields</span><br>
+                    <div class="row">
+                   @using (Html.BeginForm("EditSolution", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                     {
+                        <input type="text" name="id" hidden="" value="@ViewBag.SolInfo.ID" />
+                     <div class="modal-body">
+                      <div class="form-group">
+                      <label>Title</label>
+                       <input name="SolName" type="text" class="form-control" required value="@ViewBag.SolInfo.Title">
+                       </div>
+                       <div class="form-group">
+                       <label>Detail</label>
+                       <textarea name="des" class="form-control" required>@ViewBag.SolInfo.Detail</textarea>
+                       </div>
+                        <div class="form-group">
+                         <label>Image</label>
+                         @Html.TextBox("file", (string)ViewBag.SolInfo.Url_image, new { type = "file" }) <br />
+                           
+                         </div>
+                         </div>
+                         <div class="modal-footer">
+                          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                          <input type="submit" class="btn btn-success" value="Save">
+                          </div>
+                         }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
