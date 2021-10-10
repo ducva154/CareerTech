@@ -37,6 +37,9 @@
                     <div class="header-title col s3 m3">
                         <span class="chapter-title">Parner</span>
                     </div>
+                    <ul class="right">
+                        @Html.Partial("_LoginPartial")
+                    </ul>
                 </div>
             </nav>
         </header>
@@ -66,23 +69,14 @@
                         {
                             @Html.Partial("_LoginPartial")
                         };*@
-                    @Html.Partial("_Partner_Menu_Partial")
+                    @Html.Partial("_User_Menu_Partial")
                     @*@Html.Partial("_LoginPartial")
-                    @Html.Partial("_LoginPartial")*@
+                        @Html.Partial("_LoginPartial")*@
 
                 </ul>
             </div>
         </aside>
-        <main class="mn-inner inner-active-sidebar">
-            <div class="middle-content">
-
-
-                @RenderBody()
-
-
-
-            </div>
-        </main>
+        @RenderBody()
     </div>
     <div class="left-sidebar-hover"></div>
     <!-- Javascripts -->

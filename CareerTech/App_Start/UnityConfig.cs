@@ -23,6 +23,7 @@ namespace CareerTech
 
             container.RegisterType<IAccountService<AccountService>, AccountService>();
             container.RegisterType<IPartnerService<PartnerService>, PartnerService>();
+            container.RegisterType<IUserService<UserService>, UserService>();
             container.RegisterType<ApplicationDbContext, ApplicationDbContext>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
