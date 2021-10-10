@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "SubscriptionManagement";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+}
+<main class="mn-inner">
+    <div class="row">
+        <div class="col s12">
+            <div class="page-title">Data Tables</div>
+        </div>
+        <div class="col s12 m12 l12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">SubCription Management</span>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSub">
+                            Add new Subcription
+                        </button>
+                    </div>
+                    <table id="example" class="display responsive-table datatable-example">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Subcription Name</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                <th>Period</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Subcription Name</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                <th>Period</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach (var s in ViewBag.Sub)
+                            {
+                            <tr>
+                                <td>@s.ID</td>
+                                <td>@s.Name</td>
+                                <td>@s.Price</td>
+                                <td>@s.Type</td>
+                                <td>@s.Period</td>
+                                <td>
+                                    <a href="EditSubscription?subID=@s.ID">Edit</a>
+                                </td>
+                                <td><a href="deleteSub?subID=@s.ID" onclick="return ConfirmDelete()">Delete</a></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div id="addSub" class="modal fade" aria-labelledby="addSub">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("AddnewSubscription", "Admin", FormMethod.Post)) {
+        <div class="modal-header">
+            <h4 class="modal-title">Add New SubCription</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Name</label>
+                <input name="SubName" type="text" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <input name="price" type="number" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <input name="type" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Period</label>
+                <input name="period" type="text" class="form-control" required>
+            </div>
+        </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                <input type="submit" class="btn btn-success" value="Add">
+            </div>
+            }
+        </div>
+    </div>
+</div>
+@*<div id="editSub" class="modal fade" aria-labelledby="editSub">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm())
+            {
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit SubCription</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input name="SubName" type="text" class="form-control" required value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input name="price" type="number" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <input name="type" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-success" value="Save">
+                </div>
+            }
+            </div>
+    </div>
+</div>*@

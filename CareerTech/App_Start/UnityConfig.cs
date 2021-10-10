@@ -20,11 +20,14 @@ namespace CareerTech
 
             container.RegisterType<AccountController>(new InjectionConstructor(typeof(IAccountService<AccountService>)));
             container.RegisterType<ManageController>(new InjectionConstructor());
-
+            container.RegisterType<IUserManagmentService<UserManagementService>, UserManagementService>();
+            container.RegisterType<IPartnerManagementService<PartnerManagementService>, PartnerManagementService>();
             container.RegisterType<IAccountService<AccountService>, AccountService>();
             container.RegisterType<IPartnerService<PartnerService>, PartnerService>();
             container.RegisterType<ApplicationDbContext, ApplicationDbContext>();
-
+            container.RegisterType<ISubscriptionManagementService<SubscriptionManagementService>, SubscriptionManagementService>();
+            container.RegisterType<ISolutionManagementService<SolutionManagementService>,SolutionManagementService > ();
+            container.RegisterType<IContentService<ContentService>, ContentService>();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
