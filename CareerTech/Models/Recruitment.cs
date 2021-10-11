@@ -9,7 +9,6 @@ namespace CareerTech.Models
     [Table("Recruitment")]
     public partial class Recruitment
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Recruitment()
         {
             Users = new HashSet<ApplicationUser>();
@@ -30,18 +29,6 @@ namespace CareerTech.Models
         [StringLength(255)]
         public string Title { get; set; }
 
-        [Column(TypeName = "Longtext")]
-        [Required]
-        public string Desc { get; set; }
-
-        [Column(TypeName = "Longtext")]
-        [Required]
-        public string Requirement { get; set; }
-
-        [Column(TypeName = "Longtext")]
-        [Required]
-        public string Benefit { get; set; }
-
         [Required]
         [StringLength(255)]
         public string Address { get; set; }
@@ -52,21 +39,37 @@ namespace CareerTech.Models
 
         [Required]
         [StringLength(255)]
-        public string WorkTime { get; set; }
+        public string Workingform { get; set; }
 
-        public int? Total { get; set; }
+        [Required]
+        [StringLength(255)]
+        public string Amount { get; set; }
 
         [Required]
         [StringLength(255)]
         public string Position { get; set; }
 
+        [Required]
+        [StringLength(255)]
+        public string Experience { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string EndDate { get; set; }
+
+        [Required]
         public bool? Gender { get; set; }
+
+
+        [Column(TypeName = "Longtext")]
+        [Required]
+        public string DetailDesc { get; set; }
+
 
         public virtual CompanyProfile CompanyProfile { get; set; }
 
         public virtual Job Job { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ApplicationUser> Users { get; set; }
     }
 }

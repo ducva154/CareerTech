@@ -9,7 +9,6 @@ namespace CareerTech.Models
     [Table("Subscription")]
     public partial class Subscription
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Subscription()
         {
             Orders = new HashSet<Order>();
@@ -26,10 +25,9 @@ namespace CareerTech.Models
         [StringLength(255)]
         public string Type { get; set; }
 
-        [Column(TypeName = "date")]
-        public DateTime? Period { get; set; }
+        [Required]
+        public int Period { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

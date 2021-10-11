@@ -12,5 +12,7 @@ namespace CareerTech.Utils
         public static string ROLE_NAME = "RoleName";
 
         public static string USER_ID = "UserID";
+
+        public static string COMPANY_ID = "CompanyID";
     }
 }

@@ -14,6 +14,7 @@ namespace CareerTech.Controllers
         private readonly ISubscriptionManagementService<SubscriptionManagementService> _subscriptionManagementService;
         private readonly ISolutionManagementService<SolutionManagementService> _solutionManagementService;
         private readonly IContentService<ContentService> _contentService;
+
         public HomeController(ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
             ISolutionManagementService<SolutionManagementService> solutionManagementService,
             IContentService<ContentService> contentService)
@@ -24,8 +25,6 @@ namespace CareerTech.Controllers
         }
         public ActionResult Index()
         {
-            //string rolename = accountService.GetRoleByEmail("cuongnm@gmail.com").Name;
-            //ViewBag.rolename = rolename;
             var subscription = _subscriptionManagementService.GetSubscriptions();
             ViewBag.Subs = subscription;
             var solution = _solutionManagementService.GetSolutions();

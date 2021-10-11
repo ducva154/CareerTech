@@ -23,6 +23,8 @@ namespace CareerTech.Models
         [Required]
         public string Detail { get; set; }
 
+        public bool Main { get; set; }
+
         public virtual ApplicationUser User { get; set; }
     }
 }

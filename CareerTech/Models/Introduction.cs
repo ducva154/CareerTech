@@ -20,10 +20,13 @@ namespace CareerTech.Models
         [Required]
         [StringLength(255)]
         public string Title { get; set; }
+
         [Column(TypeName = "Longtext")]
         [Required]
         [AllowHtml]
         public string Detail { get; set; }
+
+        public bool Main { get; set; }
 
         [StringLength(255)]
         public string Url_Image { get; set; }

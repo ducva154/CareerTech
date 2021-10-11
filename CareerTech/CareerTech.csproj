@@ -307,6 +307,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartnerController.cs" />
@@ -321,6 +322,10 @@
     <Compile Include="Migrations\202110080212518_update_user.cs" />
     <Compile Include="Migrations\202110080212518_update_user.designer.cs">
       <DependentUpon>202110080212518_update_user.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110110731492_Update-table.cs" />
+    <Compile Include="Migrations\202110110731492_Update-table.designer.cs">
+      <DependentUpon>202110110731492_Update-table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\_MigrationSQLGenerator.cs" />
@@ -338,7 +343,6 @@
     <Compile Include="Models\Portfolio.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Profile.cs" />
-    <Compile Include="Models\PartnerViewModels.cs" />
     <Compile Include="Models\Recruitment.cs" />
     <Compile Include="Models\Skill.cs" />
     <Compile Include="Models\Solution.cs" />
@@ -352,7 +356,6 @@
     <Compile Include="Services\Implement\ContentService.cs" />
     <Compile Include="Services\Implement\PartnerManagementService.cs" />
     <Compile Include="Services\Implement\PartnerService.cs" />
-
     <Compile Include="Services\Implement\SolutionManagementService.cs" />
     <Compile Include="Services\Implement\SubscriptionManagementService.cs" />
     <Compile Include="Services\Implement\UserManagementService.cs" />
@@ -361,11 +364,11 @@
     <Compile Include="Services\ISolutionManagementService.cs" />
     <Compile Include="Services\ISubscriptionManagementService.cs" />
     <Compile Include="Services\IUserManagmentService.cs" />
-
     <Compile Include="Services\Implement\UserService.cs" />
     <Compile Include="Services\IUserService.cs" />
-
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\CloudDiaryService.cs" />
+    <Compile Include="Utils\CommonConstants.cs" />
     <Compile Include="Utils\PageConstant.cs" />
     <Compile Include="Utils\MessageConstant.cs" />
     <Compile Include="Utils\RoleNameConstant.cs" />
@@ -1621,7 +1624,6 @@
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\font\weathericons-regular-webfont.svg" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\index.html" />
-
     <Content Include="Content\Home\css\bootstrap.css" />
     <Content Include="Content\Home\css\maicons.css" />
     <Content Include="Content\Home\css\theme.css" />
@@ -1667,7 +1669,6 @@
     <Content Include="Content\Home\js\theme.js" />
     <Content Include="Content\Home\vendor\animate\animate.css" />
     <Content Include="Content\Home\vendor\wow\wow.min.js" />
-
     <Content Include="Content\Portfolio\assets\css\bootstrap.css" />
     <Content Include="Content\Portfolio\assets\css\custom.css" />
     <Content Include="Content\Portfolio\assets\css\maicons.css" />
@@ -1722,7 +1723,6 @@
     <Content Include="Content\Portfolio\assets\vendor\owl-carousel\owl.carousel.min.js" />
     <Content Include="Content\Portfolio\assets\vendor\waypoints\jquery.waypoints.min.js" />
     <Content Include="Content\Portfolio\assets\vendor\wow\wow.min.js" />
-
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -2034,18 +2034,15 @@
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\less\mixins.less" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\less\styles.less" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\less\variables.less" />
-
     <Content Include="Content\Home\fonts\maicons.eot" />
     <Content Include="Content\Home\fonts\maicons.ttf" />
     <Content Include="Content\Home\fonts\maicons.woff" />
-
     <Content Include="Content\Portfolio\assets\fonts\maicons.eot" />
     <Content Include="Content\Portfolio\assets\fonts\maicons.ttf" />
     <Content Include="Content\Portfolio\assets\fonts\maicons.woff" />
     <Content Include="Content\Portfolio\assets\fonts\themify.eot" />
     <Content Include="Content\Portfolio\assets\fonts\themify.ttf" />
     <Content Include="Content\Portfolio\assets\fonts\themify.woff" />
-
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2092,16 +2089,9 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout_DashBoard.cshtml" />
-    <Content Include="Views\Partner\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_Partner_Menu_Partial.cshtml" />
-    <Content Include="Views\Partner\CompanyProfile.cshtml" />
-    <Content Include="Views\Partner\Recruitment.cshtml" />
-    <Content Include="Views\Partner\CandidateManage.cshtml" />
-    <Content Include="Views\Partner\SearchCandidate.cshtml" />
-    <Content Include="Views\Partner\PartnerProfile.cshtml" />
-
     <Content Include="Views\Admin\ContentManagement.cshtml" />
     <Content Include="Views\Admin\PartnerManagement.cshtml" />
     <Content Include="Views\Admin\PaymentManagement.cshtml" />
@@ -2113,7 +2103,6 @@
     <Content Include="Views\Admin\EditSolution.cshtml" />
     <Content Include="Views\Admin\AboutManagement.cshtml" />
     <Content Include="Views\Admin\EditContent.cshtml" />
-
     <Content Include="Views\User\PortfolioManager.cshtml" />
     <Content Include="Views\Shared\_User_Menu_Partial.cshtml" />
     <Content Include="Views\User\Portfolio.cshtml" />
@@ -2126,7 +2115,15 @@
     <Content Include="Views\User\EditSkill.cshtml" />
     <Content Include="Views\User\EditEducation.cshtml" />
     <Content Include="Views\User\EditExperience.cshtml" />
-
+    <Content Include="Views\Partner\CandidateManage.cshtml" />
+    <Content Include="Views\Partner\CompanyProfile.cshtml" />
+    <Content Include="Views\Partner\CreateCompany.cshtml" />
+    <Content Include="Views\Partner\CreateRecruitment.cshtml" />
+    <Content Include="Views\Partner\EditProfileCompany.cshtml" />
+    <Content Include="Views\Partner\Index.cshtml" />
+    <Content Include="Views\Partner\PartnerProfile.cshtml" />
+    <Content Include="Views\Partner\RecruitmentManage.cshtml" />
+    <Content Include="Views\Partner\SearchCandidate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2150,6 +2147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110080212518_update_user.resx">
       <DependentUpon>202110080212518_update_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110110731492_Update-table.resx">
+      <DependentUpon>202110110731492_Update-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

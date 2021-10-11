@@ -15,10 +15,6 @@
     <link href="@Url.Content("~/Content/Dashboard/assets/plugins/material-preloader/css/materialPreloader.min.css")" rel="stylesheet">
     <link href="@Url.Content("~/Content/Dashboard/assets/plugins/datatables/css/jquery.dataTables.min.css")" rel="stylesheet">
 
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- Theme Styles -->
     <link href="@Url.Content("~/Content/Dashboard/assets/css/alpha.min.css")" rel="stylesheet" type="text/css" />
     <link href="~/Content/Dashboard/assets/css/custom.css" rel="stylesheet" type="text/css" />
@@ -59,22 +55,18 @@
                 <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion" style="padding-top: 0px!important;">
                     @*---------------------------------------------------Add view-------------------------------------------------*@
 
-                    @if (true)
+                    @if (Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("Admin"))
                         {
                             @Html.Partial("_AdminPartial")
                         }
-                        else if(true)
+                        else if(Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("User"))
                         {
                             @Html.Partial("_User_Menu_Partial")
                         }
                         else
                         {
-                            @Html.Partial("_LoginPartial")
+                            @Html.Partial("_Partner_Menu_Partial")
                         }
-
-              
-                
-
                 </ul>
             </div>
         </aside>

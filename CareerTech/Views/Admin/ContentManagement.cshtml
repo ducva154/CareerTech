@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
 }
 
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <main class="mn-inner">
     <div class="row">
         <div class="col s12">
@@ -42,16 +46,16 @@
                         <tbody>
                             @foreach (var intro in ViewBag.Intro)
                             {
-                            <tr>
-                                <td>@intro.ID</td>
-                                <td>@intro.Title</td>
-                                <td>@intro.Detail</td>
-                                <td>@Html.Raw(@intro.Url_Image).ToString()</td>
-                                <td>
-                                    <a href="EditContent?contentID=@intro.ID">Edit</a>
-                                </td>
-                                <td><a href="deleteContent?contentID=@intro.ID" onclick="return ConfirmDelete()">Delete</a></td>
-                            </tr>
+                                <tr>
+                                    <td>@intro.ID</td>
+                                    <td>@intro.Title</td>
+                                    <td>@intro.Detail</td>
+                                    <td>@Html.Raw(@intro.Url_Image).ToString()</td>
+                                    <td>
+                                        <a href="EditContent?contentID=@intro.ID">Edit</a>
+                                    </td>
+                                    <td><a href="deleteContent?contentID=@intro.ID" onclick="return ConfirmDelete()">Delete</a></td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -76,7 +80,7 @@
                     </div>
                     <div class="form-group">
                         <label>Detail</label>
-                        <textarea required name="Des" id="editor1" class="form-control" ></textarea>
+                        <textarea required name="Des" id="editor1" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Image</label>

@@ -13,7 +13,7 @@
                 <h5>@ViewBag.Portfolio.Name</h5>
                 <div class="card">
                     @Html.ValidationSummary("", new { @class = "text-danger" })
-                    <p class="error-page error text-danger">@ViewBag.ErrorMessage</p>
+                    @*<p class="error-page error text-danger">@ViewBag.ErrorMessage</p>*@
                     <div class="card-content">
                         <div id="example_wrapper" class="dataTables_wrapper">
                             <table id="example" class="display responsive-table datatable-example dataTable" role="grid" aria-describedby="example_info">

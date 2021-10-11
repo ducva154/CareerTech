@@ -9,7 +9,6 @@ namespace CareerTech.Models
     [Table("Order")]
     public partial class Order
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Order()
         {
             Payments = new HashSet<Payment>();
@@ -39,7 +38,6 @@ namespace CareerTech.Models
 
         public virtual ApplicationUser User { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
     }
 }

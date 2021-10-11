@@ -90,11 +90,11 @@ namespace CareerTech.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    // return RedirectToLocal(returnUrl);
                     IdentityRole userRole = accountService.GetRoleByEmail(model.Email);
-                    Session[SessionConstant.USER_MODEL] = accountService.GetUserByEmail(model.Email);
+                    ApplicationUser user = accountService.GetUserByEmail(model.Email);
+                    Session[SessionConstant.USER_MODEL] = user;
                     Session[SessionConstant.ROLE_NAME] = userRole.Name;
-                    Session[SessionConstant.USER_ID] = userRole.Id;
+                    Session[SessionConstant.USER_ID] = user.Id;
                     if (userRole.Name.Equals(RoleNameConstant.PARTNER))
                     {
                         return RedirectToAction("Index", "Partner");

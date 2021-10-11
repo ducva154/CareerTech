@@ -13,5 +13,14 @@ namespace CareerTech.Utils
         public static string NOT_FOUND_EDUCATION = "Education not found!";
         public static string NOT_FOUND_EXPERIENCE = "Experience not found!";
         public static string NOT_FOUND_PRODUCT = "Product not found!";
+
+        public static string DATA_NOT_EMPTY = "Data field not empty";
+        public static string EMAIL_EXIST = "Email is exist";
+        public static string UPDATE_SUCCESS = "Update success";
+        public static string CREATE_SUCCESS = "Create success";
+
+
+
+
     }
 }

@@ -114,7 +114,6 @@ namespace CareerTech.Controllers
                 {
                     _userService.EditProfile(model);
                 }
-
             }
             ViewBag.Portfolio = portfolio;
             ViewBag.Profile = profile;
@@ -149,7 +148,8 @@ namespace CareerTech.Controllers
             {
                 if (_userService.GetSkillByNameAndPortfolioID(model.SkillName, model.PortfolioID) != null)
                 {
-                    ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
+                    ModelState.AddModelError(model.SkillName, "Lặp rồi!!!!!");
+                 //   ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
                 }
                 else
                 {
