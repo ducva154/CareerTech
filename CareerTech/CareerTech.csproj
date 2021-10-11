@@ -352,6 +352,7 @@
     <Compile Include="Services\Implement\ContentService.cs" />
     <Compile Include="Services\Implement\PartnerManagementService.cs" />
     <Compile Include="Services\Implement\PartnerService.cs" />
+
     <Compile Include="Services\Implement\SolutionManagementService.cs" />
     <Compile Include="Services\Implement\SubscriptionManagementService.cs" />
     <Compile Include="Services\Implement\UserManagementService.cs" />
@@ -360,7 +361,13 @@
     <Compile Include="Services\ISolutionManagementService.cs" />
     <Compile Include="Services\ISubscriptionManagementService.cs" />
     <Compile Include="Services\IUserManagmentService.cs" />
+
+    <Compile Include="Services\Implement\UserService.cs" />
+    <Compile Include="Services\IUserService.cs" />
+
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\PageConstant.cs" />
+    <Compile Include="Utils\MessageConstant.cs" />
     <Compile Include="Utils\RoleNameConstant.cs" />
     <Compile Include="Utils\SessionConstant.cs" />
   </ItemGroup>
@@ -1614,6 +1621,7 @@
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\font\weathericons-regular-webfont.svg" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\index.html" />
+
     <Content Include="Content\Home\css\bootstrap.css" />
     <Content Include="Content\Home\css\maicons.css" />
     <Content Include="Content\Home\css\theme.css" />
@@ -1659,6 +1667,62 @@
     <Content Include="Content\Home\js\theme.js" />
     <Content Include="Content\Home\vendor\animate\animate.css" />
     <Content Include="Content\Home\vendor\wow\wow.min.js" />
+
+    <Content Include="Content\Portfolio\assets\css\bootstrap.css" />
+    <Content Include="Content\Portfolio\assets\css\custom.css" />
+    <Content Include="Content\Portfolio\assets\css\maicons.css" />
+    <Content Include="Content\Portfolio\assets\css\minibar.virtual.css" />
+    <Content Include="Content\Portfolio\assets\css\themify-icons.css" />
+    <Content Include="Content\Portfolio\assets\css\topbar.virtual.css" />
+    <Content Include="Content\Portfolio\assets\css\virtual.css" />
+    <Content Include="Content\Portfolio\assets\favicon.ico" />
+    <Content Include="Content\Portfolio\assets\fonts\maicons.svg" />
+    <Content Include="Content\Portfolio\assets\fonts\themify.svg" />
+    <Content Include="Content\Portfolio\assets\img\bg_banner.jpg" />
+    <Content Include="Content\Portfolio\assets\img\bg_image_1.jpg" />
+    <Content Include="Content\Portfolio\assets\img\bg_image_2.jpg" />
+    <Content Include="Content\Portfolio\assets\img\logo\amazon.png" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_1.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_2.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_3.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_4.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_5.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_6.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_7.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\company_8.svg" />
+    <Content Include="Content\Portfolio\assets\img\logo\google.png" />
+    <Content Include="Content\Portfolio\assets\img\logo\microsoft.png" />
+    <Content Include="Content\Portfolio\assets\img\logo\nginx.png" />
+    <Content Include="Content\Portfolio\assets\img\person.jpg" />
+    <Content Include="Content\Portfolio\assets\img\photo-2.jpg" />
+    <Content Include="Content\Portfolio\assets\img\testimonials\testimonials_1.jpg" />
+    <Content Include="Content\Portfolio\assets\img\testimonials\testimonials_2.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-1.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-2.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-3.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-4.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-5.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-6.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-7.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-8.jpg" />
+    <Content Include="Content\Portfolio\assets\img\work\work-9.jpg" />
+    <Content Include="Content\Portfolio\assets\js\bootstrap.bundle.min.js" />
+    <Content Include="Content\Portfolio\assets\js\google-maps.js" />
+    <Content Include="Content\Portfolio\assets\js\jquery-3.5.1.min.js" />
+    <Content Include="Content\Portfolio\assets\js\minibar-virtual.js" />
+    <Content Include="Content\Portfolio\assets\js\topbar-virtual.js" />
+    <Content Include="Content\Portfolio\assets\vendor\animateNumber\jquery.animateNumber.min.js" />
+    <Content Include="Content\Portfolio\assets\vendor\animate\animate.css" />
+    <Content Include="Content\Portfolio\assets\vendor\fancybox\css\jquery.fancybox.min.css" />
+    <Content Include="Content\Portfolio\assets\vendor\fancybox\js\jquery.fancybox.min.js" />
+    <Content Include="Content\Portfolio\assets\vendor\isotope\isotope.pkgd.min.js" />
+    <Content Include="Content\Portfolio\assets\vendor\nice-select\css\nice-select.css" />
+    <Content Include="Content\Portfolio\assets\vendor\nice-select\js\jquery.nice-select.min.js" />
+    <Content Include="Content\Portfolio\assets\vendor\owl-carousel\owl.carousel.css" />
+    <Content Include="Content\Portfolio\assets\vendor\owl-carousel\owl.carousel.min.js" />
+    <Content Include="Content\Portfolio\assets\vendor\waypoints\jquery.waypoints.min.js" />
+    <Content Include="Content\Portfolio\assets\vendor\wow\wow.min.js" />
+
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -1970,9 +2034,18 @@
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\less\mixins.less" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\less\styles.less" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\less\variables.less" />
+
     <Content Include="Content\Home\fonts\maicons.eot" />
     <Content Include="Content\Home\fonts\maicons.ttf" />
     <Content Include="Content\Home\fonts\maicons.woff" />
+
+    <Content Include="Content\Portfolio\assets\fonts\maicons.eot" />
+    <Content Include="Content\Portfolio\assets\fonts\maicons.ttf" />
+    <Content Include="Content\Portfolio\assets\fonts\maicons.woff" />
+    <Content Include="Content\Portfolio\assets\fonts\themify.eot" />
+    <Content Include="Content\Portfolio\assets\fonts\themify.ttf" />
+    <Content Include="Content\Portfolio\assets\fonts\themify.woff" />
+
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2028,6 +2101,7 @@
     <Content Include="Views\Partner\CandidateManage.cshtml" />
     <Content Include="Views\Partner\SearchCandidate.cshtml" />
     <Content Include="Views\Partner\PartnerProfile.cshtml" />
+
     <Content Include="Views\Admin\ContentManagement.cshtml" />
     <Content Include="Views\Admin\PartnerManagement.cshtml" />
     <Content Include="Views\Admin\PaymentManagement.cshtml" />
@@ -2039,6 +2113,20 @@
     <Content Include="Views\Admin\EditSolution.cshtml" />
     <Content Include="Views\Admin\AboutManagement.cshtml" />
     <Content Include="Views\Admin\EditContent.cshtml" />
+
+    <Content Include="Views\User\PortfolioManager.cshtml" />
+    <Content Include="Views\Shared\_User_Menu_Partial.cshtml" />
+    <Content Include="Views\User\Portfolio.cshtml" />
+    <Content Include="Views\User\EditProfilePortfolio.cshtml" />
+    <Content Include="Views\Shared\_Portfolio_Menu_Partial.cshtml" />
+    <Content Include="Views\User\SkillManager.cshtml" />
+    <Content Include="Views\User\EducationManager.cshtml" />
+    <Content Include="Views\User\ExperienceManager.cshtml" />
+    <Content Include="Views\User\ProductManager.cshtml" />
+    <Content Include="Views\User\EditSkill.cshtml" />
+    <Content Include="Views\User\EditEducation.cshtml" />
+    <Content Include="Views\User\EditExperience.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

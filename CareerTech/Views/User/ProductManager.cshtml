@@ -1,0 +1,146 @@
+﻿@using CareerTech.Models
+@model Product
+@{
+    ViewBag.Title = "EditProductPortfolio";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    ICollection<Product> listProduct = ViewBag.ListProduct;
+}
+<main class="mn-inner inner-active-sidebar">
+    <div class="middle-content">
+        <div class="row no-m-t no-m-b">
+            @Html.Partial("_Portfolio_Menu_Partial")
+            <div class="col s12 m7 l9">
+                <h5>@ViewBag.Portfolio.Name</h5>
+                <div class="card">
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <p class="error-page error text-danger">@ViewBag.ErrorMessage</p>
+                    <div class="card-content">
+                        <div id="example_wrapper" class="dataTables_wrapper">
+                            <table id="example" class="display responsive-table datatable-example dataTable" role="grid" aria-describedby="example_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 100px;">Name</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 60px;">Image</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 100px;">Company</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Domain</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 100px;">Skill</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Team size</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Project tech</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Workprocess</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Project role</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 60px;">Edit</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 60px;">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (listProduct.Count == 0 || listProduct == null)
+                                    {
+                                        <tr><td colspan="11">No item!</td></tr>
+                                    }
+                                    @if (listProduct.Count > 0)
+                                    {
+                                        foreach (var p in listProduct)
+                                        {
+                                            <tr role="row" class="odd">
+                                                <td class="sorting_1">@p.Name</td>
+                                                <td>@p.Url_Image</td>
+                                                <td>@p.Company</td>
+                                                <td>@p.Domain</td>
+                                                <td>@p.Skill</td>
+                                                <td>@p.TeamSize</td>
+                                                <td>@p.ProjectTech</td>
+                                                <td>@p.WorkProces</td>
+                                                <td>@p.ProjectRole</td>
+                                                <td><a href="/User/EditProduct?productID=@p.ID">Edit</a></td>
+                                                <td><a href="/User/DeleteProduct?productID=@p.ID">Delete</a></td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#compose">
+                <i class="material-icons">mode_edit</i>
+            </a>
+        </div>
+        <div id="compose" class="modal modal-fixed-footer">
+            <form class="col s12" action="/User/AddProduct" method="post">
+                <div class="modal-content">
+                    <h4>Experience</h4>
+                    <div class="row">
+                        <div class="row">
+                            @Html.TextBoxFor(m => m.PortfolioID, new { @readonly = "readonly", @class = "form-control hide", @Value = ViewBag.Portfolio.ID })
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="file-field input-field col s12">
+                                <div class="btn teal lighten-1">
+                                    <span>Image</span>
+                                    @Html.TextBoxFor(m => m.Url_Image, new { type = "file" })
+                                </div>
+                                <div class="file-path-wrapper">
+                                    @Html.TextBoxFor(m => m.Url_Image, new { @class = "file-path validate" })
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.Company, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.Company, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.Domain, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.Domain, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.Skill, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.Skill, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col m6 s12">
+                                @Html.LabelFor(m => m.TeamSize, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.TeamSize, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col m6 s12">
+                                @Html.LabelFor(m => m.ProjectRole, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.ProjectRole, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.ProjectTech, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.ProjectTech, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.WorkProces, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.WorkProces, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="modal-action waves-effect waves-blue btn-flat " value="Submit">
+                    <a class="modal-action modal-close waves-effect waves-blue btn-flat ">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</main>

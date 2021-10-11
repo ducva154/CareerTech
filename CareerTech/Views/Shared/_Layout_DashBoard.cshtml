@@ -39,6 +39,9 @@
                     <div class="header-title col s3 m3">
                         <span class="chapter-title">Parner</span>
                     </div>
+                    <ul class="right">
+                        @Html.Partial("_LoginPartial")
+                    </ul>
                 </div>
             </nav>
         </header>
@@ -56,21 +59,21 @@
                 <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion" style="padding-top: 0px!important;">
                     @*---------------------------------------------------Add view-------------------------------------------------*@
 
-                    @*@if (true)
+                    @if (true)
                         {
-                            @Html.Partial("_LoginPartial")
+                            @Html.Partial("_AdminPartial")
                         }
                         else if(true)
                         {
-                            @Html.Partial("_LoginPartial")
+                            @Html.Partial("_User_Menu_Partial")
                         }
                         else
                         {
                             @Html.Partial("_LoginPartial")
-                        };*@
-                    @Html.Partial("_AdminPartial")
-                    @*@Html.Partial("_LoginPartial")
-                        @Html.Partial("_LoginPartial")*@
+                        }
+
+              
+                
 
                 </ul>
             </div>

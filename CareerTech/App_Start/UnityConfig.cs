@@ -24,6 +24,7 @@ namespace CareerTech
             container.RegisterType<IPartnerManagementService<PartnerManagementService>, PartnerManagementService>();
             container.RegisterType<IAccountService<AccountService>, AccountService>();
             container.RegisterType<IPartnerService<PartnerService>, PartnerService>();
+            container.RegisterType<IUserService<UserService>, UserService>();
             container.RegisterType<ApplicationDbContext, ApplicationDbContext>();
             container.RegisterType<ISubscriptionManagementService<SubscriptionManagementService>, SubscriptionManagementService>();
             container.RegisterType<ISolutionManagementService<SolutionManagementService>,SolutionManagementService > ();

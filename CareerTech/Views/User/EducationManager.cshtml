@@ -1,0 +1,86 @@
+﻿@using CareerTech.Models
+@model Education
+@{
+    ViewBag.Title = "EditEducationPortfolio";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    ICollection<Education> listEducation = ViewBag.ListEducation;
+}
+
+<main class="mn-inner inner-active-sidebar">
+    <div class="middle-content">
+        <div class="row no-m-t no-m-b">
+            @Html.Partial("_Portfolio_Menu_Partial")
+            <div class="col s12 m7 l9">
+                <h5>@ViewBag.Portfolio.Name</h5>
+                <div class="card">
+                    <p class="error-page error text-danger">@ViewBag.ErrorMessage</p>
+                    <div class="card-content">
+                        <div id="example_wrapper" class="dataTables_wrapper">
+                            <table id="example" class="display responsive-table datatable-example dataTable" role="grid" aria-describedby="example_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 233px;">Time</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 600px;">Detail</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 100px;">Edit</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 100px;">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (listEducation.Count == 0 || listEducation == null)
+                                    {
+                                        <tr><td colspan="4">No item!</td></tr>
+                                    }
+                                    @if (listEducation.Count > 0)
+                                    {
+                                        foreach (var p in listEducation)
+                                        {
+                                            <tr role="row" class="odd">
+                                                <td class="sorting_1">@p.Time</td>
+                                                <td>@Html.Raw(p.Detail)</td>
+                                                <td><a href="/User/EditEducation?educationID=@p.ID">Edit</a></td>
+                                                <td><a href="/User/DeleteEducation?educationID=@p.ID">Delete</a></td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#compose">
+                <i class="material-icons">mode_edit</i>
+            </a>
+        </div>
+        <div id="compose" class="modal modal-fixed-footer">
+            <form class="col s12" action="/User/AddEducation" method="post">
+                <div class="modal-content">
+                    <h4>Education</h4>
+                    <div class="row">
+                        <div class="row">
+                            @Html.TextBoxFor(m => m.PortfolioID, new { @readonly = "readonly", @class = "form-control hide", @Value = ViewBag.Portfolio.ID })
+                            <div class="input-field col m6 s12">
+                                @Html.LabelFor(m => m.Time, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.Time, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                @Html.LabelFor(m => m.Detail, new { @class = "col-md-2 control-label active" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(m => m.Detail, new { @class = "ckeditor" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="modal-action waves-effect waves-blue btn-flat " value="Submit">
+                    <a class="modal-action modal-close waves-effect waves-blue btn-flat ">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

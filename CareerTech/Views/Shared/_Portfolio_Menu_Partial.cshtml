@@ -1,0 +1,22 @@
+﻿@using CareerTech.Utils
+<div class="col s12 m5 l3">
+    <div class="mailbox-list">
+        <ul>
+            <li>
+                @Html.ActionLink("Basic profile", "EditProfilePortfolio", "User", new { id = ViewBag.Portfolio.ID }, new { @class = (ViewBag.CurrentPage == PageConstant.PROFILE_PORTFOLIO?"mail-author mail-active" : "mail-author") })
+            </li>
+            <li>
+                @Html.ActionLink("Skills", "LoadSkill", "User", new { id = ViewBag.Portfolio.ID }, new { @class = (ViewBag.CurrentPage == PageConstant.SKILL_PORTFOLIO ? "mail-author mail-active" : "mail-author") })
+            </li>
+            <li>
+                @Html.ActionLink("Education", "LoadEducation", "User", new { id = ViewBag.Portfolio.ID }, new { @class = (ViewBag.CurrentPage == PageConstant.EDUCATION_PORTFOLIO ? "mail-author mail-active" : "mail-author") })
+            </li>
+            <li>
+                @Html.ActionLink("Experience", "LoadExperience", "User", new { id = ViewBag.Portfolio.ID }, new { @class = (ViewBag.CurrentPage == PageConstant.EXPERIENCE_PORTFOLIO ? "mail-author mail-active" : "mail-author") })
+            </li>
+            <li>
+                @Html.ActionLink("Product", "LoadProduct", "User", new { id = ViewBag.Portfolio.ID }, new { @class = (ViewBag.CurrentPage == PageConstant.PRODUCT_PORTFOLIO ? "mail-author mail-active" : "mail-author") })
+            </li>
+        </ul>
+    </div>
+</div>

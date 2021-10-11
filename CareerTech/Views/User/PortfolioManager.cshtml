@@ -1,0 +1,86 @@
+﻿@using CareerTech.Models;
+@{
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    ICollection<Portfolio> listPortfolio = ViewBag.ListPortfolio;
+}
+<main class="mn-inner inner-active-sidebar">
+    <div class="middle-content">
+        <div class="row">
+            <div class="col s12">
+                <div class="page-title">Portfolio Table</div>
+            </div>
+            <div class="row">
+
+                <div class="col s12 m12 l12">
+                    <div class="card">
+                        <div class="card-content">
+                            <a class="waves-effect waves-light btn lighten-1 m-b-xs modal-trigger" href="#modal1">Creat a Portfolio</a>
+                            <p class="error-page error text-danger">@ViewBag.ErrorMessage</p>
+                            <div id="modal1" class="modal" style="z-index: 1003; display: none; opacity: 0; transform: scaleX(0.7); top: 226.957px;">
+                                <form action="/User/CreatePortfolio" method="POST">
+                                    <div class="modal-content">
+                                        <h4>Create a Portfolio</h4>
+                                        <div class="input-field col s12">
+                                            <label for="portfolioName">Portfolio name</label>
+                                            <input id="portfolioName" name="portfolioName" type="text" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="modal-action waves-effect waves-blue btn-flat " value="Create">
+                                        <a class="modal-action modal-close waves-effect waves-blue btn-flat ">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m12 l12">
+                <div class="card">
+                    <div class="card-content">
+                        <table class="responsive-table">
+                            <thead>
+                                <tr>
+                                    <th data-field="id">Name</th>
+                                    <th data-field="status">Public Status</th>
+                                    <th data-field="status">Main Status</th>
+                                    <th data-field="url">Detail</th>
+                                    <th data-field="status">Edit Portfolio</th>
+                                    <th data-field="status">Delete Portfolio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (listPortfolio.Count == 0 || listPortfolio == null)
+                                {
+                                    <tr><td colspan="6">No item!</td></tr>
+                                }
+                                @if (listPortfolio.Count > 0)
+                                {
+                                    foreach (var p in listPortfolio)
+                                    {
+                                        <tr>
+                                            <td>@p.Name</td>
+                                            <td>
+                                                <input type="checkbox" class="filled-in" id="public-@p.Name" checked=@p.PublicStatus ?"checked":"">
+                                                <label for="public-@p.Name"></label>
+                                            </td>
+                                            <td>
+                                                <input name="group1" type="radio" id="main-@p.Name" @p.MainStatus ?"checked":"">
+                                                <label for="main-@p.Name"></label>
+                                            </td>
+                                            <td><a href="@p.Url_Domain" target="_blank">View detail</a></td>
+                                            <td><a href="/User/EditProfilePortfolio/@p.ID">Edit</a></td>
+                                            <td><a href="/User/DeletePortfolio/@p.ID">Delete</a></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
