@@ -29,6 +29,7 @@ namespace CareerTech
             container.RegisterType<ISubscriptionManagementService<SubscriptionManagementService>, SubscriptionManagementService>();
             container.RegisterType<ISolutionManagementService<SolutionManagementService>,SolutionManagementService > ();
             container.RegisterType<IContentService<ContentService>, ContentService>();
+            container.RegisterType<IAboutManagement<AboutService>, AboutService>();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

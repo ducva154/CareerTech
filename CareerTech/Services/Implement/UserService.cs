@@ -115,6 +115,13 @@ namespace CareerTech.Services
             _context.SaveChanges();
         }
 
+        public void ChangePortfolioStatus(string portfolioID)
+        {
+            Portfolio portfolio = GetPortfolioByID(portfolioID);
+            portfolio.PublicStatus = !portfolio.PublicStatus;
+            _context.SaveChanges();
+        }
+
         public void EditProduct(string productID, Product product)
         {
             Product oldProduct = GetProductByID(productID);
@@ -185,7 +192,7 @@ namespace CareerTech.Services
 
         public ICollection<Portfolio> GetPortfolioByNameAndUser(string portfolioName, string userID)
         {
-            return _context.Portfolios.Where(p => (p.UserID == userID && p.Name == portfolioName)) .ToList();
+            return _context.Portfolios.Where(p => (p.UserID == userID && p.Name == portfolioName)).ToList();
         }
 
         public ICollection<Portfolio> GetPortfolioByUser(string userID)

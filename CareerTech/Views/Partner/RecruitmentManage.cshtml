@@ -1,60 +1,250 @@
-﻿
+﻿@model CareerTech.Models.RecruitmentViewModel
 @{
     ViewBag.Title = "Recruitment Manage";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
 }
+@{
+    var listRecruitment = ViewBag.ListRecruitment as List<CareerTech.Models.Recruitment>;
+}
+
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="card">
                     <div class="card-content">
-                        <form action="" style="padding: 30px 0px;">
-                            <a class="btn-primary" href="~/Partner/CreateRecruitment">Create Recruitment</a>
-                        </form>
+                        <span class="card-title">List Recruitment</span>
                         <table id="example" class="display responsive-table datatable-example">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Job Name</th>
-                                    <th>Job Category</th>
+                                    @*<th>Job Category</th>*@
                                     <th>Amount</th>
-                                    <th>Start Date</th>
+                                    <th>Position</th>
                                     <th>End Date</th>
                                     <th>Job Detail</th>
                                     <th>Edit</th>
                                     <th>Delete Field</th>
                                 </tr>
                             </thead>
-                            <tbody>
+
+                            @foreach (var item in listRecruitment)
+                            {
                                 <tr>
-                                    <th>1</th>
-                                    <th>.Net Deverloper</th>
-                                    <th>IT Phần mềm</th>
-                                    <th>60</th>
-                                    <th>20/6/2021</th>
-                                    <th>20/11/2021</th>
-                                    <td><a href="job-detail.html" target="_blank">View Detail</a></td>
-                                    <td><a href="">Edit</a></td>
-                                    <td><a href="">Delete</a></td>
+                                    <td>@item.Title</td>
+                                    @*<td>Job Category</td>*@
+                                    <td>@item.Amount</td>
+                                    <td>@item.Position</td>
+                                    <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                                    <td><a href="~/Partner/JobDetail/@item.ID" target="_blank">View Detail</a></td>
+                                    <td><a href="~/Partner/EditRecruitment/@item.ID" target="_blank">Edit</a></td>
+                                    @using (Html.BeginForm("DeleteRecruitment","Partner",FormMethod.Post))
+                                    {
+                                        @Html.Hidden("recruitmentId", @item.ID)
+                                        <td><button>Delete</button></td>
+                                    }
                                 </tr>
-                                <tr>
-                                    <th>2</th>
-                                    <th>Font-end Deverloper</th>
-                                    <th>IT Phần mềm</th>
-                                    <th>60</th>
-                                    <th>20/6/2021</th>
-                                    <th>20/11/2021</th>
-                                    <td><a href="job-detail.html" target="_blank">View Detail</a></td>
-                                    <td><a href="">Edit</a></td>
-                                    <td><a href="">Delete</a></td>
-                                </tr>
-                            </tbody>
+                            }
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#compose">
+            <i class="material-icons">mode_edit</i>
+        </a>
     </div>
 </main>
+<div id="compose" class="modal modal-fixed-footer" style="width: 70%;
+                             background-color: #fff;
+                             margin-top: 22px;height: 600px;">
+    <div class="modal-content">
+        <h4>Create Recruitment</h4>
+        <span id="@ViewBag.type">@ViewBag.message</span>
+        @Html.ValidationSummary("", new { @id = "message-danger" })
+        <div class="row">
+            @using (Html.BeginForm("CreateRecruitment", "Partner", FormMethod.Post, new { @class = "col s12" }))
+            {
+                <div class="input-field col m6 s12">
+                    @Html.LabelFor(m => m.Title, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col m6 s12">
+                    @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col m6 s12">
+                    @Html.LabelFor(m => m.Salary, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Salary, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col s6">
+                    @Html.LabelFor(m => m.Workingform, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Workingform, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col s6">
+                    @Html.LabelFor(m => m.Amount, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col s6">
+                    @Html.LabelFor(m => m.Position, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Position, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col s6">
+                    @Html.LabelFor(m => m.Experience, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Experience, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="input-field col s6">
+                    @Html.LabelFor(m => m.EndDate, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @type = "date" })
+                    </div>
+                </div>
+                <div class="input-field col m6 s12">
+                    @Html.LabelFor(m => m.Gender, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>{
+                                      new SelectListItem { Text = "Male", Value = "true"},
+                                      new SelectListItem { Text = "Female", Value = "false"},
+                                      }, "Select Gender")
+                    </div>
+                </div>
+                <div class="input-field col m6 s12">
+                    @Html.LabelFor(m => m.JobID, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.JobID, ViewBag.ListJobCategory as SelectList, "Select Job Category")
+                    </div>
+                </div>
+                <div class="input-field col s12" style="margin-top: 50px;">
+                    @Html.LabelFor(m => m.DetailDesc, new { @class = "col-md-2 control-label active" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(m => m.DetailDesc, new { @class = "ckeditor" })
+                    </div>
+                    <button class="btn teal" style="margin: 20px 0px 0px 20px ;">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@*<script>
+            $(document).ready(function () {
+                LoadData();
+                $('#btnCreate').click(function () {
+                    var title = $('#Title').val();
+                    var address = $('#Address').val();
+                    var salary = $('#Salary').val();
+                    var workingform = $('#Workingform').val();
+                    var amount = $('#Amount').val();
+                    var position = $('#Position').val();
+                    var experience = $('#Experience').val();
+                    var endDate = $('#EndDate').val();
+                    var detailDesc = $('#DetailDesc').val();
+                    var model = {
+                        Title: title,
+                        Address: address,
+                        Salary: salary,
+                        Workingform: workingform,
+                        Amount: amount,
+                        Position: position,
+                        Experience: experience,
+                        EndDate: endDate,
+                        DetailDesc: detailDesc
+                    };
+                    if (Validate()) {
+                        $.ajax({
+                            url: '/Partner/CreateRecruitment',
+                            type: 'POST',
+                            data: model,
+                            success: function (res) {
+                                if (res.success) {
+                                    LoadData();
+                                    //ResetInput();
+                                    //$('#modalCreateUpdate').modal('hide');
+                                }
+                            }
+                        });
+                    }
+
+                });
+
+                function LoadData() {
+                    $.ajax({
+                        url: '/Partner/GetRecruitment',
+                        type: 'GET',
+                        success: function (res) {
+                            if (res.TotalItems > 0) {
+                                var items = res.Data;
+                                var html = "";
+                                for (let i = 0; i < res.TotalItems; i++) {
+                                    html += "<tr>";
+                                    html += "<td>" + items[i].Title +"</td>";
+                                    html += "<td>" + items[i].Address+"</td>";
+                                    html += "<td>" + items[i].Amount + "</td>";
+                                    html += "</tr>";
+                                }
+                                $('#ShowData').html(html);
+                            }
+                        }
+                    });
+                }
+
+                function Validate() {
+                    var check = true;
+                    var title = $('#Title').val();
+                    var address = $('#Address').val();
+                    var salary = $('#Salary').val();
+                    var workingform = $('#Workingform').val();
+                    var amount = $('#Amount').val();
+                    var position = $('#Position').val();
+                    var experience = $('#Experience').val();
+                    var endDate = $('#EndDate').val();
+                    var detailDesc = $('#DetailDesc').val();
+                    if (title === "" || address=== "" || salary===""
+                        || workingform==="" || amount==="" || position===""
+                        || experience==="" || endDate==="" || detailDesc==="" ) {
+                        check = false;
+                    }
+
+                    //if (title === '') {
+                    //    $('#title').next().html('the title is not empty');
+                    //    check = false;
+                    //} else {
+                    //    $('#exampleinputname').next().html('');
+                    //    check = true;
+                    //}
+
+                    //var age = $('#exampleinputage').val();
+                    //if (age === '') {
+                    //    $('#exampleinputage').next().html('bạn chưa tuổi');
+                    //    check = false;
+                    //} else {
+                    //    $('#exampleinputage').next().html('');
+                    //    check = true;
+                    //}
+                    return check;
+                }
+
+                //function ResetInput() {
+                //    $('#exampleInputName').val('');
+                //    $('#exampleInputAge').val('');
+                //    $('#exampleInputClass').val();
+                //}
+            });
+    </script>*@

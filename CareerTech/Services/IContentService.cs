@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace CareerTech.Services
 {
-    public interface IContentService<T> where T:class
+    public interface IContentService<T> where T : class
     {
-        int addContent(Guid id, string userID, string Title, string Detail,string url_img);
-        Introduction GetIntroduction();
+        int addContent(Guid id, string userID, string Title, string Detail, string url_img, bool mainStatus);
+        Introduction GetPublicIntroduction();
         int deleteIntroductionByID(string id);
-        int updateContent(string id, string title, string detail, string url_img);
+        int updateContent(string id, string title, string detail, string url_img, bool mainStatus);
         List<Introduction> GetAllIntroductions();
         Introduction GetIntroductionByID(string id);
+        Introduction GetIntroduction();
+        bool CheckMainExisted();
     }
 }

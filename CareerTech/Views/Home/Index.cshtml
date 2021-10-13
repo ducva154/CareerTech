@@ -7,7 +7,7 @@
         <div class="col-md-6 py-5 wow fadeInLeft">
             <h1 class="mb-4">@ViewBag.Intro.Title</h1>
             <p class="text-lg text-grey mb-5">
-               @Html.Raw(ViewBag.Intro.Detail.ToString());
+                @Html.Raw(ViewBag.Intro.Detail.ToString())
             </p>
 
         </div>
@@ -23,18 +23,18 @@
         <div class="row">
             @foreach (var sol in ViewBag.Sol)
             {
-            <div class="col-lg-4">
-                <div class="card-service wow fadeInUp">
-                    <div class="header">
-                        <img src="@sol.Url_image" alt="">
-                    </div>
-                    <div class="body">
-                        <h5 class="text-secondary">@sol.Title</h5>
-                        <p>@sol.Detail</p>
+                <div class="col-lg-4">
+                    <div class="card-service wow fadeInUp">
+                        <div class="header">
+                            <img src="@sol.Url_image" alt="">
+                        </div>
+                        <div class="body">
+                            <h5 class="text-secondary">@sol.Title</h5>
+                            <p>@sol.Detail</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-           }
+            }
         </div>
     </div> <!-- .container -->
 </div> <!-- .page-section -->
@@ -59,12 +59,14 @@
                             <h5>Per @s.Name</h5>
                         </div>
                         <div class="body">
-                            <p>25 Analytics <span class="suffix">Campaign</span></p>
-                            <p>1,300 Change <span class="suffix">Keywords</span></p>
-                            <p>Social Media <span class="suffix">Reviews</span></p>
-                            <p>1 Free <span class="suffix">Optimization</span></p>
-                            <p>24/7 <span class="suffix">Support</span></p>
+                            <p>Searching for <span class="suffix">Users/Candidates</span></p>
+                            <p>Contact to <span class="suffix">Users</span></p>
+                            <p>Create <span class="suffix">Company Profile</span></p>
+                            <p>Job Information <span class="suffix">Management</span></p>
+                            <p>Approve/Reject  <span class="suffix">Request</span></p>
+                            <p>Get Data  <span class="suffix">Via Restful API</span></p>
                         </div>
+
                         <div class="footer">
                             <a href="#" class="btn btn-pricing btn-block">Subscribe</a>
                         </div>

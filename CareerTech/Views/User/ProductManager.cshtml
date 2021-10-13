@@ -6,7 +6,7 @@
     ICollection<Product> listProduct = ViewBag.ListProduct;
 }
 <main class="mn-inner inner-active-sidebar">
-    <div class="middle-content">
+    <div class="middle-content" style="padding-top: 25px; padding-right: 25px; float: left;">
         <div class="row no-m-t no-m-b">
             @Html.Partial("_Portfolio_Menu_Partial")
             <div class="col s12 m7 l9">
@@ -20,16 +20,16 @@
                                 <thead>
                                     <tr role="row">
                                         <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 100px;">Name</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 60px;">Image</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 200px;">Image</th>
                                         <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 100px;">Company</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Domain</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 200px;">Domain</th>
                                         <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 100px;">Skill</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Team size</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Project tech</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Workprocess</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 100px;">Project role</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 60px;">Edit</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 60px;">Delete</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 50px;">Team size</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 50px;">Project tech</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 50px;">Work Process</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 50px;">Project role</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 50px;">Edit</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 50px;">Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -43,7 +43,7 @@
                                         {
                                             <tr role="row" class="odd">
                                                 <td class="sorting_1">@p.Name</td>
-                                                <td>@p.Url_Image</td>
+                                                <td><img src="@p.Url_Image" width="90" height="75" /></td>
                                                 <td>@p.Company</td>
                                                 <td>@p.Domain</td>
                                                 <td>@p.Skill</td>
@@ -69,7 +69,8 @@
             </a>
         </div>
         <div id="compose" class="modal modal-fixed-footer">
-            <form class="col s12" action="/User/AddProduct" method="post">
+            @using (Html.BeginForm("AddProductAsync", "User", FormMethod.Post, new { @class = "col s12", role = "form", enctype = "multipart/form-data" }))
+            {
                 <div class="modal-content">
                     <h4>Experience</h4>
                     <div class="row">
@@ -84,7 +85,7 @@
                             <div class="file-field input-field col s12">
                                 <div class="btn teal lighten-1">
                                     <span>Image</span>
-                                    @Html.TextBoxFor(m => m.Url_Image, new { type = "file" })
+                                    @Html.TextBox("Url_Image", "", new { type = "file" })
                                 </div>
                                 <div class="file-path-wrapper">
                                     @Html.TextBoxFor(m => m.Url_Image, new { @class = "file-path validate" })
@@ -139,8 +140,7 @@
                     <input type="submit" class="modal-action waves-effect waves-blue btn-flat " value="Submit">
                     <a class="modal-action modal-close waves-effect waves-blue btn-flat ">Cancel</a>
                 </div>
-            </form>
+            }
         </div>
-
     </div>
 </main>

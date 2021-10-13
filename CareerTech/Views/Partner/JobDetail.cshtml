@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Job Detail";
+}
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/bootstrap.min.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/company.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/jobs-new.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/jobs.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/style.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/styles.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/font.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/font-awesome.min.css">
+@model CareerTech.Models.Recruitment
+@{ 
+    var company = ViewBag.company as CareerTech.Models.CompanyProfile;
+}
+<div class="box box-white" style="margin-bottom: 0px;">
+    <div class="row" id="detail-box-job">
+        <div class="col-sm-9">
+            <div class="row" id="row-job-title">
+                <div class="col-sm-3">
+                    <div class="company-logo-wraper text-center">
+                            <img class="company-logo" src="@company.Url_Avatar"
+                                 alt="Avatar" loading="lazy">
+                    </div>
+                </div>
+                <div class="col-sm-9" style="margin-top: 10px;">
+                    <h1 class="job-title text-highlight bold" style="overflow-wrap:break-word;">
+                       @Model.Title
+                    </h1>
+                    <div class="company-title">
+                        <span>
+                            @company.CompanyName
+                        </span>
+                    </div>
+                    <div class="text-dark-gray" style="margin-bottom: 10px;">
+                       @company.Address
+                    </div>
+                    <div class=" text-dark-gray  job-deadline">
+                        Hạn nộp hồ sơ: @Model.EndDate.ToString("dd/MM/yyyy")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 apply-area">
+            <div class="text-center">
+                <p><a href="" class="btn btn-topcv-primary btn-apply open-apply-modal" data-target="#modal-apply-cv" data-toggle="modal">ỨNG TUYỂN NGAY</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tab-company" class="container">
+    <ul class="nav nav-pills">
+        <li class="active"><a href="~/Partner/JobDetail/@Model.ID" data-toggle="tab">TIN TUYỂN DỤNG</a></li>
+        <li><a href="~/Partner/IntroductionCompany/@company.ID" target="_blank">GIỚI THIỆU CÔNG TY</a></li>
+        <li><a href="Job.html" target="_blank">VIỆC LÀM CÙNG CÔNG TY</a></li>
+    </ul>
+</div>
+<div class="container tab-content clearfix">
+    <div class="box box-white tab-pane active" id="tab-info">
+        <div class="row">
+            <div class="col-md-8 col-sm-12" id="col-job-left">
+                @Html.Raw(Model.DetailDesc)
+            </div>
+            <div class="col-md-4 col-sm-12" id="col-job-right">
+                <div class="box_general" style="margin-bottom: 0px;">
+                    <h2 class="text_ellipsis uppercase">THÔNG TIN TUYỂN DỤNG</h2>
+                </div>
+                <div id="box-info-job">
+                    <div class="job-info-item">
+                        <strong>Mức lương: </strong>
+                        <span>
+                            @Model.Salary
+                        </span>
+                    </div>
+                    <div class="job-info-item">
+                        <strong>Hình thức làm việc: </strong>
+                        <span>@Model.Workingform</span>
+                    </div>
+                    <div class="job-info-item">
+                        <strong>Số lượng cần tuyển: </strong> <span>@Model.Amount người</span>
+                    </div>
+                    <div class="job-info-item">
+                        <strong>Chức vụ: </strong>
+                        <span>@Model.Position</span>
+                    </div>
+                    <div class="job-info-item">
+                        <strong>Yêu cầu kinh nghiệm: </strong> <span>@Model.Experience</span>
+                    </div>
+                    <div class="job-info-item">
+                        @if (Model.Gender == true)
+                        {
+                            <strong>Yêu cầu giới tính: </strong> <span>Nam</span>
+                        }
+                        else if (Model.Gender == false)
+                        {
+                            <strong>Yêu cầu giới tính: </strong> <span>Nữ</span>
+                        }
+                        else
+                        {
+                            <strong>Yêu cầu giới tính: </strong> <span>Không yêu cầu</span>
+                        }
+                    </div>
+                    <div class="job-info-item" style="border-bottom: 0px;">
+                        <strong>Địa điểm làm việc: </strong>
+                        <span>
+                           @Model.Address
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h2 style="text-align: center;">Cách thức ứng tuyển</h2>
+        <div style="text-align: center;" class=" content-tab ">
+            <p>
+                Ứng viên nộp hồ sơ trực tuyến bằng cách bấm <strong class="text-highlight ">
+                    Ứng tuyển
+                    ngay
+                </strong> dưới đây.
+            </p>
+            <div class="text-center ">
+                <div class="text-center ">
+                    <p>
+                        <a href="" class="btn btn-topcv-primary btn-apply open-apply-modal " data-target="#modal-apply-cv
+                " data-toggle="modal ">ỨNG TUYỂN NGAY</a>
+                    </p>
+                    <p>Hạn nộp hồ sơ: @Model.EndDate.ToString("dd/MM/yyyy")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

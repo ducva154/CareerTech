@@ -56,17 +56,17 @@
                     @*---------------------------------------------------Add view-------------------------------------------------*@
 
                     @if (Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("Admin"))
-                        {
-                            @Html.Partial("_AdminPartial")
-                        }
-                        else if(Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("User"))
-                        {
-                            @Html.Partial("_User_Menu_Partial")
-                        }
-                        else
-                        {
-                            @Html.Partial("_Partner_Menu_Partial")
-                        }
+                    {
+                        @Html.Partial("_AdminPartial")
+                    }
+                    else if (Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("User"))
+                    {
+                        @Html.Partial("_User_Menu_Partial")
+                    }
+                    else
+                    {
+                        @Html.Partial("_Partner_Menu_Partial")
+                    }
                 </ul>
             </div>
         </aside>
@@ -93,6 +93,7 @@
     @*<script src="@Url.Content("~/Content/Dashboard/assets/js/pages/dashboard.js")"></script>*@
     <script src="@Url.Content("~/Content/Dashboard/assets/plugins/datatables/js/jquery.dataTables.min.js")"></script>
     <script src="@Url.Content("~/Content/Dashboard/assets/js/pages/table-data.js")"></script>
+    @RenderSection("jsFooter", required: false)
     <script>
         function ConfirmDelete() {
             var x = confirm("Are you sure you want to delete this record?");
@@ -114,14 +115,14 @@
             </script>
         }
     }
-    <script>
-        var loadFile = function (event) {
-            var output = document.getElementById('output');
-            output.src = URL.createObjectURL(event.target.files[0]);
-            output.onload = function () {
-                URL.revokeObjectURL(output.src) // free memory
-            }
-        };
-    </script>
+    @*<script>
+            var loadFile = function (event) {
+                var output = document.getElementById('output');
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.onload = function () {
+                    URL.revokeObjectURL(output.src) // free memory
+                }
+            };
+        </script>*@
 </body>
 </html>

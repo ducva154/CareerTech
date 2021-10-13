@@ -17,6 +17,7 @@ using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 namespace CareerTech.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IUserManagmentService<UserManagementService> _UserManagmentService;
@@ -24,17 +25,19 @@ namespace CareerTech.Controllers
         private readonly ISubscriptionManagementService<SubscriptionManagementService> _subscriptionManagementService;
         private readonly ISolutionManagementService<SolutionManagementService> _solutionManagementService;
         private readonly IContentService<ContentService> _contentManagement;
+        private readonly IAboutManagement<AboutService> _aboutManagement;
         public AdminController(IUserManagmentService<UserManagementService> UserManagmentService,
             IPartnerManagementService<PartnerManagementService> PartnerManagementService,
             ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
             ISolutionManagementService<SolutionManagementService> solutionManagementService,
-            IContentService<ContentService> contentManagement)
+            IContentService<ContentService> contentManagement, IAboutManagement<AboutService> aboutManagement)
         {
             _UserManagmentService = UserManagmentService;
             _PartnerManagementService = PartnerManagementService;
             _subscriptionManagementService = subscriptionManagementService;
             _solutionManagementService = solutionManagementService;
             _contentManagement = contentManagement;
+            _aboutManagement = aboutManagement;
         }
 
         // GET: Admin
@@ -46,7 +49,6 @@ namespace CareerTech.Controllers
             return View();
         }
         #region UserManagement
-        [Authorize(Roles = "Admin")]
         public ActionResult UserManagement(string mess)
         {
             var users = _UserManagmentService.getAllUsers();
@@ -54,7 +56,6 @@ namespace CareerTech.Controllers
             ViewBag.Mess = mess;
             return View("UserManagement");
         }
-        [Authorize(Roles = "Admin")]
         public ActionResult deleteUser(string userID)
         {
             string mess = string.Empty;
@@ -69,13 +70,13 @@ namespace CareerTech.Controllers
                 {
                     mess = "Delete Fail";
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 mess = e.Message;
             }
             return UserManagement(mess);
         }
-        [Authorize(Roles = "Admin")]
         public void ExportUserData()
         {
             try
@@ -123,7 +124,8 @@ namespace CareerTech.Controllers
                 Response.AddHeader("content-disposition", "attachment: filename=" + "UserInfor.xlxs");
                 Response.BinaryWrite(excelPackage.GetAsByteArray());
                 Response.End();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -132,14 +134,12 @@ namespace CareerTech.Controllers
 
         #endregion
         #region PaymentManagement
-        [Authorize(Roles = "Admin")]
         public ActionResult PaymentManagement()
         {
             return View();
         }
         #endregion
         #region PartnerManagement
-        [Authorize(Roles = "Admin")]
         public ActionResult PartnerManagement()
         {
             var partners = _PartnerManagementService.getAllPartners();
@@ -164,14 +164,15 @@ namespace CareerTech.Controllers
             {
                 Guid id = Guid.NewGuid();
                 string Name = Request.Form["SubName"].ToString();
-                if (Name.Trim().Length > 0)
+                if (!String.IsNullOrEmpty(Name.Trim()))
                 {
                     string Type = Request.Form["type"].ToString();
-                    if (Type.Trim().Length > 0)
+                    if (!String.IsNullOrEmpty(Type.Trim()))
                     {
-                        float Price = float.Parse(Request.Form["price"].ToString());
-                        if (Price.ToString().Trim().Length > 0)
+                        string txtPrice = Request.Form["price"].ToString();
+                        if (!String.IsNullOrEmpty(txtPrice.Trim()))
                         {
+                            float Price = float.Parse(txtPrice);
                             /*string Period = Request.Form["period"].ToString();
                             DateTime period = DateTime.Parse(Period);*/
                             int add = _subscriptionManagementService.addNewSubscription(id, Name, Price, Type);
@@ -183,27 +184,29 @@ namespace CareerTech.Controllers
                             {
                                 mess = "Add Failed";
                             }
-                        }else
-                    {
-                            mess = "Price can not be empty";
+                        }
+                        else
+                        {
+                            mess = "Add Failed! Price can not be empty";
+                        }
                     }
-                    }else
+                    else
                     {
-                        mess = "Type can not be empty";
+                        mess = "Add Failed! Type can not be empty";
                     }
                 }
                 else
                 {
-                    mess = "Name can not be empty";
+                    mess = "Add Failed! Name can not be empty";
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 mess = e.Message;
             }
             return SubscriptionManagement(mess);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public ActionResult EditSubscription(string subID)
         {
             var subscription = _subscriptionManagementService.GetSubscriptionByID(subID);
@@ -212,7 +215,6 @@ namespace CareerTech.Controllers
 
         }
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public ActionResult EditSubscription(string ID, string Name, float Price, string Type)
         {
             string mess = string.Empty;
@@ -220,26 +222,48 @@ namespace CareerTech.Controllers
             {
                 ID = Request.Form["id"].ToString();
                 Name = Request.Form["SubName"].ToString();
-                Type = Request.Form["type"].ToString();
-                Price = float.Parse(Request.Form["price"].ToString());
-                /*string Period = Request.Form["period"].ToString();
-                DateTime period = DateTime.Parse(Period);*/
-                int edit = _subscriptionManagementService.UpdateSubscriptionByID(ID, Name, Price, Type);
-                if (edit > 0)
+                if (!String.IsNullOrEmpty(Name))
                 {
-                    mess = "Update Successfully";
+                    Type = Request.Form["type"].ToString();
+                    if (!String.IsNullOrEmpty(Type))
+                    {
+                        string txtPrice = Request.Form["price"].ToString();
+                        if (!String.IsNullOrEmpty(txtPrice))
+                        {
+                            Price = float.Parse(txtPrice);
+                            /*string Period = Request.Form["period"].ToString();
+                            DateTime period = DateTime.Parse(Period);*/
+                            int edit = _subscriptionManagementService.UpdateSubscriptionByID(ID, Name, Price, Type);
+                            if (edit > 0)
+                            {
+                                mess = "Update Successfully";
+                            }
+                            else
+                            {
+                                mess = "Update Failed";
+                            }
+                        }
+                        else
+                        {
+                            mess = "Update Failed! Price can not be empty";
+                        }
+                    }
+                    else
+                    {
+                        mess = "Update Failed! Type can not be empty";
+                    }
                 }
                 else
                 {
-                    mess = "Update Failed";
+                    mess = "Update Failed! Name can not be empty";
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 mess = e.Message;
             }
             return SubscriptionManagement(mess);
         }
-        [Authorize(Roles = "Admin")]
         public ActionResult deleteSub(string subID)
         {
             string mess = string.Empty;
@@ -256,7 +280,6 @@ namespace CareerTech.Controllers
         }
         #endregion
         #region ContentManagement
-        [Authorize(Roles = "Admin")]
         public ActionResult ContentManagement(string mess)
         {
             var intro = _contentManagement.GetAllIntroductions();
@@ -264,9 +287,8 @@ namespace CareerTech.Controllers
             ViewBag.Mess = mess;
             return View("ContentManagement");
         }
-        
+
         [HttpPost, ValidateInput(false)]
-        [Authorize(Roles="Admin")]
         public ActionResult AddContent(HttpPostedFileBase file, FormCollection collection)
         {
             string mess = string.Empty;
@@ -275,74 +297,191 @@ namespace CareerTech.Controllers
                 Guid id = Guid.NewGuid();
                 string uID = User.Identity.GetUserId();
                 string Title = collection["Title"].ToString();
-                if (Title.Trim().Length > 0)
+                bool status;
+                if (!String.IsNullOrEmpty(Title.Trim()))
                 {
                     string Detail = collection["Des"].ToString();
-                    if (Detail.Trim().Length > 0) {
+                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    {
                         string url = "";
+                        string txtStatus = collection["Status"];
+                        if (!String.IsNullOrEmpty(txtStatus))
+                        {
 
-                        if (file.ContentLength > 0)
+                            if (txtStatus.Equals("Public"))
+                            {
+                                bool checkMainExisted = _contentManagement.CheckMainExisted();
+                                if (checkMainExisted)
+                                {
+                                    mess = "Add Failed! Main Content Existed";
+                                    return ContentManagement(mess);
+                                }
+                                else
+                                {
+                                    status = true;
+                                }
+                            }
+                            else
+                            {
+                                status = false;
+                            }
+                            if (file == null)
+                            {
+                                mess = "Add Failed! Please choose image for your content";
+                            }
+                            else
+                            {
+                                string _FileName = Path.GetFileName(file.FileName);
+                                string _path = Path.Combine(Server.MapPath("~/Content/Home/img"), _FileName);
+                                file.SaveAs(_path);
+                                url = CloudinaryUpload(_path, _FileName);
+                                int result = _contentManagement.addContent(id, uID, Title, Detail, url, status);
+                                if (result > 0)
+                                {
+                                    mess = "Add Successfully";
+                                }
+                                else
+                                {
+                                    mess = "Add failed";
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            mess = "Add failed! Please choose status for content";
+                        }
+                    }
+                    else
+                    {
+                        mess = "Add failed! Detail can not be empty";
+                    }
+                }
+                else
+                {
+                    mess = "Add failed! Title can not be Empty";
+                }
+            }
+            catch (Exception e)
+            {
+                mess = e.Message;
+            }
+            return ContentManagement(mess);
+
+        }
+        [HttpGet]
+        public ActionResult EditContent(string contentID, string mess)
+        {
+            var intro = _contentManagement.GetIntroductionByID(contentID);
+            ViewBag.Content = intro;
+            ViewBag.Mess = mess;
+            return View();
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult EditContent(HttpPostedFileBase file, FormCollection collection)
+        {
+            string mess = string.Empty;
+            string contentID = collection["id"];
+            try
+            {
+                string Title = collection["title"];
+                string url = string.Empty;
+                bool status = false;
+                if (!string.IsNullOrEmpty(Title.Trim()))
+                {
+                    string Detail = collection["des"];
+                    if (!string.IsNullOrEmpty(Detail.Trim()))
+                    {
+                        string txtStatus = collection["Status"];
+                        if (txtStatus.Equals("Public"))
+                        {
+                            bool checkMainExisted = _contentManagement.CheckMainExisted();
+                            if (checkMainExisted)
+                            {
+                                mess = "Save Changes Failed!! Main Content Existed";
+                                return EditContent(contentID, mess);
+                            }
+                            else
+                            {
+                                status = true;
+                            }
+                        }
+                        else
+                        {
+                            status = false;
+                        }
+                        if (file == null)
+                        {
+                            var content = _contentManagement.GetIntroductionByID(contentID);
+                            url = content.Url_Image;
+                        }
+                        else
                         {
                             string _FileName = Path.GetFileName(file.FileName);
                             string _path = Path.Combine(Server.MapPath("~/Content/Home/img"), _FileName);
                             file.SaveAs(_path);
                             url = CloudinaryUpload(_path, _FileName);
                         }
-                        int result = _contentManagement.addContent(id, uID, Title, Detail, url);
+
+                        int result = _contentManagement.updateContent(contentID, Title, Detail, url, status);
                         if (result > 0)
                         {
-                            mess = "Add Successfully";
+                            mess = "Save Changes Successfully";
                         }
                         else
                         {
-                            mess = "Add failed";
+                            mess = "Save Changes failed";
                         }
                     }
                     else
                     {
-                        mess = "Detail can not be empty";
+                        mess = "Save changes failed! Detail can not be empty";
                     }
                 }
                 else
                 {
-                    mess = "Title can not be Empty";
+                    mess = "Save changes failed! Title can not be empty";
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
+            {
+                mess = e.Message;
+               
+            }
+            return EditContent(contentID, mess);
+        }
+        public ActionResult deleteContent(string contentID)
+        {
+            string mess = string.Empty;
+            try
+            {
+                int result = _contentManagement.deleteIntroductionByID(contentID);
+                if (result > 0)
+                {
+                    mess = "Delete Sucessfully";
+                }
+                else
+                {
+                    mess = "Delete Failed";
+                }
+            }
+            catch (Exception e)
             {
                 mess = e.Message;
             }
             return ContentManagement(mess);
-           
-        }
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public ActionResult EditContent(string contentID)
-        {
-            var intro = _contentManagement.GetIntroductionByID(contentID);
-            ViewBag.Content = intro;
-            return View(); 
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public ActionResult EditContent(string contentID,HttpPostedFile file, FormCollection collection)
-        {
-
-            return View();
         }
         #endregion
         #region SolutionManangement
-        [Authorize(Roles = "Admin")]
         public ActionResult SolutionManagement(string mess)
         {
             var sol = _solutionManagementService.GetSolutions();
             ViewBag.Mess = mess;
             ViewBag.Sol = sol;
-          
+
             return View("SolutionManagement");
         }
-        [Authorize(Roles = "Admin")]
         public ActionResult AddSolution(HttpPostedFileBase file)
         {
             string mess = string.Empty;
@@ -350,47 +489,61 @@ namespace CareerTech.Controllers
             {
                 Guid id = Guid.NewGuid();
                 string Name = Request.Form["SolName"].ToString();
-                string Des = Request.Form["des"].ToString();
-               
-                string url = "";
-                
-                if (file.ContentLength > 0)
+                if (!String.IsNullOrEmpty(Name.Trim()))
                 {
-                    string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/Content/Home/img/services"), _FileName);
-                    file.SaveAs(_path);
-                    url = CloudinaryUpload(_path,_FileName);
-                }
-                string uID = User.Identity.GetUserId();
-                int result = _solutionManagementService.AddSolution(id, uID, Name, Des, url);
-                if (result > 0)
-                {
-                    mess = "Add Successfully";
+                    string Des = Request.Form["des"].ToString();
+                    if (!String.IsNullOrEmpty(Des.Trim()))
+                    {
+                        string url = "";
+                        if (file == null)
+                        {
+                            mess = "Add Failed! Please add image for your solution";
+                        }
+                        else
+                        {
+                            string _FileName = Path.GetFileName(file.FileName);
+                            string _path = Path.Combine(Server.MapPath("~/Content/Home/img/services"), _FileName);
+                            file.SaveAs(_path);
+                            url = CloudinaryUpload(_path, _FileName);
+                            string uID = User.Identity.GetUserId();
+                            int result = _solutionManagementService.AddSolution(id, uID, Name, Des, url);
+                            if (result > 0)
+                            {
+                                mess = "Add Successfully";
+                            }
+                            else
+                            {
+                                mess = "Add failed";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mess = "Add failed! Detail can not be empty";
+                    }
                 }
                 else
                 {
-                    mess = "Add failed";
+                    mess = "Add failed! name can not be empty";
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 mess = e.Message;
             }
             return SolutionManagement(mess);
         }
-       
+
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public ActionResult EditSolution(string solID)
+        public ActionResult EditSolution(string solID, string mess)
         {
             var solution = _solutionManagementService.GetSolutionByID(solID);
             ViewBag.SolInfo = solution;
-            
+            ViewBag.Mess = mess;
             return View();
 
         }
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public ActionResult EditSolution(string solID, string Title, string Detail, string url_img, HttpPostedFileBase file)
         {
             string mess = string.Empty;
@@ -398,38 +551,59 @@ namespace CareerTech.Controllers
             {
                 solID = Request.Form["id"].ToString();
                 Title = Request.Form["SolName"].ToString();
-                Detail = Request.Form["des"].ToString();
-                if (file.ContentLength > 0)
+                if (!String.IsNullOrEmpty(Title.Trim()))
                 {
-                    string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/Content/Home/img/services"), _FileName);
-                    file.SaveAs(_path);
-                    url_img = CloudinaryUpload(_path,_FileName);
-                }
-                int result = _solutionManagementService.UpdateSolutionByID(solID, Title, Detail, url_img);
-                if (result > 0)
-                {
-                    mess = "Save changes Successfully";
+                    Detail = Request.Form["des"].ToString();
+                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    {
+                        if (file == null)
+                        {
+                            var solution = _solutionManagementService.GetSolutionByID(solID);
+                            url_img = solution.Url_image;
+                        }
+                        else
+                        {
+                            string _FileName = Path.GetFileName(file.FileName);
+                            string _path = Path.Combine(Server.MapPath("~/Content/Home/img/services"), _FileName);
+                            file.SaveAs(_path);
+                            url_img = CloudinaryUpload(_path, _FileName);
+                        }
+
+                        int result = _solutionManagementService.UpdateSolutionByID(solID, Title, Detail, url_img);
+                        if (result > 0)
+                        {
+                            mess = "Save changes Successfully";
+                            return SolutionManagement(mess);
+                        }
+                        else
+                        {
+                            mess = "Save changes failed";
+                        }
+                    }
+                    else
+                    {
+                        mess = "Save changes failed! Detail can not be empty";
+                    }
                 }
                 else
                 {
-                    mess = "Save changes failed";
+                    mess = "Save changes failed! Title can not be empty";
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 mess = e.Message;
+
             }
-            return SolutionManagement(mess);
+            return EditSolution(solID, mess);
         }
-        [Authorize(Roles = "Admin")]
         public ActionResult deleteSolution(string solID)
         {
             string mess = string.Empty;
             try
             {
                 int result = _solutionManagementService.DeleteSolutionByID(solID);
-                if(result > 0)
+                if (result > 0)
                 {
                     mess = "Delete Successfully";
                 }
@@ -437,7 +611,8 @@ namespace CareerTech.Controllers
                 {
                     mess = "Delete failed";
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 mess = e.Message;
             }
@@ -445,10 +620,186 @@ namespace CareerTech.Controllers
         }
         #endregion
         #region About Management
-        [Authorize(Roles = "Admin")]
-        public ActionResult AboutManagement()
+        public ActionResult AboutManagement(string mess)
         {
-            return View();
+            var abouts = _aboutManagement.getAllAbouts();
+            ViewBag.About = abouts;
+            ViewBag.Mess = mess;
+            return View("AboutManagement");
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult AddAbout(FormCollection collection)
+        {
+            string mess = string.Empty;
+            try
+            {
+                Guid id = Guid.NewGuid();
+                string uID = User.Identity.GetUserId();
+                string Title = collection["Title"].ToString();
+                bool status;
+                if (!String.IsNullOrEmpty(Title.Trim()))
+                {
+                    string Detail = collection["detail"].ToString();
+                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    {
+                        string Description = collection["Des"];
+                        if (!String.IsNullOrEmpty(Description.Trim()))
+                        {
+                            string txtStatus = collection["Status"];
+                            if (!String.IsNullOrEmpty(txtStatus))
+                            {
+
+                                if (txtStatus.Equals("Public"))
+                                {
+                                    bool checkMainExisted = _aboutManagement.CheckMainStatusExisted();
+                                    if (checkMainExisted)
+                                    {
+                                        mess = "Add Failed! Main Content Existed";
+                                        return AboutManagement(mess);
+                                    }
+                                    else
+                                    {
+                                        status = true;
+                                    }
+                                }
+                                else
+                                {
+                                    status = false;
+                                }
+
+                                int result = _aboutManagement.AddAbout(id, uID, Title, Detail, Description, status);
+                                if (result > 0)
+                                {
+                                    mess = "Add Successfully";
+                                }
+                                else
+                                {
+                                    mess = "Add failed";
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        else
+                        {
+                            mess = "Add failed! Please choose status for about";
+                        }
+                    }
+                    else
+                    {
+                        mess = "Add failed! Detail can not be empty";
+                    }
+                }
+                else
+                {
+                    mess = "Add failed! Title can not be Empty";
+                }
+            }
+            catch (Exception e)
+            {
+                mess = e.Message;
+            }
+            return AboutManagement(mess);
+        }
+        [HttpGet]
+        public ActionResult EditAbout(string aboutID, string mess)
+        {
+            var about = _aboutManagement.getAboutByID(aboutID);
+            ViewBag.About = about;
+            ViewBag.Mess = mess;
+            return View("EditAbout");
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult EditAbout(FormCollection collection)
+        {
+            string mess = string.Empty;
+            string aboutID = collection["id"];
+            bool status = false;
+            try
+            {
+                string Title = collection["Title"];
+                if (!String.IsNullOrEmpty(Title.Trim()))
+                {
+                    string Detail = collection["detail"];
+                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    {
+                        string Desc = collection["des"];
+                        if (!String.IsNullOrEmpty(Desc))
+                        {
+                            string txtStatus = collection["Status"];
+                            if (txtStatus.Equals("Public"))
+                            {
+                                bool checkMainExisted = _aboutManagement.CheckMainStatusExisted();
+                                if (checkMainExisted)
+                                {
+                                    mess = "Save Changes Failed! Main Content Existed";
+                                    return EditAbout(aboutID, mess);
+                                }
+                                else
+                                {
+                                    status = true;
+                                }
+                            }
+
+                            else
+                            {
+                                status = false;
+                            }
+                            int result = _aboutManagement.UpdateAbout(aboutID, Title, Detail, Desc, status);
+                            if (result > 0)
+                            {
+                                mess = "Save Changes Successfully";
+                                return AboutManagement(mess);
+                            }
+                            else
+                            {
+                                mess = "Save Changes Failed";
+                            }
+                        }
+                        else
+                        {
+                            mess = "Save changes Failed! Description Can Not Be Empty";
+                        }
+                    }
+                    else
+                    {
+                        mess = "Save Changes Failed! Detail Can Not Be Empty";
+                    }
+                }
+                else
+                {
+                    mess = "Save Changes Failed! Title Can Not Be Empty";
+                }
+            }
+            catch (Exception e)
+            {
+                mess = e.Message;
+            }
+            return EditAbout(aboutID, mess);
+        }
+        public ActionResult DeleteAbout(string aboutID)
+        {
+            string mess = string.Empty;
+            try
+            {
+                int result = _aboutManagement.deleteAboutByID(aboutID);
+                if (result > 0)
+                {
+                    mess = "Delete Succesfully";
+                }
+                else
+                {
+                    mess = "Delete Failed";
+                }
+            }
+            catch (Exception e)
+            {
+                mess = e.Message;
+            }
+            return AboutManagement(mess);
         }
         #endregion
         #region Upload Cloudinary
@@ -465,7 +816,7 @@ namespace CareerTech.Controllers
                 PublicId = Name
             };
             var uploadResult = cloudinary.Upload(uploadParams);
-            var uploadPath = uploadResult.Uri.AbsoluteUri;
+            var uploadPath = uploadResult.Url.AbsoluteUri;
             return uploadPath;
         }
         #endregion

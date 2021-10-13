@@ -25,8 +25,11 @@ namespace CareerTech.Models
         [StringLength(255)]
         public string Type { get; set; }
 
+        public int? Period { get; set; }
+
+        [Column(TypeName = "Longtext")]
         [Required]
-        public int Period { get; set; }
+        public string DetailDesc { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
     }

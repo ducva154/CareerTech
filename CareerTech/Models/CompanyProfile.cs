@@ -9,7 +9,6 @@ namespace CareerTech.Models
     [Table("CompanyProfile")]
     public partial class CompanyProfile
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CompanyProfile()
         {
             Recruitments = new HashSet<Recruitment>();
@@ -50,7 +49,6 @@ namespace CareerTech.Models
 
         public virtual ApplicationUser User { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Recruitment> Recruitments { get; set; }
     }
 }

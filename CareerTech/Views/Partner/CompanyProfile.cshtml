@@ -3,7 +3,7 @@
     ViewBag.Title = "Company Profile";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
 }
-@model CareerTech.Models.CompanyProfile
+@model CareerTech.Models.CompanyProfileViewModel
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
         <div class="row">
@@ -11,64 +11,71 @@
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title">Edit Your Profile Company</span><br>
-                        <span id="@ViewBag.type">@ViewBag.message</span>
+                        <span class="@ViewBag.type">@ViewBag.message</span>
+                        @Html.ValidationSummary("", new { @class = "message-danger" })
                         <div class="row">
                             @using (Html.BeginForm("EditCompany", "Partner", FormMethod.Post, new { enctype = "multipart/form-data" }))
                             {
                                 <div class="row">
                                     <div class="col s6">
-                                        <label style="font-size: 16px;">Update Cover</label>
+                                        <label style="font-size: 16px;">Upload cover your company</label>
                                         <div class="p-v-xs">
                                             <div class="file-field input-field">
                                                 <div class="btn teal lighten-1">
                                                     <span>File</span>
-                                                    @*@Html.TextBox("img_cover", "", new { type = "file" })*@
-                                                    <input type="file" id="img_cover" name="img_cover" />
+                                                    @Html.TextBoxFor(m => m.Url_Background, new {Name= "imgCover", type = "file" })
                                                 </div>
                                                 <div class="file-path-wrapper">
-                                                    <input class="file-path validate" type="text" placeholder="Upload Cover">
+                                                    <input class="file-path validate" type="text" placeholder="Change Cover">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col s6">
-                                        <label style="font-size: 16px;">Update Avatar</label>
+                                        <label style="font-size: 16px;">Upload avatar company</label>
                                         <div class="p-v-xs">
                                             <div class="file-field input-field">
                                                 <div class="btn teal lighten-1">
                                                     <span>File</span>
-                                                    @*@Html.TextBox("img_avatar", "", new { type = "file" })*@
-                                                    <input type="file" id="img_avatar" name="img_cover" />
+                                                    @Html.TextBoxFor(m => m.Url_Avatar, new {Name= "imgAvatar", type = "file" })
                                                 </div>
                                                 <div class="file-path-wrapper">
-                                                    <input class="file-path validate" type="text" placeholder="Upload Avatar">
+                                                    <input class="file-path validate" type="text" placeholder="Change avatar">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="input-field col s6">
-                                        <input id="company-name" name="companyName" type="text" class="validate" value="@Model.CompanyName">
-                                        <label class="active" for="company-name">Comany name</label>
-                                    </div>
-                                    @*<div class="input-field col s6">
-                                            <input id="domain-company" type="text" class="validate" value="">
-                                            <label class="active" for="domain-company">Domain company</label>
+                                    <div class="input-field col m6 s12">
+                                        @Html.LabelFor(m => m.CompanyName, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control" })
                                         </div>
-                                        <div class="input-field col s6">
-                                            <input id="total-employee" type="text" class="validate" value="">
-                                            <label class="active" for="total-employee">Total employee</label>
-                                        </div>*@
-                                    <div class="input-field col s6">
-                                        <input id="address" type="text" name="address" class="validate" value="@Model.Address">
-                                        <label class="active" for="address">Address</label>
                                     </div>
-                                    <div class="input-field col s12" style="margin-top:50px;">
-                                        <label class="active" for="intro-company">Introduction company</label>
+                                    <div class="input-field col m6 s12">
+                                        @Html.LabelFor(m => m.Phone, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                                        </div>
                                     </div>
-                                    <div class="input-field col s12">
-                                        <textarea class="ckeditor" name="introCompany" cols="10" rows="30" style="height: 12rem;padding: 15px;">@Model.Desc</textarea>
+                                    <div class="input-field col m6 s12">
+                                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                        </div>
                                     </div>
-                                    <button class="btn teal" style="margin: 20px 0px 0px 20px ;">Save</button>
+                                    <div class="input-field col m6 s12">
+                                        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12" style="margin-top: 50px;">
+                                        @Html.LabelFor(m => m.Desc, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextAreaFor(m => m.Desc, new { @class = "ckeditor" })
+                                        </div>
+                                        <button class="btn teal" style="margin: 20px 0px 0px 20px ;">Save</button>
+                                    </div>
                                 </div>
                             }
                         </div>

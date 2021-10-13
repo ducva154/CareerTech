@@ -3,6 +3,28 @@
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
     ICollection<Portfolio> listPortfolio = ViewBag.ListPortfolio;
 }
+
+@section jsFooter {
+    <script>
+        $('.btn-public').off('click').on('click', function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            $.ajax({
+                url: "/User/ChangeStatus",
+                data: { id: btn.data('id') },
+                type: "POST",
+                dataType: "json",
+                success: function (res) {
+                    if (res.status == true) {
+                        btn.text('Public');
+                    } else {
+                        btn.text('Private');
+                    }
+                }
+            })
+        })
+    </script>
+}
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
         <div class="row">
@@ -44,7 +66,6 @@
                                 <tr>
                                     <th data-field="id">Name</th>
                                     <th data-field="status">Public Status</th>
-                                    <th data-field="status">Main Status</th>
                                     <th data-field="url">Detail</th>
                                     <th data-field="status">Edit Portfolio</th>
                                     <th data-field="status">Delete Portfolio</th>
@@ -61,14 +82,7 @@
                                     {
                                         <tr>
                                             <td>@p.Name</td>
-                                            <td>
-                                                <input type="checkbox" class="filled-in" id="public-@p.Name" checked=@p.PublicStatus ?"checked":"">
-                                                <label for="public-@p.Name"></label>
-                                            </td>
-                                            <td>
-                                                <input name="group1" type="radio" id="main-@p.Name" @p.MainStatus ?"checked":"">
-                                                <label for="main-@p.Name"></label>
-                                            </td>
+                                            <td><a href="" class="btn-public" data-id="@p.ID" onclick="changeStatus()">@(p.PublicStatus?"Public":"Private")</a></td>
                                             <td><a href="@p.Url_Domain" target="_blank">View detail</a></td>
                                             <td><a href="/User/EditProfilePortfolio/@p.ID">Edit</a></td>
                                             <td><a href="/User/DeletePortfolio/@p.ID">Delete</a></td>

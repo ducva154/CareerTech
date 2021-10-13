@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "Company";
+}
+
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/bootstrap.min.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/company.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/jobs-new.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/jobs.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/style.css">
+<link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/styles.css">
+@model CareerTech.Models.CompanyProfile
+<div class="company-cover">
+    <div class="container" style="width: 100%;">
+        <div class="cover-wrapper">
+            <img src="@Model.Url_Background" alt="Cover" style=" width: 100%;">
+        </div>
+        <div class="company-detail-overview" style="min-height: 105px">
+            <div class="col-sm-9">
+                <div class="row">
+                    <div class="col-sm-3 hidden-xs">
+                        <div id="company-logo">
+                            <img src="@Model.Url_Avatar" alt="Avatar" class="img-responsive">
+                        </div>
+                    </div>
+                    <div class="col-sm-9">@Model.CompanyName</h1>
+                        <div class="row">
+                            <div class="col-sm-6 detail-item"><i class="icons8-global text-highlight"></i>Email: @Model.Email</div>
+                            <div class="col-sm-6 detail-item"><i class="icons8-user-groups text-highlight"></i>Phone: @Model.Phone</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row box-company-info">
+            <div class="col-md-8 col-sm-7 col-left">
+                <div class="left-box-title" style="margin-top: 50px; padding-left: 20px;">
+                    <h2>GIỚI THIỆU CÔNG TY</h2>
+                </div>
+                <div class="box box-white company-description" style="min-height:500px;">
+                    <p>
+                       @Html.Raw(Model.Desc)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

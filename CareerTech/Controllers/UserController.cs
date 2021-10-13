@@ -3,9 +3,12 @@ using CareerTech.Services;
 using CareerTech.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace CareerTech.Controllers
 {
@@ -18,19 +21,72 @@ namespace CareerTech.Controllers
             _userService = userService;
         }
 
-        public ActionResult Portfolio(string id)
-        {
-            ViewBag.id = id;
-            return View();
-        }
-
         // GET: User
         [Authorize(Roles = "User")]
         public ActionResult Index()
         {
             return View();
         }
+        #region UserProfile
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ActionResult UserProfile()
+        {
+            ApplicationUser user = Session[SessionConstant.USER_MODEL] as ApplicationUser;
+            return View(user);
+        }
 
+        [HttpPost]
+        public ActionResult EditUserProfile()
+        {
+            return View();
+        }
+        #endregion
+
+        #region PortfolioPage
+        [HttpGet]
+        public ActionResult Portfolio(string id)
+        {
+            if (_userService.GetPortfolioByID(id) == null)
+            {
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_PORTFOLIO;
+                return View("Error");
+            }
+            ViewBag.Profile = _userService.GetProfileByPortfolioID(id);
+            ViewBag.Skill = _userService.GetSkillByPortfolioID(id);
+            ViewBag.Education = _userService.GetEducationByPortfolioID(id);
+            ViewBag.Experience = _userService.GetExperienceByPortfolioID(id);
+            ViewBag.Product = _userService.GetProductByPortfolioID(id);
+            return View();
+        }
+
+        public ActionResult DownloadPortfolio(string id)
+        {
+            var PDF = IronPdf.ChromePdfRenderer.StaticRenderUrlAsPdf(new Uri("https://localhost:44396/User/Portfolio/" + id));
+            return File(PDF.BinaryData, "application/pdf", "Portfolio.Pdf");
+        }
+        #endregion
+
+        #region ImageProcess
+        private async Task<string> GetUrlImageByFileBase(HttpPostedFileBase fileBase, int Height, int width)
+        {
+            string urlImage = "";
+            if (fileBase != null && fileBase.ContentLength > 0)
+            {
+                string path = Path.Combine(Server.MapPath("~/UploadFiles"), Path.GetFileName(fileBase.FileName));
+                fileBase.SaveAs(path);
+                // Call API to get Url image
+                urlImage = await CloudDiaryService.CloudinaryUpload(path, Height, width);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+            }
+            return urlImage;
+        }
+        #endregion
+
+        #region PortfolioManagement
         // GET: User
         [HttpGet]
         [Authorize(Roles = "User")]
@@ -48,9 +104,7 @@ namespace CareerTech.Controllers
             var user = Session[SessionConstant.USER_MODEL] as ApplicationUser;
             if (_userService.GetPortfolioByNameAndUser(portfolioName, user.Id).Count > 0)
             {
-                ViewBag.listPortfolio = _userService.GetPortfolioByUser(user.Id);
                 ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
-                return View("PortfolioManager");
             }
             else
             {
@@ -62,9 +116,19 @@ namespace CareerTech.Controllers
                 portfolio.MainStatus = false;
                 portfolio.Url_Domain = "/User/Portfolio/" + portfolio.ID;
                 _userService.InsertPortfolio(portfolio);
-                ViewBag.listPortfolio = _userService.GetPortfolioByUser(user.Id);
-                return View("PortfolioManager");
             }
+            ViewBag.listPortfolio = _userService.GetPortfolioByUser(user.Id);
+            return View("PortfolioManager");
+        }
+
+        [HttpPost]
+        public JsonResult ChangeStatus(string id)
+        {
+            _userService.ChangePortfolioStatus(id);
+            return Json(new
+            {
+                status = _userService.GetPortfolioByID(id).PublicStatus
+            });
         }
 
         [HttpGet]
@@ -77,11 +141,11 @@ namespace CareerTech.Controllers
                 return View("Error");
             }
             _userService.DeletePortfolio(id);
-            var user = Session[SessionConstant.USER_MODEL] as ApplicationUser;
-            ViewBag.listPortfolio = _userService.GetPortfolioByUser(user.Id);
-            return View("PortfolioManager");
+            return RedirectToAction("LoadPortfolio");
         }
+        #endregion
 
+        #region ProfileManagement
         [HttpGet]
         [Authorize(Roles = "User")]
         public ActionResult EditProfilePortfolio(string id)
@@ -99,11 +163,15 @@ namespace CareerTech.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User")]
-        public ActionResult EditProfilePortfolio(Profile model, string desc)
+        public async Task<ActionResult> EditProfilePortfolioAsync(Profile model, string desc, HttpPostedFileBase url_avatar)
         {
             var portfolio = _userService.GetPortfolioByID(model.PortfolioID);
             var profile = _userService.GetProfileByPortfolioID(model.PortfolioID);
             model.Desc = desc;
+            if (url_avatar != null)
+            {
+                model.Url_avatar = await GetUrlImageByFileBase(url_avatar, 350, 280);
+            }
             if (ModelState.IsValid)
             {
                 if (profile == null)
@@ -117,9 +185,12 @@ namespace CareerTech.Controllers
             }
             ViewBag.Portfolio = portfolio;
             ViewBag.Profile = profile;
-            return View(model);
+            ViewBag.CurrentPage = PageConstant.PROFILE_PORTFOLIO;
+            return View("EditProfilePortfolio", model);
         }
-        //==========LOAD SKILL ======================
+        #endregion
+
+        #region SkillManagement
         [HttpGet]
         [Authorize(Roles = "User")]
         public ActionResult LoadSkill(string id)
@@ -149,7 +220,7 @@ namespace CareerTech.Controllers
                 if (_userService.GetSkillByNameAndPortfolioID(model.SkillName, model.PortfolioID) != null)
                 {
                     ModelState.AddModelError(model.SkillName, "Lặp rồi!!!!!");
-                 //   ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
+                    //   ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
                 }
                 else
                 {
@@ -202,6 +273,10 @@ namespace CareerTech.Controllers
                     }
                     _userService.EditSkill(skillID, model);
                 }
+                else
+                {
+                    return View("EditSkill");
+                }
                 ViewBag.ListSkill = _userService.GetSkillByPortfolioID(model.PortfolioID);
                 return View("SkillManager");
             }
@@ -227,8 +302,9 @@ namespace CareerTech.Controllers
                 return View("SkillManager");
             }
         }
+        #endregion
 
-        //==========LOAD EDU ======================
+        #region EducationManagement
         [HttpGet]
         //[Authorize(Roles = "User")]
         public ActionResult LoadEducation(string id)
@@ -309,7 +385,8 @@ namespace CareerTech.Controllers
             {
                 ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_EDUCATION;
                 return View("Error");
-            } else
+            }
+            else
             {
                 string portfolioID = education.PortfolioID;
                 ViewBag.Portfolio = _userService.GetPortfolioByID(portfolioID);
@@ -319,8 +396,9 @@ namespace CareerTech.Controllers
                 return View("EducationManager");
             }
         }
+        #endregion
 
-        //==========LOAD EXP ======================
+        #region ExperienceManagement
         [HttpGet]
         //[Authorize(Roles = "User")]
         public ActionResult LoadExperience(string id)
@@ -412,7 +490,9 @@ namespace CareerTech.Controllers
                 return View("ExperienceManager");
             }
         }
-        //==========LOAD PRODUCT ======================
+        #endregion
+
+        #region ProductManagement
         [HttpGet]
         //[Authorize(Roles = "User")]
         public ActionResult LoadProduct(string id)
@@ -427,5 +507,110 @@ namespace CareerTech.Controllers
             ViewBag.ListProduct = _userService.GetProductByPortfolioID(id);
             return View("ProductManager");
         }
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> AddProductAsync(Product model, HttpPostedFileBase url_image)
+        {
+            if (_userService.GetPortfolioByID(model.PortfolioID) == null)
+            {
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_PORTFOLIO;
+                return View("Error");
+            }
+            if (url_image != null)
+            {
+                model.Url_Image = await GetUrlImageByFileBase(url_image, 253, 338);
+            }
+            if (ModelState.IsValid)
+            {
+                if (_userService.GetProductByNameAndPortfolioID(model.Name, model.PortfolioID) != null)
+                {
+                    ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
+                }
+                else
+                {
+                    _userService.AddProduct(model);
+                }
+            }
+            ViewBag.Portfolio = _userService.GetPortfolioByID(model.PortfolioID);
+            ViewBag.ListProduct = _userService.GetProductByPortfolioID(model.PortfolioID);
+            ViewBag.CurrentPage = PageConstant.PRODUCT_PORTFOLIO;
+            return View("ProductManager");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ActionResult EditProduct(string productID)
+        {
+            Product product = _userService.GetProductByID(productID);
+            if (product == null)
+            {
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_PRODUCT;
+                return View("Error");
+            }
+            ViewBag.Product = product;
+            ViewBag.Portfolio = _userService.GetPortfolioByID(product.PortfolioID);
+            ViewBag.CurrentPage = PageConstant.PRODUCT_PORTFOLIO;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> EditProductAsync(string productID, Product model, HttpPostedFileBase url_image)
+        {
+            var product = _userService.GetProductByID(productID);
+            if (product == null)
+            {
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_PRODUCT;
+                return View("Error");
+            }
+            else
+            {
+                if (url_image != null)
+                {
+                    model.Url_Image = await GetUrlImageByFileBase(url_image, 253, 338);
+                }
+                ViewBag.Portfolio = _userService.GetPortfolioByID(model.PortfolioID);
+                ViewBag.CurrentPage = PageConstant.PRODUCT_PORTFOLIO;
+                if (ModelState.IsValid)
+                {
+                    if (_userService.GetProductByNameAndPortfolioID(model.Name, model.PortfolioID) != null && model.Name != _userService.GetProductByID(productID).Name)
+                    {
+                        ViewBag.ErrorMessage = MessageConstant.DUPLICATE_NAME;
+                        ViewBag.Product = _userService.GetProductByID(productID);
+                        return View();
+                    }
+                    _userService.EditProduct(productID, model);
+                }
+                else
+                {
+                    return View("EditProduct");
+                }
+                ViewBag.ListProduct = _userService.GetProductByPortfolioID(model.PortfolioID);
+                return View("ProductManager");
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ActionResult DeleteProduct(string productID)
+        {
+            var product = _userService.GetProductByID(productID);
+            if (product == null)
+            {
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_PRODUCT;
+                return View("Error");
+            }
+            else
+            {
+                string portfolioID = _userService.GetProductByID(productID).PortfolioID;
+                ViewBag.Portfolio = _userService.GetPortfolioByID(portfolioID);
+                ViewBag.CurrentPage = PageConstant.PRODUCT_PORTFOLIO;
+                _userService.DeleteProduct(productID);
+                ViewBag.ListProduct = _userService.GetProductByPortfolioID(portfolioID);
+                return View("ProductManager");
+            }
+        }
+        #endregion
     }
 }

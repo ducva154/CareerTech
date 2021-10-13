@@ -21,7 +21,7 @@ namespace CareerTech.Models
             Portfolios = new HashSet<Portfolio>();
             Solutions = new HashSet<Solution>();
             Times = new HashSet<Time>();
-            Recruitments = new HashSet<Recruitment>();
+            Candidates = new HashSet<Candidate>();
         }
 
         [StringLength(255)]
@@ -46,8 +46,7 @@ namespace CareerTech.Models
 
         public virtual ICollection<Time> Times { get; set; }
 
-        public virtual ICollection<Recruitment> Recruitments { get; set; }
-
+        public virtual ICollection<Candidate> Candidates { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -81,8 +80,7 @@ namespace CareerTech.Models
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Time> Times { get; set; }
 
-        //public virtual DbSet<ApplicationUser> Users { get; set; }
-
+        public virtual DbSet<Candidate> Candidates { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -215,27 +213,27 @@ namespace CareerTech.Models
             modelBuilder.Entity<Portfolio>()
                 .HasMany(e => e.Educations)
                 .WithRequired(e => e.Portfolio)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<Portfolio>()
                 .HasMany(e => e.Experiences)
                 .WithRequired(e => e.Portfolio)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<Portfolio>()
                 .HasMany(e => e.Products)
                 .WithRequired(e => e.Portfolio)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<Portfolio>()
                 .HasMany(e => e.Profiles)
                 .WithRequired(e => e.Portfolio)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<Portfolio>()
                 .HasMany(e => e.Skills)
                 .WithRequired(e => e.Portfolio)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<Product>()
                 .Property(e => e.ID)
@@ -302,9 +300,27 @@ namespace CareerTech.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Recruitment>()
-                .HasMany(e => e.Users)
-                .WithMany(e => e.Recruitments)
-                .Map(m => m.ToTable("Candidate").MapLeftKey("RecruitmentID").MapRightKey("UserID"));
+             .HasMany(e => e.Candidates)
+             .WithRequired(e => e.Recruitment)
+             .WillCascadeOnDelete(true);
+
+
+            //modelBuilder.Entity<Recruitment>()
+            //    .HasMany(e => e.Users)
+            //    .WithMany(e => e.Recruitments)
+            //    .Map(m => m.ToTable("Candidate").MapLeftKey("RecruitmentID").MapRightKey("UserID"));
+
+            modelBuilder.Entity<Candidate>()
+               .Property(c => c.ID)
+               .IsUnicode(false);
+
+            modelBuilder.Entity<Candidate>()
+                .Property(c => c.UserID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Candidate>()
+                .Property(c => c.RecruitmentID)
+                .IsUnicode(false);
 
             modelBuilder.Entity<Skill>()
                 .Property(e => e.ID)
@@ -351,7 +367,6 @@ namespace CareerTech.Models
                 .Property(e => e.UserID)
                 .IsUnicode(false);
 
-
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.Abouts)
                 .WithRequired(e => e.User)
@@ -386,6 +401,12 @@ namespace CareerTech.Models
                 .HasMany(e => e.Times)
                 .WithRequired(e => e.User)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ApplicationUser>()
+               .HasMany(e => e.Candidates)
+               .WithRequired(e => e.User)
+               .WillCascadeOnDelete(false);
+
         }
 
 

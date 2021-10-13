@@ -4,14 +4,13 @@ namespace CareerTech.Models
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
+  
     [Table("Recruitment")]
     public partial class Recruitment
     {
         public Recruitment()
         {
-            Users = new HashSet<ApplicationUser>();
+            Candidates = new HashSet<Candidate>();
         }
 
         [StringLength(255)]
@@ -53,23 +52,21 @@ namespace CareerTech.Models
         [StringLength(255)]
         public string Experience { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string EndDate { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime EndDate { get; set; }
 
-        [Required]
         public bool? Gender { get; set; }
-
 
         [Column(TypeName = "Longtext")]
         [Required]
         public string DetailDesc { get; set; }
 
-
         public virtual CompanyProfile CompanyProfile { get; set; }
 
         public virtual Job Job { get; set; }
 
-        public virtual ICollection<ApplicationUser> Users { get; set; }
+      
+        public virtual ICollection<Candidate> Candidates { get; set; }
+
     }
 }

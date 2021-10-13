@@ -13,6 +13,12 @@ namespace CareerTech.Services.Implement
             this.dbContext = dbContext;
         }
 
+        public void AddRecruitment(Recruitment obj)
+        {
+            dbContext.Recruitments.Add(obj);
+            dbContext.SaveChanges();
+        }
+
         public bool CheckEmailExist(string email,string userId)
         {
            List<ApplicationUser> listuser = dbContext.Users.Where(u=> !u.Id.Equals(userId)).ToList();
@@ -30,6 +36,16 @@ namespace CareerTech.Services.Implement
             dbContext.SaveChanges();
         }
 
+        public List<Job> GetAddJobCategory()
+        {
+            return dbContext.Jobs.ToList();
+        }
+
+        public List<Recruitment> GetAllRecruitment()
+        {
+            return dbContext.Recruitments.ToList();
+        }
+
         public CompanyProfile GetCompanyProfileByPartnerId(string userId)
         {
             return dbContext.CompanyProfiles.Where(c => c.UserID.Equals(userId)).FirstOrDefault();
@@ -42,7 +58,7 @@ namespace CareerTech.Services.Implement
 
         public void UpdateCompany(CompanyProfile company)
         {
-            var companyUpdate = dbContext.CompanyProfiles.Where(c => c.ID == company.ID).FirstOrDefault();
+            var companyUpdate = dbContext.CompanyProfiles.Where(c => c.ID.Equals(company.ID)).FirstOrDefault();
             companyUpdate.CompanyName = company.CompanyName;
             companyUpdate.Address = company.Address;
             companyUpdate.Desc = company.Desc;
@@ -55,16 +71,65 @@ namespace CareerTech.Services.Implement
 
         public void UpdatePartnerProfile(ApplicationUser partner)
         {
-            var partnerUpdate = dbContext.Users.Where(u => u.Id == partner.Id).FirstOrDefault();
+            var partnerUpdate = dbContext.Users.Where(u => u.Id.Equals(partner.Id)).FirstOrDefault();
             partnerUpdate.FullName = partner.FullName;
             partnerUpdate.Email = partner.Email;
             partnerUpdate.PhoneNumber = partner.PhoneNumber;
             dbContext.SaveChanges();
         }
 
-     
+        public void DeleteRecruitmentByID(string recruitmentId)
+        {
+            Recruitment recruitment = dbContext.Recruitments.Where(r => r.ID.Equals(recruitmentId)).FirstOrDefault();
+            dbContext.Recruitments.Remove(recruitment);
+            dbContext.SaveChanges();
+        }
+
+        public CompanyProfile GetCompanyProfileById(string companyId)
+        {
+            return dbContext.CompanyProfiles.Where(c => c.ID.Equals(companyId)).FirstOrDefault();
+        }
+
+        public Recruitment GetRecruitmentById(string recruitmentId)
+        {
+            return dbContext.Recruitments.Where(r => r.ID.Equals(recruitmentId)).FirstOrDefault();
+        }
+
+        public void UpdateRecruitment(Recruitment recruitment)
+        {
+            Recruitment recruitmentUpdate = dbContext.Recruitments.Where(r => r.ID.Equals(recruitment.ID)).FirstOrDefault();
+            recruitment.JobID = recruitment.JobID;
+            recruitment.Title = recruitment.Title;
+            recruitment.Address = recruitment.Address;
+            recruitment.Salary = recruitment.Salary;
+            recruitment.Workingform = recruitment.Workingform;
+            recruitment.Amount = recruitment.Amount;
+            recruitment.Position = recruitment.Position;
+            recruitment.Experience = recruitment.Experience;
+            recruitment.Gender = recruitment.Gender;
+            recruitment.EndDate = recruitment.EndDate;
+            recruitment.DetailDesc = recruitment.DetailDesc.ToString();
+            dbContext.SaveChanges();
+        }
+
+        public CompanyProfile GetCompanyProfileByRecruitmentId(string recruitmentId)
+        {
+            var recruitment = dbContext.Recruitments.Where(r=>r.ID.Equals(recruitmentId)).FirstOrDefault();
+            return dbContext.CompanyProfiles.Where(c => c.ID.Equals(recruitment.CompanyProfileID)).FirstOrDefault();
+        }
+
+        public List<ApplicationUser> GetListCandidate()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        //public List<CandidateViewModel> GetListCandidate()
+        //{
+        //    var user = 
 
 
 
+        //    return null;
+        //}
     }
 }

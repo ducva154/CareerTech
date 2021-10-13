@@ -17,8 +17,23 @@ namespace CareerTech.Services
 
         CompanyProfile GetCompanyProfileByPartnerId(string userId);
 
+        CompanyProfile GetCompanyProfileById(string companyId);
+
+        CompanyProfile GetCompanyProfileByRecruitmentId(string recruitmentId);
+
         void CreateProfileCompany(CompanyProfile company);
 
         void UpdateCompany(CompanyProfile company);
+
+        List<Recruitment> GetAllRecruitment();
+
+        void AddRecruitment(Recruitment obj);
+
+        List<Job> GetAddJobCategory();
+
+        Recruitment GetRecruitmentById(string recruitmentId);
+        void DeleteRecruitmentByID(string recruitmentId);
+        void UpdateRecruitment(Recruitment recruitment);
+        List<ApplicationUser> GetListCandidate();
     }
 }

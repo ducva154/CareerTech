@@ -24,6 +24,10 @@ namespace CareerTech.Models
         public string Detail { get; set; }
 
         public bool Main { get; set; }
+        
+        [Required]
+        [Column(TypeName = "Longtext")]
+        public string Desc { get; set; }
 
         public virtual ApplicationUser User { get; set; }
     }

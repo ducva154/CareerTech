@@ -11,10 +11,8 @@ namespace CareerTech.Utils
 
         public static string DANGER = "message-danger";
 
-        public enum Gender
-        {
-            Male,
-            Female
-        }
+        public static string URL_COVER_DEFAULT = "https://res.cloudinary.com/mockcareertech/image/upload/v1634036755/Default_cover_id3jbf.jpg";
+       
+        public static string URL_AVATAR_DEFAULT = "https://res.cloudinary.com/mockcareertech/image/upload/v1634036755/Default_avatar_rfwavo.png";
     }
 }

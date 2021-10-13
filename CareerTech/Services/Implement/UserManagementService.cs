@@ -7,7 +7,7 @@ namespace CareerTech.Services.Implement
 {
     public class UserManagementService : IUserManagmentService<UserManagementService>
     {
-        private ApplicationDbContext _applicationDbContext { get; set; }
+        private ApplicationDbContext _applicationDbContext =null; 
 
         public UserManagementService(ApplicationDbContext applicationDbContext)
         {
@@ -20,8 +20,8 @@ namespace CareerTech.Services.Implement
                         join r in _applicationDbContext.Roles on ur.RoleId equals r.Id
                         where r.Name == "User"
                         select u;
-            var rs = query.ToList();
-            return rs;
+            var result = query.ToList();
+            return result;
         }
 
         public int deleteUser(string uID)
@@ -29,14 +29,14 @@ namespace CareerTech.Services.Implement
             var user = (from u in _applicationDbContext.Users
                         where u.Id == uID
                         select u).FirstOrDefault();
-           _applicationDbContext.Users.Remove(user);
-           int rs = _applicationDbContext.SaveChanges();
-            return rs;
+            _applicationDbContext.Users.Remove(user);
+            int result = _applicationDbContext.SaveChanges();
+            return result;
         }
 
         public int countNumerOfUser()
         {
-           
+
             return getAllUsers().Count();
         }
     }

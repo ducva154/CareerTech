@@ -15,7 +15,7 @@
                 <div class="card">
                     @Html.ValidationSummary("", new { @class = "text-danger" })
                     <div class="card-content">
-                        @using (Html.BeginForm("EditProfilePortfolio", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                        @using (Html.BeginForm("EditProfilePortfolioAsync", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
                         {
                             <div id="example_wrapper" class="dataTables_wrapper">
                                 <div class="row">
@@ -29,7 +29,7 @@
                                     <div class="file-field input-field col m6 s12">
                                         <div class="btn teal lighten-1">
                                             <span>Image</span>
-                                            @Html.TextBoxFor(m => m.Url_avatar, new { type = "file", @Value = (@profile != null ? @profile.Url_avatar : "") })
+                                            @Html.TextBox("Url_avatar", "", new { type = "file" })
                                         </div>
                                         <div class="file-path-wrapper">
                                             @Html.TextBoxFor(m => m.Url_avatar, new { @class = "file-path validate", @Value = (@profile != null ? @profile.Url_avatar : "") })

@@ -25,9 +25,7 @@
                     <table id="example" class="display responsive-table datatable-example">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Solution Name</th>
-                                <th>Description</th>
                                 <th>Url_img</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
@@ -35,9 +33,7 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
                                 <th>Solution Name</th>
-                                <th>Description</th>
                                 <th>Url_img</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
@@ -47,11 +43,9 @@
                             @foreach (var sol in ViewBag.Sol)
                             {
                                 <tr>
-                                    <td>@sol.ID</td>
                                     <td>@sol.Title</td>
-                                    <td>@sol.Detail</td>
                                     <td>
-                                        @sol.Url_image
+                                        <img style="height:30px;width:50px" src=" @sol.Url_image" alt="Solution_Img" />
                                     </td>
                                     <td>
                                         <a href="EditSolution?solID=@sol.ID">Edit</a>

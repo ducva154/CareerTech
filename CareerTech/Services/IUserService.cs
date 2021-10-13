@@ -17,6 +17,8 @@ namespace CareerTech.Services
 
         Portfolio GetPortfolioByID(string portfolioID);
 
+        void ChangePortfolioStatus(string portfolioID);
+
         void DeletePortfolio(string portfolioID);
 
         Profile GetProfileByPortfolioID(string portfolioID);

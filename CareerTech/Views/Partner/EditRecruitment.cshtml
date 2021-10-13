@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Edit Recruitment";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+}
+@model CareerTech.Models.RecruitmentViewModel
+<main class="mn-inner inner-active-sidebar" style="background-color:white;">
+    <div class="middle-content">
+        <div class="modal-content">
+            <h4>Create Recruitment</h4>
+            <span id="@ViewBag.type">@ViewBag.message</span>
+            @Html.ValidationSummary("", new { @id = "message-danger" })
+            <div class="row">
+                @using (Html.BeginForm("EditRecruitment", "Partner", FormMethod.Post, new { @class = "col s12" }))
+                {
+                    <div class="input-field col m6 s12">
+                        @Html.LabelFor(m => m.Title, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col m6 s12">
+                        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col m6 s12">
+                        @Html.LabelFor(m => m.Salary, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Salary, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col s6">
+                        @Html.LabelFor(m => m.Workingform, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Workingform, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col s6">
+                        @Html.LabelFor(m => m.Amount, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Amount, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col s6">
+                        @Html.LabelFor(m => m.Position, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Position, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col s6">
+                        @Html.LabelFor(m => m.Experience, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Experience, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="input-field col s6">
+                        @Html.LabelFor(m => m.EndDate, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @type = "date", @Value = Model.EndDate.ToString("dd/MM/yyyy") })
+                        </div>
+                    </div>
+                    <div class="input-field col m6 s12">
+                        @Html.LabelFor(m => m.Gender, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>{
+                                          new SelectListItem { Text = "Male", Value = "true"},
+                                          new SelectListItem { Text = "Female", Value = "false"},
+                                          }, "Select Gender")
+                        </div>
+                    </div>
+                    <div class="input-field col m6 s12">
+                        @Html.LabelFor(m => m.JobID, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.JobID, ViewBag.ListJobCategory as SelectList, "Select Job Category")
+                        </div>
+                    </div>
+                    <div class="input-field col s12" style="margin-top: 50px;">
+                        @Html.LabelFor(m => m.DetailDesc, new { @class = "col-md-2 control-label active" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(m => m.DetailDesc, new { @class = "ckeditor" })
+                        </div>
+                        <input type="hidden" name="recruitmentId" value="@ViewBag.recruitmentId" />
+                        <button class="btn teal" style="margin: 20px 0px 0px 20px ;">Save</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</main>
+@*<script type="text/javascript">
+    document.getElementById("EndDate").value= "@Model.EndDate.ToString("dd/MM/yyyy")";
+</script>*@
+

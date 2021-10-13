@@ -23,9 +23,8 @@
                     <table id="example" class="display responsive-table datatable-example">
                         <thead>
                             <tr>
-                                <th>ID</th>
+
                                 <th>Title</th>
-                                <th>Des</th>
                                 <th>Main status</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
@@ -33,24 +32,25 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
+
                                 <th>Title</th>
-                                <th>Des</th>
                                 <th>Main status</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
                         </tfoot>
                         <tbody>
-
-                            <tr>
-                                <td><span>ID</span></td>
-                                <td><span>Title</span></td>
-                                <td><span>Des</span></td>
-                                <td>Main status</td>
-                                <td><a href="#">Edit</a></td></td>
-                                <td><a href="#" onlick="return ConfirmDelete()">Delete</a></td>
-                            </tr>
+                            @foreach (var about in ViewBag.About)
+                            {
+                                <tr>
+                                    <td><span>@about.Title</span></td>
+                                    <td>
+                                        @about.Main
+                                    </td>
+                                    <td><a href="EditAbout?aboutID=@about.ID">Edit</a></td>
+                                    <td><a href="DeleteAbout?aboutID=@about.ID" onclick="return ConfirmDelete()">Delete</a></td>
+                                </tr>
+                            }
 
                         </tbody>
                     </table>
@@ -60,12 +60,12 @@
     </div>
 </main>
 <div id="addAbout" class="modal fade" aria-labelledby="addAbout">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="min-height=300px;height:475px;overflow:scroll">
         <div class="modal-content">
             @using (Html.BeginForm("AddAbout", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <div class="modal-header">
-                    <h4 class="modal-title">Add New Solution</h4>
+                    <h4 class="modal-title">Add New About Information</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -74,9 +74,20 @@
                         <input name="Title" type="text" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Description</label>
-                        <textarea name="Des" id="editor1" class="form-control" required></textarea>
+                        <label>Detail</label>
+                        <textarea name="Detail" id="editor1" class="form-control" required></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="Des" id="editor2" class="form-control" required></textarea>
+                    </div>
+                </div>
+                <div>
+                    <label>Main Status:</label> <br />
+                    @Html.RadioButton("Status", "Public", new { id = "main1" })
+                    <label for="main1">Public</label>
+                    @Html.RadioButton("Status", "UnPublic", new { id = "main2" })
+                    <label for="main2">UnPublic</label>
                 </div>
                 <div class="modal-footer">
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -87,6 +98,7 @@
         <script src="~/Content/Dashboard/assets/plugins/ckeditor/ckeditor.js"></script>
         <script>
             CKEDITOR.replace('editor1');
+            CKEDITOR.replace('editor2');
         </script>
     </div>
 </div>

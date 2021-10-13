@@ -1,8 +1,8 @@
-﻿@model CareerTech.Models.Introduction
+﻿@model CareerTech.Models.About
 @{
-    ViewBag.Title = "EditContent";
+    ViewBag.Title = "EditAbout";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
-    var content = ViewBag.Content;
+    var about = ViewBag.About;
 }
 
 <main class="mn-inner">
@@ -15,28 +15,36 @@
                 <div class="card-content">
                     <span class="card-title">Edit Content</span><br>
                     <div class="row">
-                        @using (Html.BeginForm("EditContent", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        @using (Html.BeginForm("EditAbout", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
 
-                            <input type="text" name="id" hidden="" value="@content.ID" />
+                            <input type="text" name="id" hidden="" value="@about.ID" />
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <input required name="title" id="title" type="text" class="validate" value="@content.Title">
+                                    <input required name="title" id="title" type="text" class="validate" value="@about.Title">
                                     <label for="title">Title</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <textarea required id="editor1" name="des" class="validate">
-                                        @Html.Raw(content.Detail.ToString())
+                                    <textarea required id="editor1" name="detail" class="validate">
+                                        @Html.Raw(about.Detail.ToString())
                                     </textarea>
                                     <label for="editor1">Detail</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
+                                    <textarea required id="editor2" name="des" class="validate">
+                                       @Html.Raw(about.Desc.ToString())
+                                    </textarea>
+                                    <label for="editor2">Description</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
                                     <label>Main Status:</label> <br />
-                                    @if (content.Main == true)
+                                    @if (about.Main == true)
                                     {
                                         @Html.RadioButton("Status", "Public", true, new { id = "main1" })
                                         <label for="main1">Public</label>
@@ -53,16 +61,6 @@
 
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Image</label>
-                                <div class="btn teal lighten-1">
-                                    @Html.TextBox("file", (string)content.Url_Image, new { type = "file" }) <br />
-                                </div>
-                                <div class="file-path-wrapper">
-                                    @Html.TextBoxFor(m => m.Url_Image, new { @class = "file-path validate", @Value = (content != null ? content.Url_Image : "") })
-                                </div>
-
-                            </div>
                             <div>
                                 <button class="btn btn-primary" type="submit">Save Changes </button>
                             </div>
@@ -74,9 +72,7 @@
     </div>
 </main>
 
-<script src="~/Content/Dashboard/assets/plugins/ckeditor/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace('editor1');
+            CKEDITOR.replace('editor1');
+            CKEDITOR.replace('editor2');
 </script>
-
-

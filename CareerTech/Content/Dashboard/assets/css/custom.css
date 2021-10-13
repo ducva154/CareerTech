@@ -1,6 +1,6 @@
 /* Write your custom CSS here */
 
-#message-success {
+.message-success {
     color: #87BD48;
     font-weight: 700;
     font-size: 16px;
@@ -9,7 +9,7 @@
     display: block;
 }
 
-#message-danger {
+.message-danger {
     color: red;
     font-weight: 700;
     font-size: 16px;
