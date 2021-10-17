@@ -38,6 +38,8 @@ namespace CareerTech.Models
 
     public class RecruitmentViewModel
     {
+        public string RecId { get; set; }
+
         [Required(ErrorMessage = "Please choose Job Category ")]
         [Display(Name = "Job Category")]
         public string JobID { get; set; }
@@ -85,7 +87,126 @@ namespace CareerTech.Models
 
     public class CandidateViewModel
     {
-        
+        public string CandidateID { get; set; }
+
+
+        public string FullName { get; set; }
+
+
+        public string Email { get; set; }
+
+
+        public string Phone { get; set; }
+
+
+        public string PortfolioID { get; set; }
+
+
+        public string RecruitmentID { get; set; }
+
+        public string UserID { get; set; }
+
+
+        public DateTime DateApply { get; set; }
+
+        public string Status { get; set; }
+
+
     }
+
+    //public class  CandidateFilter{
+    //    public CandidateFilterViewModel Cadidate { get; set; }
+    //    public FilterViewModel Filter { get; set; }
+    //}
+
+    public class CandidateFilterViewModel
+    {
+        public string FullName { get; set; }
+
+        public string Career { get; set; }
+
+        public string Address { get; set; }
+
+        public int? Age { get; set; }
+
+        public bool? Gender { get; set; }
+
+        public string Email { get; set; }
+
+        public string Phone { get; set; }
+
+        public string PortfolioID { get; set; }
+    }
+
+
+    public class FilterViewModel
+    {
+        public string Address { get; set; }
+
+        public string Career { get; set; }
+
+        public bool? Gender { get; set; }
+    }
+
+    public class SearchRecruitmentViewModel
+    {
+        [Required]
+        [StringLength(255)]
+        public string RecruitmentID { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string CompanyProfileID { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string JobID { get; set; }
+
+        public string Url_Avatar { get; set; }
+
+        [Required()]
+        [StringLength(255)]
+        public string Title { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string CompanyName { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Address { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Salary { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string JobName { get; set; }
+    }
+
+    public class DashboardRecruitmentViewModel
+    {
+        [Required]
+        [StringLength(255)]
+        public string RecruitmentID { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string CompanyProfileID { get; set; }
+
+        [Required()]
+        [StringLength(255)]
+        public string Title { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string CompanyName { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Status { get; set; }
+    }
+
 
 }

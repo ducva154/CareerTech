@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="wapper-active" style="color:black; width: 600px; min-height: 500px; background-color: #F5F5F5; margin: 0 auto; box-sizing: border-box;">
+        <h1 style="color: black; font-size: 28px; font-weight: normal; text-align: center; padding: 25px 0px; margin: 0;">Hồ sơ của bạn đã được Approve</h1>
+        <div class="container" style="color: black; width: 80%; background-color: white; margin: 0 auto; padding: 30px; border-radius: 10px; line-height: 1.5;">
+            <p>
+                Thân chào : <span style="color: black;font-weight:700;">{{CandidateName}}</span><br>
+                Đại diện phía công ty <span style="color: black; font-weight: 700;">{{CompanyName}}</span> vui mừng thông báo hồ sơ ứng tuyển của bạn đã được phê duyệt.<br>
+                Nhằm mong muốn trao đổi cụ thể và chi tiết hơn về vị trí công việc ứng tuyển,
+                bạn vui lòng liên hệ với Anh/Chị <span style="color: black; font-weight: 700;">{{PartnerName}}</span> cán bộ nhân sự phía công ty, theo thông tin liên lạc bên dưới:<br>
+                <span style="color: black; font-weight: 700;">Phone</span>: {{Phone}} <br>
+                <span style="color: black; font-weight: 700;">Email</span>: {{Email}} <br>
+                Nếu không phải yêu cầu của bạn, hãy bỏ qua email này.
+            </p>
+            <b style="color: black;">Team support CareerTech</b>
+            <hr style="margin-bottom: 20px;">
+            <div style="text-align: center;">
+                <a style=" display: inline; text-decoration: none; background-color: #468966; color: #F5F5F5; padding: 10px; border-radius: 5px;" href="domain/recruitment/{{RecruitmentID}}" target="_blank">View Recruitment</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

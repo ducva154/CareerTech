@@ -1,11 +1,12 @@
-﻿using CareerTech.Models;
-using CareerTech.Services;
+﻿using CareerTech.Services;
 using CareerTech.Services.Implement;
+using CareerTech.Utils;
+using Microsoft.AspNet.Identity;
+using PayPal.Api;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Payment = PayPal.Api.Payment;
 
 namespace CareerTech.Controllers
 {
@@ -15,15 +16,21 @@ namespace CareerTech.Controllers
         private readonly ISolutionManagementService<SolutionManagementService> _solutionManagementService;
         private readonly IContentService<ContentService> _contentService;
         private readonly IAboutManagement<AboutService> _aboutManagement;
+        private readonly IOrderManagementService<OrderManagementService> _orderManagementService;
+        private readonly IPartnerManagementService<PartnerManagementService> _partnerManagementService;
 
         public HomeController(ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
             ISolutionManagementService<SolutionManagementService> solutionManagementService,
-            IContentService<ContentService> contentService, IAboutManagement<AboutService> aboutManagement)
+            IContentService<ContentService> contentService, IAboutManagement<AboutService> aboutManagement,
+             IOrderManagementService<OrderManagementService> orderManagementService,
+            IPartnerManagementService<PartnerManagementService> partnerManagementService)
         {
             _subscriptionManagementService = subscriptionManagementService;
             _solutionManagementService = solutionManagementService;
             _contentService = contentService;
             _aboutManagement = aboutManagement;
+            _orderManagementService = orderManagementService;
+            _partnerManagementService = partnerManagementService;
         }
         public ActionResult Index()
         {
@@ -40,7 +47,23 @@ namespace CareerTech.Controllers
             {
                 ViewBag.Intro = _contentService.GetIntroduction();
             }
-
+            /*  string userId = User.Identity.GetUserId();
+              if (userId != null)
+              {
+                  var serviceTime = _partnerManagementService.GetPartnerServiceTime(userId);
+                  if(serviceTime != null)
+                  {
+                      var time = _partnerManagementService.PartnerService(userId);
+                      // time > 0 => now > endDate
+                      // time = 0 => now = endDate
+                      // time < 0 => now < endDate
+                      ViewBag.Time = time;
+                  }
+              }
+              else
+              {
+                  ViewBag.Time = null;
+              }*/
             return View();
         }
 
@@ -55,6 +78,8 @@ namespace CareerTech.Controllers
             {
                 ViewBag.About = _aboutManagement.getAbout();
             }
+            var partners = _partnerManagementService.getAllPartners();
+            ViewBag.partners = partners;
             return View();
         }
 
@@ -64,5 +89,197 @@ namespace CareerTech.Controllers
 
             return View();
         }
+        public ActionResult SuccessView()
+        {
+
+            return View();
+        }
+        public ActionResult FailView()
+        {
+
+            return View();
+        }
+        #region Paypal
+        [Authorize(Roles = "Partner")]
+        public ActionResult PaymentWithPaypal(string id, string Cancel = null)
+        {
+            //getting the apiContext  
+            APIContext apiContext = PayPalService.GetAPIContext();
+            try
+            {
+                //A resource representing a Payer that funds a payment Payment Method as paypal  
+                //Payer Id will be returned when payment proceeds or click to pay  
+                string payerId = Request.Params["PayerID"];
+                if (string.IsNullOrEmpty(payerId))
+                {
+                    //this section will be executed first because PayerID doesn't exist  
+                    //it is returned by the create function call of the payment class  
+                    // Creating a payment  
+                    // baseURL is the url on which paypal sendsback the data.  
+                    string baseURI = Request.Url.Scheme + "://" + Request.Url.Authority + "/Home/PaymentWithPayPal?";
+                    //here we are generating guid for storing the paymentID received in session  
+                    //which will be used in the payment execution  
+                    var guid = Convert.ToString((new Random()).Next(100000));
+                    //CreatePayment function gives us the payment approval url  
+                    //on which payer is redirected for paypal account payment  
+                    var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, id);
+                    //get links returned from paypal in response to Create function call  
+                    var links = createdPayment.links.GetEnumerator();
+                    string paypalRedirectUrl = null;
+                    while (links.MoveNext())
+                    {
+                        Links lnk = links.Current;
+                        if (lnk.rel.ToLower().Trim().Equals("approval_url"))
+                        {
+                            //saving the payapalredirect URL to which user will be redirected for payment  
+                            paypalRedirectUrl = lnk.href;
+                        }
+                    }
+                    // saving the paymentID in the key guid  
+                    Session.Add(guid, createdPayment.id);
+                    return Redirect(paypalRedirectUrl);
+                }
+                else
+                {
+                    // This function exectues after receving all parameters for the payment  
+                    var guid = Request.Params["guid"];
+                    var executedPayment = ExecutePayment(apiContext, payerId, Session[guid] as string);
+                    //If executed payment failed then we will show payment failure message to user  
+                    if (executedPayment.state.ToLower() != "approved")
+                    {
+                        return View("FailView");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return View("FailView");
+            }
+            string userId = User.Identity.GetUserId();
+            if (Session["order"] != null)
+            {
+                Models.Order order = (Models.Order)Session["order"];
+                string orderId = order.ID;
+                DateTime orderDate = order.OrderDate;
+                var subs = _subscriptionManagementService.GetSubscriptionByID(order.SubscriptionID);
+                int period = (int)subs.Period;
+                DateTime dueDate = DateTime.Parse(orderDate.AddMonths(period).ToString("MM/dd/yyyy HH:mm:ss"));
+                var UpdateOrder = _orderManagementService.UpdateOrder(orderId, "Paid");
+                if (UpdateOrder > 0)
+                {
+                    //add to TIme
+                    string timeId = Guid.NewGuid().ToString();
+                    string paymentId = Guid.NewGuid().ToString();
+                    bool partnerTimeExisted = _partnerManagementService.PartnerTimeExisted(userId);
+                    if (partnerTimeExisted)
+                    {
+                        int compare = _partnerManagementService.CompareTime(userId);
+                        if (compare < 0)
+                        {
+                            var time = _partnerManagementService.GetPartnerServiceTime(userId);
+                            DateTime endDate = time.EndDate.AddMonths(period);
+                            _partnerManagementService.UpdateServiceTime(userId, endDate);
+                        }
+                        else
+                        {
+                            _partnerManagementService.addServiceTime(timeId, userId, orderDate, dueDate);
+                        }
+                    }
+                    else
+                    {
+                        _partnerManagementService.addServiceTime(timeId, userId, orderDate, dueDate);
+                    }
+                    //add  to Payment
+                    _orderManagementService.AddPaymentDB(orderId, paymentId);
+                }
+                Session.Remove("order");
+            }
+            //on successful payment, show success page to user.  
+            return View("SuccessView");
+        }
+        private PayPal.Api.Payment payment;
+        private Payment ExecutePayment(APIContext apiContext, string payerId, string paymentId)
+        {
+            var paymentExecution = new PaymentExecution()
+            {
+                payer_id = payerId
+            };
+            this.payment = new Payment()
+            {
+                id = paymentId
+            };
+            return this.payment.Execute(apiContext, paymentExecution);
+        }
+        private Payment CreatePayment(APIContext apiContext, string redirectUrl, string id)
+        {
+            var sub = _subscriptionManagementService.GetSubscriptionByID(id);
+            //create itemlist and add item objects to it  
+            var itemList = new ItemList()
+            {
+                items = new List<Item>()
+            };
+            //Adding Item Details like name, currency, price etc  
+            itemList.items.Add(new Item()
+            {
+                name = sub.ID,
+                currency = "USD",
+                price = sub.Price.ToString(),
+                quantity = "1",
+                sku = "sku"
+            });
+            var payer = new Payer()
+            {
+                payment_method = "paypal"
+            };
+            // Configure Redirect Urls here with RedirectUrls object  
+            var redirUrls = new RedirectUrls()
+            {
+                cancel_url = redirectUrl + "&Cancel=true",
+                return_url = redirectUrl
+            };
+            // Adding Tax, shipping and Subtotal details  
+            var details = new Details()
+            {
+                tax = "1",
+                shipping = "0",
+                subtotal = sub.Price.ToString()
+            };
+            //Final amount with details  
+            var amount = new Amount()
+            {
+                currency = "USD",
+                total = (Convert.ToDouble(details.tax) + Convert.ToDouble(details.shipping) + Convert.ToDouble(details.subtotal)).ToString()
+                , // Total must be equal to sum of tax, shipping and subtotal.  
+                details = details
+            };
+            var transactionList = new List<Transaction>();
+            // Adding description about the transaction  
+            transactionList.Add(new Transaction()
+            {
+                description = "Transaction description",
+                invoice_number = Convert.ToString(new Random().Next(1000000000)),
+                amount = amount,
+                item_list = itemList
+            });
+            this.payment = new PayPal.Api.Payment()
+            {
+                intent = "sale",
+                payer = payer,
+                transactions = transactionList,
+                redirect_urls = redirUrls
+            };
+            string guid = Guid.NewGuid().ToString();
+            string userID = User.Identity.GetUserId();
+            DateTime orderDate = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"));
+            int period = (int)sub.Period;
+            string status = "Pending";
+            double price = Double.Parse(amount.total);
+            var result = _orderManagementService.AddOrder(guid, id, userID, orderDate, price, status);
+            var order = _orderManagementService.getOrderByID(guid);
+            HttpContext.Session.Add("order", order);
+            // Create a payment using a APIContext  
+            return this.payment.Create(apiContext);
+        }
+        #endregion
     }
 }

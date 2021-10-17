@@ -25,15 +25,18 @@ namespace CareerTech.Services
 
         void UpdateCompany(CompanyProfile company);
 
-        List<Recruitment> GetAllRecruitment();
+        List<Recruitment> GetListRecruitmentByCompanyID(string companyID);
 
         void AddRecruitment(Recruitment obj);
 
-        List<Job> GetAddJobCategory();
+        List<Job> GetAllJobCategory();
 
         Recruitment GetRecruitmentById(string recruitmentId);
         void DeleteRecruitmentByID(string recruitmentId);
         void UpdateRecruitment(Recruitment recruitment);
-        List<ApplicationUser> GetListCandidate();
+        List<CandidateViewModel> GetListCandidateByCompanyID(string companyID);
+        void DeleteCandidateById(string id);
+
+        void UpdateCandidateByID(string candidateID);
     }
 }

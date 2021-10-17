@@ -1,14 +1,24 @@
 ﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
+@if (Session[CareerTech.Utils.SessionConstant.USER_MODEL]!=null)
 {
-
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
         <div class="navbar-collapse collapse" id="navbarContent">
             <ul class="navbar-nav ml-auto" style="line-height:50px;">
                 <li class="nav-item active">
-                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                    @if (Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("Admin"))
+                    {
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName(), "Index", "Admin")
+                    }
+                    else if (Session[CareerTech.Utils.SessionConstant.ROLE_NAME].Equals("User"))
+                    {
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName(), "Index", "User")
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName(), "Index", "Partner")
+                    }
                 </li>
                 <li class="nav-item active" style="margin-left: 20px;"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
             </ul>

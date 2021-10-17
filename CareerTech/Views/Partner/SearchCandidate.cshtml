@@ -3,11 +3,10 @@
     ViewBag.Title = "Search Candidate";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
 }
-
+<script src="~/Scripts/AdminService/jquery-3.6.0.min.js"></script>
+@model CareerTech.Models.FilterViewModel
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
-
-
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="card">
@@ -15,46 +14,37 @@
                         <span class="card-title">Thông tin ứng viên</span>
                         <form>
                             <div class="row">
-                                <div class="col s3">
-                                    <select>
-                                        <option value="">Lives In</option>
-                                        <option value="">Ha Noi</option>
-                                        <option value="">Bac Ninh</option>
-                                        <option value="">Da Nang</option>
-                                    </select>
+                                <div class="input-field col m6 s12">
+                                    @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(m => m.Address, ViewBag.ListAddress as SelectList, "--Select address--")
+                                    </div>
                                 </div>
-                                <div class="col s3">
-                                    <select>
-                                        <option value="">Career</option>
-                                        <option value="">Sales</option>
-                                        <option value="">Developer</option>
-                                        <option value="">Marketing</option>
-                                    </select>
+                                <div class="input-field col m6 s12">
+                                    @Html.LabelFor(m => m.Career, new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(m => m.Career, ViewBag.ListJobCategory as SelectList, "--Select Job Category--")
+                                    </div>
                                 </div>
-                                <div class="col s3">
-                                    <select>
-                                        <option value="">Age</option>
-                                        <option value="">18</option>
-                                        <option value="">20</option>
-                                        <option value="">22</option>
-                                    </select>
+                                <div class="input-field col m6 s12">
+                                    @Html.LabelFor(m => m.Gender, new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>{
+                                                      new SelectListItem { Text = "Male", Value = "true"},
+                                                      new SelectListItem { Text = "Female", Value = "false"},
+                                                      }, "--Select Gender--")
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col s3">
-                                    <select>
-                                        <option value="">Gender</option>
-                                        <option value="">Male</option>
-                                        <option value="">Female</option>
-                                    </select>
-                                </div>
-                                <div class="col s3">
-                                    <button class="btn teal">Filter</button>
+                                    <div id="filterCandidate" class="btn teal">Filter</div>
                                 </div>
                             </div>
                         </form>
-                        <table>
+                        <table id="example" class="display responsive-table datatable-example">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Name</th>
                                     <th>Career</th>
                                     <th>Lives In</th>
@@ -65,29 +55,7 @@
                                     <th>Portfolio</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Quinn Flynn</td>
-                                    <th>Developer</th>
-                                    <th>Ha Noi</th>
-                                    <th>18</th>
-                                    <th>Male</th>
-                                    <td>nguyenvana@gmail.com</td>
-                                    <td>123456789</td>
-                                    <td><a href="">View Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Flynn</td>
-                                    <th>Developer</th>
-                                    <th>Ha Noi</th>
-                                    <th>18</th>
-                                    <th>Male</th>
-                                    <td>haiphuong@gmail.com</td>
-                                    <td>123456</td>
-                                    <td><a href="">View Detail</a></td>
-                                </tr>
+                            <tbody id="candidate-infor">
                             </tbody>
                         </table>
                     </div>
@@ -96,3 +64,49 @@
         </div>
     </div>
 </main>
+<script>
+    $(document).ready(function () {
+        $('#filterCandidate').click(function () {
+            loadData();
+        });
+    });
+    //Load Data function
+    function loadData() {
+        var FilterViewModel = {
+            Address: $('#Address').val(),
+            Career: $('#Career').val(),
+            Gender: $('#Gender').val()
+        };
+        var model = JSON.stringify(FilterViewModel);
+        $.ajax({
+            url: "https://localhost:44396/api/getcandidate",
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            data: model,
+            dataType: "json",
+            success: function (response) {
+                var html = '';
+                $.each(response, function (index, item) {
+                    html += '<tr>';
+                    html += '<td>' + item.FullName + '</td>';
+                    html += '<td>' + item.Career + '</td>';
+                    html += '<td>' + item.Address + '</td>';
+                    html += '<td>' + item.Age + '</td>';
+                    if (item.Gender === true) {
+                        html += '<td>Male</td>';
+                    } else {
+                        html += '<td>Female</td>';
+                    }
+                    html += '<td>' + item.Email + '</td>';
+                    html += '<td>' + item.Phone + '</td>';
+                    html += '<td><a href="/portfolio/' + item.PortfolioID + '"target="_blank">View Detail</a></td>';
+                    html += '</tr>';
+                });
+                 $('#candidate-infor').html(html);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

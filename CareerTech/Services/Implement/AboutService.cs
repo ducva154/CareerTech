@@ -8,7 +8,7 @@ namespace CareerTech.Services.Implement
 {
     public class AboutService : IAboutManagement<AboutService>
     {
-        ApplicationDbContext _applicationDbContext { get; set; }
+        private readonly ApplicationDbContext _applicationDbContext = null;
 
         public AboutService(ApplicationDbContext applicationDbContext)
         {

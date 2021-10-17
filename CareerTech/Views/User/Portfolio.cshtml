@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <div class="vg-page page-home" id="home">
+    <div class="vg-page page-home" id="home" style="background-image: url(http://res.cloudinary.com/anhduc/image/upload/v1634195594/l4amuueyfxoyyhtpcerg.jpg)">
         <!-- Navbar -->
         <div class="navbar navbar-expand-lg navbar-dark sticky" data-offset="500">
             <div class="container">
@@ -128,7 +128,7 @@
             <div class="row">
                 <div class="col-lg-4 py-3">
                     <div class="img-place wow fadeInUp">
-                        <img src="@profile.Url_avatar" alt="">
+                        <img src="@(profile.Url_avatar!=null?profile.Url_avatar:"http://res.cloudinary.com/anhduc/image/upload/v1634354042/l7rdutyldpyjljqx8ony.jpg")" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 offset-lg-1 wow fadeInRight">
@@ -235,21 +235,21 @@
                             <div class='col-md-6 col-lg-3 py-3'>
                                 <ul class='list-unstyled'>
                                     <li><b>Name: </b>@p.Name</li>
-                                    <li><b>Domain: </b>@p.Domain</li>
-                                    <li><b>Team size: </b>@p.TeamSize</li>
+                                    <li><b>Domain: </b>@(p.Domain!=null?p.Domain:"N/A")</li>
+                                    <li><b>Team size: </b>@(p.TeamSize!=null?p.TeamSize.ToString():"N/A")</li>
                                 </ul>
                             </div>
                             <div class='col-md-6 py-3'>
                                 <ul class='list-unstyled'>
-                                    <li><b>Skill: </b>@p.Skill</li>
-                                    <li><b>Project Tech: </b>@p.ProjectTech</li>
-                                    <li><b>Work Process: </b>@p.WorkProces</li>
+                                    <li><b>Skill: </b>@(p.Skill!=null?p.Skill:"N/A")</li>
+                                    <li><b>Project Tech: </b>@(p.ProjectTech!=null?p.ProjectTech:"N/A")</li>
+                                    <li><b>Work Process: </b>@(p.WorkProces!=null?p.WorkProces:"N/A")</li>
                                 </ul>
                             </div>
                             <div class='col-md-6 col-lg-3 py-3'>
                                 <ul class='list-unstyled'>
-                                    <li><b>Project Role: </b>@p.ProjectRole</li>
-                                    <li><b>Company: </b>@p.Company</li>
+                                    <li><b>Project Role: </b>@(p.ProjectRole!=null?p.ProjectRole:"N/A")</li>
+                                    <li><b>Company: </b>@(p.Company!=null?p.Company:"N/A")</li>
                                 </ul>
                             </div>
                         </div>

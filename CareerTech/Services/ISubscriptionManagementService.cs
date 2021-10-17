@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace CareerTech.Services
 {
-    public interface ISubscriptionManagementService<T> where T:class
+    public interface ISubscriptionManagementService<T> where T : class
     {
-        int addNewSubscription(Guid id, string Name, float Price, string Type);
+        int AddNewSubscription(Guid id, string Name, float Price, string Type, int Period, string Desc);
         List<Subscription> GetSubscriptions();
-        int UpdateSubscriptionByID(string subscriptionID, string Name, float Price, string Type);
+        int UpdateSubscriptionByID(string subscriptionID, string Name, float Price, string Type, int Period, string Desc);
         Subscription GetSubscriptionByID(string subscriptionID);
         int DeleteSubscriptionByID(string subscriptionID);
     }
-        
+
 }

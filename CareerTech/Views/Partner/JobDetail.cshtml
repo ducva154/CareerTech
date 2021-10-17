@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/font.css">
 <link rel="stylesheet" href="~/Content/Dashboard/assets/css/css-job/font-awesome.min.css">
 @model CareerTech.Models.Recruitment
-@{ 
+@{
     var company = ViewBag.company as CareerTech.Models.CompanyProfile;
 }
 <div class="box box-white" style="margin-bottom: 0px;">
@@ -20,13 +20,13 @@
             <div class="row" id="row-job-title">
                 <div class="col-sm-3">
                     <div class="company-logo-wraper text-center">
-                            <img class="company-logo" src="@company.Url_Avatar"
-                                 alt="Avatar" loading="lazy">
+                        <img class="company-logo" src="@company.Url_Avatar"
+                             alt="Avatar" loading="lazy">
                     </div>
                 </div>
                 <div class="col-sm-9" style="margin-top: 10px;">
                     <h1 class="job-title text-highlight bold" style="overflow-wrap:break-word;">
-                       @Model.Title
+                        @Model.Title
                     </h1>
                     <div class="company-title">
                         <span>
@@ -34,7 +34,7 @@
                         </span>
                     </div>
                     <div class="text-dark-gray" style="margin-bottom: 10px;">
-                       @company.Address
+                        @Model.Address
                     </div>
                     <div class=" text-dark-gray  job-deadline">
                         Hạn nộp hồ sơ: @Model.EndDate.ToString("dd/MM/yyyy")
@@ -44,7 +44,7 @@
         </div>
         <div class="col-sm-3 apply-area">
             <div class="text-center">
-                <p><a href="" class="btn btn-topcv-primary btn-apply open-apply-modal" data-target="#modal-apply-cv" data-toggle="modal">ỨNG TUYỂN NGAY</a></p>
+                <p><a href="/User/ApplyRecruitment/@Model.ID" id="apply-recruitment" class="btn btn-topcv-primary btn-apply open-apply-modal">ỨNG TUYỂN NGAY</a></p>
             </div>
         </div>
     </div>
@@ -53,7 +53,6 @@
     <ul class="nav nav-pills">
         <li class="active"><a href="~/Partner/JobDetail/@Model.ID" data-toggle="tab">TIN TUYỂN DỤNG</a></li>
         <li><a href="~/Partner/IntroductionCompany/@company.ID" target="_blank">GIỚI THIỆU CÔNG TY</a></li>
-        <li><a href="Job.html" target="_blank">VIỆC LÀM CÙNG CÔNG TY</a></li>
     </ul>
 </div>
 <div class="container tab-content clearfix">
@@ -104,7 +103,7 @@
                     <div class="job-info-item" style="border-bottom: 0px;">
                         <strong>Địa điểm làm việc: </strong>
                         <span>
-                           @Model.Address
+                            @Model.Address
                         </span>
                     </div>
                 </div>
@@ -131,4 +130,20 @@
         </div>
     </div>
 </div>
+@section scripts{
+    <script>
+        var message = '@(ViewBag.Message)';
+        $("#apply-recruitment").click(function () {
+            sessionStorage.reloadAfterPageLoad = true;
+        }
+        );
+
+        $(function () {
+            if (sessionStorage.reloadAfterPageLoad) {
+                alert(message);
+                sessionStorage.reloadAfterPageLoad = false;
+            }
+        });
+    </script>
+}
 

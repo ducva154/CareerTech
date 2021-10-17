@@ -1,7 +1,7 @@
 ﻿@using CareerTech.Models
 @model CareerTech.Models.Skill
 @{
-    ViewBag.Title = "EditSkillPortfolio";
+    ViewBag.Title = "Skill Portfolio";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
     ICollection<Skill> listSkill = ViewBag.ListSkill;
 }
@@ -12,8 +12,8 @@
             <div class="col s12 m7 l9">
                 <h5>@ViewBag.Portfolio.Name</h5>
                 <div class="card">
+                    <span class="@ViewBag.Type">@ViewBag.Message</span>
                     @Html.ValidationSummary("", new { @class = "text-danger" })
-                    @*<p class="error-page error text-danger">@ViewBag.ErrorMessage</p>*@
                     <div class="card-content">
                         <div id="example_wrapper" class="dataTables_wrapper">
                             <table id="example" class="display responsive-table datatable-example dataTable" role="grid" aria-describedby="example_info">
@@ -70,7 +70,7 @@
                             <div class="input-field col m6 s12">
                                 @Html.LabelFor(m => m.SkillLevel, new { @class = "col-md-2 control-label active" })
                                 <div class="col-md-10">
-                                    @Html.TextBoxFor(m => m.SkillLevel, new { @class = "form-control" })
+                                    @Html.TextBoxFor(m => m.SkillLevel, new { @type = "number", @min = "0", @max = "100", @class = "form-control" })
                                 </div>
                             </div>
                         </div>

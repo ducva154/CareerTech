@@ -110,6 +110,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -307,10 +310,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="App_Start\UnityResolver.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\AdminServiceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartnerController.cs" />
@@ -322,10 +326,15 @@
     <Compile Include="Migrations\202110131411267_initial.designer.cs">
       <DependentUpon>202110131411267_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202110171005541_update_company_profile.cs" />
+    <Compile Include="Migrations\202110171005541_update_company_profile.designer.cs">
+      <DependentUpon>202110171005541_update_company_profile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\_MigrationSQLGenerator.cs" />
     <Compile Include="Models\About.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Candidate.cs" />
     <Compile Include="Models\CompanyProfile.cs" />
     <Compile Include="Models\Education.cs" />
@@ -348,15 +357,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAboutManagement.cs" />
     <Compile Include="Services\IAccountService.cs" />
+    <Compile Include="Services\IAPIService.cs" />
     <Compile Include="Services\IContentService.cs" />
     <Compile Include="Services\Implement\AboutService.cs" />
     <Compile Include="Services\Implement\AccountService.cs" />
+    <Compile Include="Services\Implement\APIService.cs" />
     <Compile Include="Services\Implement\ContentService.cs" />
+    <Compile Include="Services\Implement\OrderManagementService.cs" />
     <Compile Include="Services\Implement\PartnerManagementService.cs" />
     <Compile Include="Services\Implement\PartnerService.cs" />
     <Compile Include="Services\Implement\SolutionManagementService.cs" />
     <Compile Include="Services\Implement\SubscriptionManagementService.cs" />
     <Compile Include="Services\Implement\UserManagementService.cs" />
+    <Compile Include="Services\IOrderManagementService.cs" />
     <Compile Include="Services\IPartnerManagementService.cs" />
     <Compile Include="Services\IPartnerService.cs" />
     <Compile Include="Services\ISolutionManagementService.cs" />
@@ -367,8 +380,10 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CloudDiaryService.cs" />
     <Compile Include="Utils\CommonConstants.cs" />
+    <Compile Include="Utils\CommonService.cs" />
     <Compile Include="Utils\PageConstant.cs" />
     <Compile Include="Utils\MessageConstant.cs" />
+    <Compile Include="Utils\PayPalService.cs" />
     <Compile Include="Utils\RoleNameConstant.cs" />
     <Compile Include="Utils\SessionConstant.cs" />
   </ItemGroup>
@@ -1622,6 +1637,9 @@
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\font\weathericons-regular-webfont.svg" />
     <Content Include="Content\Dashboard\assets\plugins\weather-icons-master\_docs\gh-pages\index.html" />
+    <Content Include="Content\EmailTemplate\Approve.html" />
+    <Content Include="Content\Error\css\style.css" />
+    <Content Include="Content\Error\img\bg.jpg" />
     <Content Include="Content\Home\css\bootstrap.css" />
     <Content Include="Content\Home\css\maicons.css" />
     <Content Include="Content\Home\css\theme.css" />
@@ -1725,6 +1743,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\AdminService\adminController.js" />
+    <Content Include="Scripts\AdminService\jquery-3.6.0.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Dashboard\assets\plugins\.DS_Store" />
@@ -2127,6 +2147,12 @@
     <Content Include="Views\Partner\IntroductionCompany.cshtml" />
     <Content Include="Views\Partner\EditRecruitment.cshtml" />
     <Content Include="Views\Admin\EditAbout.cshtml" />
+    <Content Include="Views\User\UserProfile.cshtml" />
+    <Content Include="Views\User\SearchRecruitment.cshtml" />
+    <Content Include="Views\User\EditProduct.cshtml" />
+    <Content Include="Views\Home\SuccessView.cshtml" />
+    <Content Include="Views\Home\FailView.cshtml" />
+    <Content Include="Views\Admin\OrderDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2147,6 +2173,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202110131411267_initial.resx">
       <DependentUpon>202110131411267_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110171005541_update_company_profile.resx">
+      <DependentUpon>202110171005541_update_company_profile.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

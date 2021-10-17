@@ -1,78 +1,84 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+@if (ViewBag.Intro != null && ViewBag.Sol != null && ViewBag.Subs != null)
+{
+    <div class="page-banner home-banner">
+        <div class="row align-items-center flex-wrap-reverse h-100">
+            <div class="col-md-6 py-5 wow fadeInLeft">
+                <h1 class="mb-4">@ViewBag.Intro.Title</h1>
+                <p class="text-lg text-grey mb-5">
+                    @Html.Raw(ViewBag.Intro.Detail.ToString())
+                </p>
 
-<div class="page-banner home-banner">
-    <div class="row align-items-center flex-wrap-reverse h-100">
-        <div class="col-md-6 py-5 wow fadeInLeft">
-            <h1 class="mb-4">@ViewBag.Intro.Title</h1>
-            <p class="text-lg text-grey mb-5">
-                @Html.Raw(ViewBag.Intro.Detail.ToString())
-            </p>
-
-        </div>
-        <div class="col-md-6 py-5 wow zoomIn">
-            <div class="img-fluid text-center">
-                <img src="@ViewBag.Intro.Url_Image" alt="">
+            </div>
+            <div class="col-md-6 py-5 wow zoomIn">
+                <div class="img-fluid text-center">
+                    <img src="@ViewBag.Intro.Url_Image" alt="">
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="page-section">
-    <div class="container">
-        <div class="row">
-            @foreach (var sol in ViewBag.Sol)
-            {
-                <div class="col-lg-4">
-                    <div class="card-service wow fadeInUp">
-                        <div class="header">
-                            <img src="@sol.Url_image" alt="">
-                        </div>
-                        <div class="body">
-                            <h5 class="text-secondary">@sol.Title</h5>
-                            <p>@sol.Detail</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div> <!-- .container -->
-</div> <!-- .page-section -->
-<div class="page-section">
-    <div class="container">
-        <div class="text-center wow fadeInUp">
-            <div class="subhead">Pricing Plan</div>
-            <h2 class="title-section">Choose plan the right for you</h2>
-            <div class="divider mx-auto"></div>
-        </div>
-        <div class="row mt-5">
-            @foreach (var s in ViewBag.Subs)
-            {
-                <div class="col-lg-4 py-3 wow zoomIn">
-                    <div class="card-pricing marked">
-                        <div class="header">
-                            <div class="pricing-type">@s.Type</div>
-                            <div class="price">
-                                <span class="dollar">$</span>
-                                <h1>@s.Price</h1>
+    <div class="page-section">
+        <div class="container">
+            <div class="row">
+                @foreach (var sol in ViewBag.Sol)
+                {
+                    <div class="col-lg-4">
+                        <div class="card-service wow fadeInUp">
+                            <div class="header">
+                                <img src="@sol.Url_image" alt="">
                             </div>
-                            <h5>Per @s.Name</h5>
-                        </div>
-                        <div class="body">
-                            <p>Searching for <span class="suffix">Users/Candidates</span></p>
-                            <p>Contact to <span class="suffix">Users</span></p>
-                            <p>Create <span class="suffix">Company Profile</span></p>
-                            <p>Job Information <span class="suffix">Management</span></p>
-                            <p>Approve/Reject  <span class="suffix">Request</span></p>
-                            <p>Get Data  <span class="suffix">Via Restful API</span></p>
-                        </div>
-
-                        <div class="footer">
-                            <a href="#" class="btn btn-pricing btn-block">Subscribe</a>
+                            <div class="body">
+                                <h5 class="text-secondary">@sol.Title</h5>
+                                <p>@sol.Detail</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
-    </div> <!-- .container -->
-</div> <!-- .page-section -->
+                }
+            </div>
+        </div> <!-- .container -->
+    </div> <!-- .page-section -->
+    <div class="page-section">
+        <div class="container">
+            <div class="text-center wow fadeInUp">
+                <div class="subhead">Pricing Plan</div>
+                <h2 class="title-section">Choose plan the right for you</h2>
+                <div class="divider mx-auto"></div>
+            </div>
+            <div class="row mt-5">
+                @foreach (var s in ViewBag.Subs)
+                {
+                    <div class="col-lg-4 py-3 wow zoomIn">
+                        <div class="card-pricing marked">
+                            <div class="header">
+                                <div class="pricing-type">@s.Type</div>
+                                <div class="price">
+                                    <span class="dollar">$</span>
+                                    <h1>@s.Price</h1>
+                                </div>
+                                <h5>Per @s.Name</h5>
+                            </div>
+                            <div class="body">
+                                @Html.Raw(s.DetailDesc.ToString())
+                            </div>
+                            <div class="footer">
+                                <a href="~/Home/PaymentWithPaypal?id=@s.ID" class="btn btn-pricing btn-block">Subscribe</a>
+                            </div>
+                            @*
+
+                                <div class="footer">
+                                    <p class="btn btn-pricing btn-block disable">Subscribed</p>
+                                </div>*@
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div> <!-- .container -->
+    </div> <!-- .page-section -->
+}
+else
+{
+    <h1> No Data</h1>
+}

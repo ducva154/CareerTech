@@ -7,7 +7,7 @@ namespace CareerTech.Services.Implement
 {
     public class UserManagementService : IUserManagmentService<UserManagementService>
     {
-        private ApplicationDbContext _applicationDbContext =null; 
+        private readonly ApplicationDbContext _applicationDbContext = null;
 
         public UserManagementService(ApplicationDbContext applicationDbContext)
         {

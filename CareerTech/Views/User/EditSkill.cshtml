@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "EditSkill";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
-    Skill skill = ViewBag.Skill;
 }
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
@@ -12,10 +11,10 @@
             <div class="col s12 m7 l9">
                 <h5>@ViewBag.Portfolio.Name</h5>
                 <div class="card">
+                    <span class="@ViewBag.Type">@ViewBag.Message</span>
                     @Html.ValidationSummary("", new { @class = "text-danger" })
-                    <p class="error">@ViewBag.ErrorMessage</p>
                     <div class="card-content">
-                        @using (Html.BeginForm("EditSkill", "User", new { skillID = skill.ID }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        @using (Html.BeginForm("EditSkill", "User", new { skillID = Model.ID }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
                             <div id="example_wrapper" class="dataTables_wrapper">
                                 <div class="row">
@@ -23,13 +22,13 @@
                                     <div class="input-field col m6 s12">
                                         @Html.LabelFor(m => m.SkillName, new { @class = "col-md-2 control-label active" })
                                         <div class="col-md-10">
-                                            @Html.TextBoxFor(m => m.SkillName, new { @class = "form-control", @Value = (skill != null ? skill.SkillName : "") })
+                                            @Html.TextBoxFor(m => m.SkillName, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="input-field col m6 s12">
                                         @Html.LabelFor(m => m.SkillLevel, new { @class = "col-md-2 control-label active" })
                                         <div class="col-md-10">
-                                            @Html.TextBoxFor(m => m.SkillLevel, new { @class = "form-control", @Value = (skill != null ? skill.SkillLevel + "" : "") })
+                                            @Html.TextBoxFor(m => m.SkillLevel, new { @type = "number", @min = "0", @max = "100", @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>

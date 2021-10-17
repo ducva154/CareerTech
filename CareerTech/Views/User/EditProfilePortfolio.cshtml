@@ -2,8 +2,6 @@
 @{
     ViewBag.Title = "Edit_Profile_Portfolio";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
-    var profile = ViewBag.Profile;
-    string desc = profile != null ? profile.Desc : "";
 }
 
 <main class="mn-inner inner-active-sidebar">
@@ -13,6 +11,7 @@
             <div class="col s12 m7 l9">
                 <h5>@ViewBag.Portfolio.Name</h5>
                 <div class="card">
+                    <span class="@ViewBag.Type">@ViewBag.Message</span>
                     @Html.ValidationSummary("", new { @class = "text-danger" })
                     <div class="card-content">
                         @using (Html.BeginForm("EditProfilePortfolioAsync", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
@@ -23,7 +22,7 @@
                                     <div class="input-field col m6 s12">
                                         @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label active" })
                                         <div class="col-md-10">
-                                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @Value = (profile != null ? profile.Name : "") })
+                                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="file-field input-field col m6 s12">
@@ -32,77 +31,76 @@
                                             @Html.TextBox("Url_avatar", "", new { type = "file" })
                                         </div>
                                         <div class="file-path-wrapper">
-                                            @Html.TextBoxFor(m => m.Url_avatar, new { @class = "file-path validate", @Value = (@profile != null ? @profile.Url_avatar : "") })
+                                            @Html.TextBoxFor(m => m.Url_avatar, new { @class = "file-path validate" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Age, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Age, new { @class = "form-control", @Value = (profile != null ? profile.Age : "") })
+                                        @Html.TextBoxFor(m => m.Age, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Gender, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.DropDownListFor(model => model.Gender, new List<SelectListItem>
-                                            { new SelectListItem{Text = "Male", Value = "True", Selected = (profile == null || profile.Gender == true)? true : false},
-                                            new SelectListItem { Text = "Female", Value = "False", Selected = (profile == null || profile.Gender == true) ? false : true }})
+                                        @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>
+                                            { new SelectListItem{Text = "Male", Value = "True"},
+                                            new SelectListItem { Text = "Female", Value = "False"}})
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
                                     @Html.LabelFor(m => m.Position, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Position, new { @class = "form-control", @Value = (profile != null ? profile.Position : "") })
+                                        @Html.TextBoxFor(m => m.Position, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
                                     @Html.LabelFor(m => m.Desc, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @*@Html.TextAreaFor (m => m.Desc, new { @class = "materialize-textarea" })*@
-                                        @Html.TextArea("Desc", desc, new { @class = "materialize-textarea" })
+                                        @Html.TextAreaFor(m => m.Desc, new { @class = "materialize-textarea" })
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
                                     @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @Value = (profile != null ? profile.Address : "") })
+                                        @Html.DropDownListFor(m => m.Address, ViewBag.ListAddress as SelectList, "--- Select address ---")
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Phone, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @Value = (profile != null ? profile.Phone : "") })
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @Value = (profile != null ? profile.Email : "") })
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Facebook_url, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Facebook_url, new { @class = "form-control", @Value = (profile != null ? profile.Facebook_url : "") })
+                                        @Html.TextBoxFor(m => m.Facebook_url, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Twitter_url, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Twitter_url, new { @class = "form-control", @Value = (profile != null ? profile.Twitter_url : "") })
+                                        @Html.TextBoxFor(m => m.Twitter_url, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Youtube_url, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Youtube_url, new { @class = "form-control", @Value = (profile != null ? profile.Youtube_url : "") })
+                                        @Html.TextBoxFor(m => m.Youtube_url, new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="input-field col m6 s12">
                                     @Html.LabelFor(m => m.Instagram_url, new { @class = "col-md-2 control-label active" })
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Instagram_url, new { @class = "form-control", @Value = (profile != null ? profile.Instagram_url : "") })
+                                        @Html.TextBoxFor(m => m.Instagram_url, new { @class = "form-control" })
                                     </div>
                                 </div>
                             </div>

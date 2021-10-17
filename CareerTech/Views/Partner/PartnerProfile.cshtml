@@ -16,15 +16,15 @@
                             @using (Html.BeginForm("UpdateProfile", "Partner", FormMethod.Post, new { @class = "col s12" }))
                             {
                                 <div class="input-field col s12">
-                                    <input id="first_name" type="text" class="validate" value="@Model.UserName" readonly required>
-                                    <label class="active" for="first_name">Account</label>
+                                    <input id="email" type="email" name="email" class="validate" value="@Model.Email" readonly required>
+                                    <label class="active" for="email">Email</label>
                                 </div>
                                 <div class="input-field col s6">
                                     <input id="password" type="password" class="validate" value="--------" readonly required>
                                     <label class="active" for="password">Password</label>
                                 </div>
                                 <div class="col s6">
-                                    <a href="">Change Password</a>
+                                    <a href="/Manage/ChangePassword">Change Password</a>
                                 </div>
                                 <div class="input-field col s12">
                                     <input id="Fullname" name="fullname" type="text" class="validate" value="@Model.FullName" required>
@@ -33,10 +33,6 @@
                                 <div class="input-field col s12">
                                     <input id="phone" type="text" name="phone" class="validate" value="@Model.PhoneNumber" required>
                                     <label class="active" for="phone">Phone</label>
-                                </div>
-                                <div class="input-field col s12">
-                                    <input id="email" type="email" name="email" class="validate" value="@Model.Email" required>
-                                    <label class="active" for="email">Email</label>
                                 </div>
                                 <div class="col s12">
                                     <button class="btn teal">update</button>

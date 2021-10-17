@@ -9,9 +9,13 @@ namespace CareerTech.Services
 {
     public interface IUserService<T> where T : class
     {
-        void InsertPortfolio(Portfolio portfolio);
+        int InsertPortfolio(Portfolio portfolio);
 
         ICollection<Portfolio> GetPortfolioByUser(string userID);
+
+        ICollection<Portfolio> GetPublicPortfolioByUser(string userID);
+
+        Portfolio GetMainPortfolioByUser(string userID);
 
         ICollection<Portfolio> GetPortfolioByNameAndUser(string portfolioName, string userID);
 
@@ -19,13 +23,13 @@ namespace CareerTech.Services
 
         void ChangePortfolioStatus(string portfolioID);
 
-        void DeletePortfolio(string portfolioID);
+        int DeletePortfolio(string portfolioID);
 
         Profile GetProfileByPortfolioID(string portfolioID);
 
-        void CreateProfile(Profile profile);
+        int CreateProfile(Profile profile);
 
-        void EditProfile(Profile profile);
+        int EditProfile(Profile profile);
 
         ICollection<Skill> GetSkillByPortfolioID(string portfolioID);
 
@@ -33,31 +37,31 @@ namespace CareerTech.Services
 
         Skill GetSkillByNameAndPortfolioID(string skillName, string portfolioID);
 
-        void AddSkill(Skill skill);
+        int AddSkill(Skill skill);
 
-        void DeleteSkill(string skillID);
+        int DeleteSkill(string skillID);
 
-        void EditSkill(string skillID, Skill skill);
+        int EditSkill(string skillID, Skill skill);
 
         ICollection<Education> GetEducationByPortfolioID(string portfolioID);
 
         Education GetEducationByID(string educationID);
 
-        void AddEducation(Education education);
+        int AddEducation(Education education);
 
-        void DeleteEducation(string educationID);
+        int DeleteEducation(string educationID);
 
-        void EditEducation(string educationID, Education education);
+        int EditEducation(string educationID, Education education);
 
         ICollection<Experience> GetExperienceByPortfolioID(string portfolioID);
 
         Experience GetExperienceByID(string experienceID);
 
-        void AddExperience(Experience experience);
+        int AddExperience(Experience experience);
 
-        void DeleteExperience(string experienceID);
+        int DeleteExperience(string experienceID);
 
-        void EditExperience(string experienceID, Experience experience);
+        int EditExperience(string experienceID, Experience experience);
 
         ICollection<Product> GetProductByPortfolioID(string portfolioID);
 
@@ -65,11 +69,28 @@ namespace CareerTech.Services
 
         Product GetProductByNameAndPortfolioID(string productName, string portfolioID);
 
-        void AddProduct(Product product);
+        int AddProduct(Product product);
 
-        void DeleteProduct(string productID);
+        int DeleteProduct(string productID);
 
-        void EditProduct(string productID, Product product);
+        int EditProduct(string productID, Product product);
 
+        int EditUserProfile(string userID, ApplicationUser user);
+
+        int EditMainStatus(string portfolioID, string userID);
+
+        List<SearchRecruitmentViewModel> SearchAllRecruiment();
+
+        List<SearchRecruitmentViewModel> SearchRecruimentByFilter(string address, string jobID);
+
+        int ApplyRecruitment(Candidate candidate);
+
+        Candidate GetCandidateByUserIDAndRecruitmentID(string userID, string recruitmentID);
+
+        List<DashboardRecruitmentViewModel> GetDashboardRecruitmentByUserIDAndStatus(string userID);
+
+        int CountCandidateByUserIDAndStatus(string userID, string status);
+
+        string GetCompanyStatusByCompanyProfileID(string companyProfileID);
     }
 }

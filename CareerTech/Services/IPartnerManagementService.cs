@@ -9,7 +9,16 @@ namespace CareerTech.Services
 {
     public interface IPartnerManagementService<T> where T : class
     {
-        List<CompanyProfile> getAllPartners();
+        List<PartnerManagementViewModel> getAllPartners();
         int CountNoOfPartners();
+        List<ApplicationUser> getPartners();
+        int addServiceTime(string id, string userId, DateTime startDate, DateTime endDate);
+        Time GetPartnerServiceTime(string userID);
+        int CompareTime(string userId);
+        CompanyProfile getPartnerByID(string comID);
+        int ApprovePartner(string comID);
+        int RejectPartner(string comID);
+        int UpdateServiceTime(string userID, DateTime dueDate);
+        bool PartnerTimeExisted(string userID);
     }
 }

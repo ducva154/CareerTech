@@ -8,13 +8,13 @@ namespace CareerTech.Services.Implement
 {
     public class SolutionManagementService : ISolutionManagementService<SolutionManagementService>
     {
-        ApplicationDbContext _applicationDbContext { get; set; }
-public SolutionManagementService(ApplicationDbContext applicationDbContext)
+        private readonly ApplicationDbContext _applicationDbContext = null;
+        public SolutionManagementService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
-        public int AddSolution(Guid id,string uID, string Name, string Des,string img_url)
+        public int AddSolution(Guid id, string uID, string Name, string Des, string img_url)
         {
             Solution solution = new Solution();
             solution.ID = id.ToString();
@@ -32,7 +32,7 @@ public SolutionManagementService(ApplicationDbContext applicationDbContext)
             var query = from sol in _applicationDbContext.Solutions
                         select sol;
             var result = query.ToList();
-            
+
             return result;
         }
 

@@ -8,21 +8,22 @@ namespace CareerTech.Services.Implement
 {
     public class SubscriptionManagementService : ISubscriptionManagementService<SubscriptionManagementService>
     {
-        ApplicationDbContext _applicationDbContext { get; set; }
+        private readonly ApplicationDbContext _applicationDbContext = null;
 
         public SubscriptionManagementService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
-        public int addNewSubscription(Guid id,string Name,float Price,string Type)
+        public int AddNewSubscription(Guid SubId, string Name, float Price, string Type, int Period, string Desc)
         {
             Subscription subscription = new Subscription();
-            subscription.ID = id.ToString();
+            subscription.ID = SubId.ToString();
             subscription.Name = Name;
             subscription.Price = Price;
             subscription.Type = Type;
-            
+            subscription.Period = Period;
+            subscription.DetailDesc = Desc;
             _applicationDbContext.Subscriptions.Add(subscription);
             int row = _applicationDbContext.SaveChanges();
             return row;
@@ -36,15 +37,14 @@ namespace CareerTech.Services.Implement
             return result;
         }
 
-        public int UpdateSubscriptionByID(string subscriptionID, string Name, float Price, string Type)
+        public int UpdateSubscriptionByID(string subscriptionID, string Name, float Price, string Type, int Period, string Desc)
         {
-            var query = from sub in _applicationDbContext.Subscriptions
-                        where sub.ID == subscriptionID
-                        select sub;
-            var subscription = query.FirstOrDefault();
+            var subscription = GetSubscriptionByID(subscriptionID);
             subscription.Name = Name;
             subscription.Price = Price;
             subscription.Type = Type;
+            subscription.Period = Period;
+            subscription.DetailDesc = Desc;
             int row = _applicationDbContext.SaveChanges();
             return row;
         }
@@ -60,10 +60,7 @@ namespace CareerTech.Services.Implement
 
         public int DeleteSubscriptionByID(string subscriptionID)
         {
-            var query = from sub in _applicationDbContext.Subscriptions
-                        where sub.ID == subscriptionID
-                        select sub;
-            var subscription = query.FirstOrDefault();
+            var subscription = GetSubscriptionByID(subscriptionID);
             _applicationDbContext.Subscriptions.Remove(subscription);
             int result = _applicationDbContext.SaveChanges();
             return result;

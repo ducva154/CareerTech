@@ -22,7 +22,7 @@
                     <div class="input-field col m6 s12">
                         @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
                         <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                            @Html.DropDownListFor(m => m.Address, ViewBag.ListAddress as SelectList, "Select address")
                         </div>
                     </div>
                     <div class="input-field col m6 s12">
@@ -81,7 +81,7 @@
                         <div class="col-md-10">
                             @Html.TextAreaFor(m => m.DetailDesc, new { @class = "ckeditor" })
                         </div>
-                        <input type="hidden" name="recruitmentId" value="@ViewBag.recruitmentId" />
+                        @Html.Hidden("recId", @Model.RecId)                 
                         <button class="btn teal" style="margin: 20px 0px 0px 20px ;">Save</button>
                     </div>
                 }

@@ -36,15 +36,11 @@ namespace CareerTech.Services.Implement
             dbContext.SaveChanges();
         }
 
-        public List<Job> GetAddJobCategory()
+        public List<Job> GetAllJobCategory()
         {
             return dbContext.Jobs.ToList();
         }
 
-        public List<Recruitment> GetAllRecruitment()
-        {
-            return dbContext.Recruitments.ToList();
-        }
 
         public CompanyProfile GetCompanyProfileByPartnerId(string userId)
         {
@@ -118,18 +114,55 @@ namespace CareerTech.Services.Implement
             return dbContext.CompanyProfiles.Where(c => c.ID.Equals(recruitment.CompanyProfileID)).FirstOrDefault();
         }
 
-        public List<ApplicationUser> GetListCandidate()
+        public List<CandidateViewModel> GetListCandidateByCompanyID(string companyID)
         {
-            throw new System.NotImplementedException();
+            var model = from c in dbContext.Candidates
+                        join p in dbContext.Portfolios on c.UserID equals p.UserID
+                        join r in dbContext.Recruitments on c.RecruitmentID equals r.ID
+                        join u in dbContext.Users on c.UserID equals u.Id
+                        where r.CompanyProfileID == companyID && p.MainStatus==true && p.PublicStatus == true
+                        select new CandidateViewModel
+                        {
+                            CandidateID = c.ID,
+                            FullName = u.FullName,
+                            UserID = u.Id,
+                            Email = u.Email,
+                            Phone = u.PhoneNumber,
+                            DateApply = c.DateApply,
+                            PortfolioID = p.ID,
+                            RecruitmentID = r.ID,
+                            Status = c.Status
+                        };
+            return model.ToList();
         }
 
-        //public List<CandidateViewModel> GetListCandidate()
-        //{
-        //    var user = 
+        public List<Recruitment> GetListRecruitmentByCompanyID(string companyID)
+        {
+            return dbContext.Recruitments.Where(r => r.CompanyProfileID.Equals(companyID)).ToList();
+        }
+        public List<Recruitment> GetListRecruitmentabcmpanyID(string companyID)
+        {
+            return dbContext.Recruitments.Where(r => r.Address.ToLower().Contains(companyID.ToLower())).ToList();
+        }
+
+        public void DeleteCandidateById(string id)
+        {
+            var candidate = dbContext.Candidates.Where(c => c.ID.Equals(id)).FirstOrDefault();
+            dbContext.Candidates.Remove(candidate);
+            dbContext.SaveChanges();
+        }
+
+        public void UpdateCandidateByID(string candidateID)
+        {
+            var candidateUpdate = dbContext.Candidates.Where(c => c.ID.Equals(candidateID)).FirstOrDefault();
+            candidateUpdate.Status = "Approved";
+            dbContext.SaveChanges();
+        }
 
 
 
-        //    return null;
-        //}
+
+
+
     }
 }

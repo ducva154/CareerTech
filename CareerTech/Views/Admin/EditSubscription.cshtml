@@ -1,7 +1,8 @@
-﻿
+﻿@model CareerTech.Models.Subscription
 @{
     ViewBag.Title = "EditSubscription";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    var subscription = ViewBag.SubInfo;
 }
 
 <main class="mn-inner">
@@ -14,33 +15,41 @@
                 <div class="card-content">
                     <span class="card-title">Input fields</span><br>
                     <div class="row">
-                      @using (Html.BeginForm("EditSubscription", "Admin", FormMethod.Post,new { @class= "col s12" }))
-                      {
-                          <input type="text" name="id" hidden="" value="@ViewBag.SubInfo.ID"/>
+                        @using (Html.BeginForm("EditSubscription", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+
+
+                            <input type="text" name="id" hidden="" value="@subscription.ID" />
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <input placeholder="SubName" name="SubName" id="name" type="text" class="validate" value="@ViewBag.SubInfo.Name">
+                                    <input placeholder="SubName" name="SubName" id="name" type="text" class="validate" value="@subscription.Name">
                                     <label for="name">Subcription Name</label>
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <input id="price" type="number" name="price" class="validate" value="@ViewBag.SubInfo.Price">
-                                    <label for="last_name">Price</label>
+                                    <input id="price" type="number" name="price" value="@subscription.Price">
+                                    <label for="price">Price</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="type" type="text" name="type" class="validate" value="@ViewBag.SubInfo.Type">
+                                    <input id="type" type="text" name="type" class="validate" value="@subscription.Type">
                                     <label for="type">Type</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="date" type="number" name="period" class="validate">
+                                    <input id="date" type="number" name="period" class="validate" value="@subscription.Period">
                                     <label for="date">Period</label>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Detail</label>
+                                <textarea required name="Des" id="editor1" class="form-control">
+                            @Html.Raw(subscription.DetailDesc.ToString())
+                            </textarea>
                             </div>
                             <div>
                                 <button class="btn btn-primary" type="submit">Save Changes </button>
@@ -52,4 +61,7 @@
         </div>
     </div>
 </main>
+<script>
+    CKEDITOR.replace('editor1');
+</script>
 

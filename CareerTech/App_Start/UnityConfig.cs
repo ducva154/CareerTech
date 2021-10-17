@@ -17,7 +17,7 @@ namespace CareerTech
 
             // register all your components with the container here
             // it is NOT necessary to register your controllers
-
+            //container.RegisterType<ServiceController>(new InjectionConstructor(typeof(IAPIService<APIService>)));
             container.RegisterType<AccountController>(new InjectionConstructor(typeof(IAccountService<AccountService>)));
             container.RegisterType<ManageController>(new InjectionConstructor());
             container.RegisterType<IUserManagmentService<UserManagementService>, UserManagementService>();
@@ -30,6 +30,7 @@ namespace CareerTech
             container.RegisterType<ISolutionManagementService<SolutionManagementService>,SolutionManagementService > ();
             container.RegisterType<IContentService<ContentService>, ContentService>();
             container.RegisterType<IAboutManagement<AboutService>, AboutService>();
+            container.RegisterType<IOrderManagementService<OrderManagementService>, OrderManagementService>();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

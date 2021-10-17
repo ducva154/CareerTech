@@ -1,0 +1,64 @@
+﻿@model CareerTech.Models.ApplicationUser
+@{
+    ViewBag.Title = "User Profile";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+}
+<main class="mn-inner inner-active-sidebar">
+    <div class="middle-content">
+        <div class="row">
+            <div class="col s12 m12 l6">
+                <div class="card">
+                    <span class="@ViewBag.Type">@ViewBag.Message</span>
+                    <div class="card-content">
+                        <span class="card-title">Update fields</span><br>
+                        <div class="row">
+                            @using (Html.BeginForm("EditUserProfile", "User", FormMethod.Post, new { @class = "col s12" }))
+                            {
+                                <div class="input-field col s12">
+                                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="input-field col m6 s12">
+                                    @Html.Label("Password", new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.TextBox("Password", "##########", new { @class = "form-control", @type = "password", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="input-field col m6 s12">
+                                    <div class="col-md-10">
+                                        <a href="/Manage/ChangePassword">Change Password</a>
+                                    </div>
+                                </div>
+                                <div class="input-field col s12">
+                                    @Html.LabelFor(m => m.FullName, new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="input-field col s12">
+                                    @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="input-field col s12">
+                                    @Html.Label("mainPortfoio", "Main Portfolio", new { @class = "col-md-2 control-label active" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("mainPortfoio", ViewBag.ListPublicPortfolio as SelectList, "--- Select ---")
+                                    </div>
+                                </div>
+                                <div class="col s12">
+                                    <button class="btn teal">Update</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+

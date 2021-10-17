@@ -15,16 +15,21 @@ namespace CareerTech
 
             routes.MapRoute(
               name: "companyPage",
-              url: "company",
-              defaults: new { controller = "Partner", action = "IntroductionCompany"}
+              url: "company/{id}",
+              defaults: new { controller = "Partner", action = "IntroductionCompany" }
           );
 
             routes.MapRoute(
               name: "PortfolioPage",
-              url: "portfolio",
+              url: "portfolio/{id}",
               defaults: new { controller = "User", action = "Portfolio" }
             );
 
+            routes.MapRoute(
+              name: "recruitmentPage",
+              url: "recruitment/{id}",
+              defaults: new { controller = "Partner", action = "JobDetail" }
+            );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

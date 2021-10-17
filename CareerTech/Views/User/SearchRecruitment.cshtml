@@ -1,0 +1,73 @@
+﻿@using CareerTech.Models
+@{
+    ViewBag.Title = "Search Recruitment";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    ICollection<SearchRecruitmentViewModel> recruitments = ViewBag.ListRecruitment;
+}
+
+<main class="mn-inner inner-active-sidebar">
+    <div class="middle-content">
+        <div class="row no-m-t no-m-b">
+            <div class="col s12 m12 l12">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="example_wrapper" class="dataTables_wrapper">
+                            @using (Html.BeginForm("SearchRecruitment", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="input-field col s12 m12 l3">
+                                    <div class="select-wrapper">
+                                        @Html.Label("address", "Address", new { @class = "control-label active" })
+                                        @Html.DropDownList("address", ViewBag.ListAddress as SelectList, "--- Select address ---")
+                                    </div>
+                                </div>
+                                <div class="input-field col s12 m12 l3">
+                                    <div class="select-wrapper">
+                                        @Html.Label("job", "Job", new { @class = "control-label active" })
+                                        @Html.DropDownList("job", ViewBag.ListJob as SelectList, "--- Select job ---")
+                                    </div>
+                                </div>
+                                <div class="input-field col s12 m12 l3">
+                                    <div class="select-wrapper">
+                                        <button class="btn teal">Filter</button>
+                                    </div>
+                                </div>
+                            }
+                            <table id="example" class="display responsive-table datatable-example dataTable" role="grid" aria-describedby="example_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 234px;">Recrutment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var r in recruitments)
+                                    {
+                                        <tr role="row" class="odd">
+                                            <td>
+                                                <div class="row valign-wrapper">
+                                                    <div class="col s2">
+                                                        <a href="/recruitment/@r.RecruitmentID" target="_blank"><img src="@r.Url_Avatar" alt="" class="circle responsive-img"></a>
+                                                    </div>
+                                                    <div class="col s10">
+                                                        <div class="black-text">
+                                                            <a href="/recruitment/@r.RecruitmentID" target="_blank" class="heading-title">@r.Title</a>
+                                                            <a href="/company/@r.CompanyProfileID" target="_blank" class="green-text">@r.CompanyName</a>
+                                                            <p class="blue-grey-text">Salary: @r.Salary</p>
+                                                            <p class="blue-grey-text">Address: @r.Address</p>
+                                                            <p class="blue-grey-text">Job: @r.JobName</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+

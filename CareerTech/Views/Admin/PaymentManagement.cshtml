@@ -13,12 +13,11 @@
         <div class="col s12 m12 l12">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title">User Management</span>
+                    <span class="card-title">Payment Management</span>
                     <table id="example" class="display responsive-table datatable-example">
                         <thead>
                             <tr>
                                 <th>Payment Type</th>
-                                <th>Company</th>
                                 <th>Phone</th>
                                 <th>Mail</th>
                                 <th>Subcription Type</th>
@@ -30,28 +29,27 @@
                         <tfoot>
                             <tr>
                                 <th>Payment Type</th>
-                                <th>Company</th>
                                 <th>Phone</th>
                                 <th>Mail</th>
-                                <th>Subcription Type</th>
+                                <th>Subcription Name</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th>Total</th>
                             </tr>
                         </tfoot>
                         <tbody>
-
-                            <tr>
-                                <td>#203</td>
-                                <td>PayPal</td>
-                                <td>Curabitur Libero Corp</td>
-                                <td>123123123</td>
-                                <td>abc@gmail.com</td>
-                                <td>3 Month</td>
-                                <td>Dec 16, 18:12</td>
-                                <td><span class="pie">3/8</span></td>
-                                <td>$5430</td>
-                            </tr>
+                            @foreach (var p in ViewBag.Payment)
+                            {
+                                <tr>
+                                    <td>PayPal</td>
+                                    <td>@p.Phone</td>
+                                    <td>@p.Email</td>
+                                    <td>@p.SubscriptionName</td>
+                                    <td>@p.OrderDate</td>
+                                    <td><span class="pie">3/8</span></td>
+                                    <td>$@p.TotalPrice</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "OrderDetail";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+}
+<main class="mn-inner">
+    <div class="row">
+        <div class="col s12">
+            <div class="page-title">Data Tables</div>
+        </div>
+        <div class="col s12 m12 l12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">User Management</span>
+                    <table id="example" class="display responsive-table datatable-example">
+                        <thead>
+                            <tr>
+                                <th>Payment Type</th>
+                                <th>Phone</th>
+                                <th>Mail</th>
+                                <th>Subcription Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Payment Type</th>
+                                <th>Phone</th>
+                                <th>Mail</th>
+                                <th>Subcription Name</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach (var p in ViewBag.Order)
+                            {
+                                <tr>
+                                    <td>PayPal</td>
+                                    <td>@p.Phone</td>
+                                    <td>@p.Email</td>
+                                    <td>@p.SubscriptionName</td>
+                                    <td>@p.OrderDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@p.Status</td>
+                                    <td>$@p.TotalPrice</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

@@ -37,7 +37,7 @@
                                     <td><span>@(item.FullName==null?"No data" : item.FullName)</span></td>
                                     <td><span>@item.Email</span></td>
                                     <td><span>@(item.PhoneNumber==null?"No data":item.PhoneNumber)</span></td>
-                                    <td><a href="deleteUser?userID=@item.Id" onlick="return ConfirmDelete()">Delete</a></td>
+                                    <td><a href="DeleteUser?userID=@item.Id" onlick="return ConfirmDelete()">Delete</a></td>
                                 </tr>
                             }
                         </tbody>

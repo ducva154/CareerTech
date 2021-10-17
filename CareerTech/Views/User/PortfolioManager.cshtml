@@ -1,5 +1,6 @@
 ﻿@using CareerTech.Models;
 @{
+    ViewBag.Title = "Portfolio";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
     ICollection<Portfolio> listPortfolio = ViewBag.ListPortfolio;
 }
@@ -37,7 +38,6 @@
                     <div class="card">
                         <div class="card-content">
                             <a class="waves-effect waves-light btn lighten-1 m-b-xs modal-trigger" href="#modal1">Creat a Portfolio</a>
-                            <p class="error-page error text-danger">@ViewBag.ErrorMessage</p>
                             <div id="modal1" class="modal" style="z-index: 1003; display: none; opacity: 0; transform: scaleX(0.7); top: 226.957px;">
                                 <form action="/User/CreatePortfolio" method="POST">
                                     <div class="modal-content">
@@ -61,14 +61,15 @@
             <div class="col s12 m12 l12">
                 <div class="card">
                     <div class="card-content">
-                        <table class="responsive-table">
+                        <span class="@ViewBag.Type">@ViewBag.Message</span>
+                        <table id="example" class="display responsive-table datatable-example dataTable" role="grid" aria-describedby="example_info">
                             <thead>
-                                <tr>
-                                    <th data-field="id">Name</th>
-                                    <th data-field="status">Public Status</th>
-                                    <th data-field="url">Detail</th>
-                                    <th data-field="status">Edit Portfolio</th>
-                                    <th data-field="status">Delete Portfolio</th>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 233px;">Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 370px;">Public Status</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 370px;">View Detail</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 200px;">Edit</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 200px;">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,7 +81,7 @@
                                 {
                                     foreach (var p in listPortfolio)
                                     {
-                                        <tr>
+                                        <tr role="row" class="odd">
                                             <td>@p.Name</td>
                                             <td><a href="" class="btn-public" data-id="@p.ID" onclick="changeStatus()">@(p.PublicStatus?"Public":"Private")</a></td>
                                             <td><a href="@p.Url_Domain" target="_blank">View detail</a></td>

@@ -1,20 +1,17 @@
 ﻿using CareerTech.Services;
 using CareerTech.Services.Implement;
+using CareerTech.Utils;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Microsoft.AspNet.Identity;
+
 namespace CareerTech.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -26,11 +23,13 @@ namespace CareerTech.Controllers
         private readonly ISolutionManagementService<SolutionManagementService> _solutionManagementService;
         private readonly IContentService<ContentService> _contentManagement;
         private readonly IAboutManagement<AboutService> _aboutManagement;
+        private readonly IOrderManagementService<OrderManagementService> _orderManagementService;
         public AdminController(IUserManagmentService<UserManagementService> UserManagmentService,
             IPartnerManagementService<PartnerManagementService> PartnerManagementService,
             ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
             ISolutionManagementService<SolutionManagementService> solutionManagementService,
-            IContentService<ContentService> contentManagement, IAboutManagement<AboutService> aboutManagement)
+            IContentService<ContentService> contentManagement, IAboutManagement<AboutService> aboutManagement,
+            IOrderManagementService<OrderManagementService> orderManagementService)
         {
             _UserManagmentService = UserManagmentService;
             _PartnerManagementService = PartnerManagementService;
@@ -38,14 +37,48 @@ namespace CareerTech.Controllers
             _solutionManagementService = solutionManagementService;
             _contentManagement = contentManagement;
             _aboutManagement = aboutManagement;
+            _orderManagementService = orderManagementService;
         }
-
+        string mess = string.Empty;
         // GET: Admin
-        [Authorize(Roles = "Admin")]
+
         public ActionResult Index()
         {
-            ViewBag.NOUser = _UserManagmentService.countNumerOfUser();
-            ViewBag.NOPartner = _PartnerManagementService.CountNoOfPartners();
+            try
+            {
+                ViewBag.NOUser = _UserManagmentService.countNumerOfUser();
+                ViewBag.NOPartner = _PartnerManagementService.CountNoOfPartners();
+                if (ViewBag.NOUser == null || ViewBag.NOPartner == null)
+                {
+                    return View("error");
+                }
+                var partners = _PartnerManagementService.getPartners();
+                foreach (var p in partners)
+                {
+                    if (_PartnerManagementService.GetPartnerServiceTime(p.Id) != null)
+                    {
+                        int compare = _PartnerManagementService.CompareTime(p.Id);
+                        if (compare == 0)
+                        {
+                            ViewBag.Mess = "account " + p.Email + "will be expired after today";
+                        }
+                        else if (compare > 0)
+                        {
+                            ViewBag.Mess = "account " + p.Email + "has expired";
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.Mess = e.Message;
+                return View("error");
+            }
             return View();
         }
         #region UserManagement
@@ -56,24 +89,24 @@ namespace CareerTech.Controllers
             ViewBag.Mess = mess;
             return View("UserManagement");
         }
-        public ActionResult deleteUser(string userID)
+        public ActionResult DeleteUser(string userID)
         {
-            string mess = string.Empty;
             try
             {
                 var del = _UserManagmentService.deleteUser(userID);
                 if (del > 0)
                 {
-                    mess = "Delete Successfully";
+                    mess = MessageConstant.DELETE_SUCCESS;
                 }
                 else
                 {
-                    mess = "Delete Fail";
+                    mess = MessageConstant.DELETE_FAIL;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
             return UserManagement(mess);
         }
@@ -128,6 +161,7 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+
             }
 
         }
@@ -136,19 +170,74 @@ namespace CareerTech.Controllers
         #region PaymentManagement
         public ActionResult PaymentManagement()
         {
+            var paymentDetail = _orderManagementService.getAllOrderDetail();
+            ViewBag.Payment = paymentDetail;
+            return View();
+        }
+        [HttpGet]
+        public ActionResult OrderDetail(string id)
+        {
+            var orderDetail = _orderManagementService.getOrderDetail(id);
+            ViewBag.Order = orderDetail;
             return View();
         }
         #endregion
         #region PartnerManagement
-        public ActionResult PartnerManagement()
+        public ActionResult PartnerManagement(string mess)
         {
-            var partners = _PartnerManagementService.getAllPartners();
-            ViewBag.Partners = partners;
-            return View();
+            var partnersWithCompany = _PartnerManagementService.getAllPartners();
+            var partners = _PartnerManagementService.getPartners();
+            /* foreach (var p in p1)
+             {
+                 var com = p.CompanyProfiles.Where(cc => cc.UserID == p.Id).FirstOrDefault();
+             }*/
+            ViewBag.Partners = partnersWithCompany;
+            ViewBag.Partners2 = partners;
+            ViewBag.Mess = mess;
+            return View("PartnerManagement");
+        }
+        public ActionResult ApprovePartner(string id)
+        {
+            try
+            {
+                int result = _PartnerManagementService.ApprovePartner(id);
+                if (result > 0)
+                {
+                    mess = MessageConstant.APPROVE_SUCCESS;
+                }
+                else
+                {
+                    mess = MessageConstant.APPROVE_FAIL;
+                }
+            }
+            catch (Exception e)
+            {
+                mess = e.Message;
+            }
+            return PartnerManagement(mess);
+        }
+        public ActionResult RejectPartner(string id)
+        {
+            try
+            {
+                int result = _PartnerManagementService.RejectPartner(id);
+                if (result > 0)
+                {
+                    mess = MessageConstant.REJECT_SUCCESS;
+                }
+                else
+                {
+                    mess = MessageConstant.REJECT_FAILED;
+                }
+            }
+            catch (Exception e)
+            {
+                mess = e.Message;
+            }
+            return PartnerManagement(mess);
         }
         #endregion
         #region SubscriptionManagement
-        [Authorize(Roles = "Admin")]
         public ActionResult SubscriptionManagement(string mess)
         {
             var subs = _subscriptionManagementService.GetSubscriptions();
@@ -156,48 +245,62 @@ namespace CareerTech.Controllers
             ViewBag.Mess = mess;
             return View("SubscriptionManagement");
         }
-        [Authorize(Roles = "Admin")]
-        public ActionResult AddnewSubscription()
+        [HttpPost, ValidateInput(false)]
+        public ActionResult AddnewSubscription(FormCollection collection)
         {
-            string mess = string.Empty;
             try
             {
                 Guid id = Guid.NewGuid();
-                string Name = Request.Form["SubName"].ToString();
-                if (!String.IsNullOrEmpty(Name.Trim()))
+                string Name = collection["SubName"];
+                if (!string.IsNullOrEmpty(Name.Trim()))
                 {
-                    string Type = Request.Form["type"].ToString();
-                    if (!String.IsNullOrEmpty(Type.Trim()))
+                    string Type = collection["type"];
+                    if (!string.IsNullOrEmpty(Type.Trim()))
                     {
-                        string txtPrice = Request.Form["price"].ToString();
-                        if (!String.IsNullOrEmpty(txtPrice.Trim()))
+                        string txtPrice = collection["price"];
+                        if (!string.IsNullOrEmpty(txtPrice.Trim()))
                         {
                             float Price = float.Parse(txtPrice);
-                            /*string Period = Request.Form["period"].ToString();
-                            DateTime period = DateTime.Parse(Period);*/
-                            int add = _subscriptionManagementService.addNewSubscription(id, Name, Price, Type);
-                            if (add > 0)
+                            string txtPeriod = collection["period"];
+                            if (!string.IsNullOrEmpty(txtPeriod))
                             {
-                                mess = "Add Successfully";
+                                int Period = Int32.Parse(txtPeriod);
+                                string detailDescription = collection["Des"];
+                                if (!string.IsNullOrEmpty(detailDescription))
+                                {
+                                    int result = _subscriptionManagementService.AddNewSubscription(id, Name, Price, Type, Period, detailDescription);
+                                    if (result > 0)
+                                    {
+                                        mess = MessageConstant.ADD_SUCCESS;
+                                    }
+                                    else
+                                    {
+                                        mess = MessageConstant.ADD_FAILED;
+                                    }
+                                }
+                                else
+                                {
+                                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                                }
                             }
                             else
                             {
-                                mess = "Add Failed";
+                                mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                             }
                         }
                         else
                         {
-                            mess = "Add Failed! Price can not be empty";
+                            mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                         }
                     }
                     else
                     {
-                        mess = "Add Failed! Type can not be empty";
+                        mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
-                    mess = "Add Failed! Name can not be empty";
+                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
@@ -207,74 +310,113 @@ namespace CareerTech.Controllers
             return SubscriptionManagement(mess);
         }
         [HttpGet]
-        public ActionResult EditSubscription(string subID)
+        public ActionResult EditSubscription(string subID, string mess)
         {
-            var subscription = _subscriptionManagementService.GetSubscriptionByID(subID);
-            ViewBag.SubInfo = subscription;
+            try
+            {
+                var subscription = _subscriptionManagementService.GetSubscriptionByID(subID);
+                ViewBag.SubInfo = subscription;
+                if (ViewBag.SubInfo == null)
+                {
+                    ViewBag.Mess = "No data";
+                    return View("error");
+                }
+                ViewBag.Mess = mess;
+            }
+            catch (Exception e)
+            {
+                ViewBag.Mess = e.Message;
+                return View("error");
+            }
+
             return View();
 
         }
-        [HttpPost]
-        public ActionResult EditSubscription(string ID, string Name, float Price, string Type)
+        [HttpPost, ValidateInput(false)]
+        public ActionResult EditSubscription(FormCollection collection)
         {
-            string mess = string.Empty;
+            string ID = string.Empty;
             try
             {
-                ID = Request.Form["id"].ToString();
-                Name = Request.Form["SubName"].ToString();
-                if (!String.IsNullOrEmpty(Name))
+                ID = collection["id"].ToString();
+                string Name = collection["SubName"];
+                if (!string.IsNullOrEmpty(Name))
                 {
-                    Type = Request.Form["type"].ToString();
-                    if (!String.IsNullOrEmpty(Type))
+                    string Type = collection["type"];
+                    if (!string.IsNullOrEmpty(Type))
                     {
                         string txtPrice = Request.Form["price"].ToString();
-                        if (!String.IsNullOrEmpty(txtPrice))
+                        if (!string.IsNullOrEmpty(txtPrice))
                         {
-                            Price = float.Parse(txtPrice);
-                            /*string Period = Request.Form["period"].ToString();
-                            DateTime period = DateTime.Parse(Period);*/
-                            int edit = _subscriptionManagementService.UpdateSubscriptionByID(ID, Name, Price, Type);
-                            if (edit > 0)
+                            float Price = float.Parse(txtPrice);
+                            string txtPeriod = collection["period"];
+                            if (!string.IsNullOrEmpty(txtPeriod))
                             {
-                                mess = "Update Successfully";
+                                int Period = Int32.Parse(txtPeriod);
+                                string Desc = collection["Des"];
+                                if (!string.IsNullOrEmpty(Desc))
+                                {
+                                    int edit = _subscriptionManagementService.UpdateSubscriptionByID(ID, Name, Price, Type, Period, Desc);
+                                    if (edit > 0)
+                                    {
+                                        mess = MessageConstant.UPDATE_SUCCESS;
+                                        return SubscriptionManagement(mess);
+                                    }
+                                    else
+                                    {
+                                        mess = MessageConstant.UPDATE_FAIL;
+                                    }
+                                }
+                                else
+                                {
+                                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                                }
                             }
                             else
                             {
-                                mess = "Update Failed";
+                                mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                             }
                         }
                         else
                         {
-                            mess = "Update Failed! Price can not be empty";
+                            mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                         }
                     }
                     else
                     {
-                        mess = "Update Failed! Type can not be empty";
+                        mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
-                    mess = "Update Failed! Name can not be empty";
+                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
-            return SubscriptionManagement(mess);
+            return EditSubscription(ID, mess);
         }
-        public ActionResult deleteSub(string subID)
+        public ActionResult DeleteSub(string subID)
         {
-            string mess = string.Empty;
-            var del = _subscriptionManagementService.DeleteSubscriptionByID(subID);
-            if (del > 0)
+            try
             {
-                mess = "Delete Successfully";
+                var del = _subscriptionManagementService.DeleteSubscriptionByID(subID);
+                if (del > 0)
+                {
+                    mess = MessageConstant.DELETE_SUCCESS;
+                }
+                else
+                {
+                    mess = MessageConstant.DELETE_FAIL;
+                }
             }
-            else
+            catch (Exception)
             {
-                mess = "Delete Fail";
+
+                return View("error");
             }
             return SubscriptionManagement(mess);
         }
@@ -291,21 +433,20 @@ namespace CareerTech.Controllers
         [HttpPost, ValidateInput(false)]
         public ActionResult AddContent(HttpPostedFileBase file, FormCollection collection)
         {
-            string mess = string.Empty;
             try
             {
                 Guid id = Guid.NewGuid();
                 string uID = User.Identity.GetUserId();
                 string Title = collection["Title"].ToString();
                 bool status;
-                if (!String.IsNullOrEmpty(Title.Trim()))
+                if (!string.IsNullOrEmpty(Title.Trim()))
                 {
                     string Detail = collection["Des"].ToString();
-                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    if (!string.IsNullOrEmpty(Detail.Trim()))
                     {
                         string url = "";
                         string txtStatus = collection["Status"];
-                        if (!String.IsNullOrEmpty(txtStatus))
+                        if (!string.IsNullOrEmpty(txtStatus))
                         {
 
                             if (txtStatus.Equals("Public"))
@@ -365,6 +506,7 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 mess = e.Message;
+                ViewBag.Mess = "No data";
             }
             return ContentManagement(mess);
 
@@ -372,19 +514,32 @@ namespace CareerTech.Controllers
         [HttpGet]
         public ActionResult EditContent(string contentID, string mess)
         {
-            var intro = _contentManagement.GetIntroductionByID(contentID);
-            ViewBag.Content = intro;
-            ViewBag.Mess = mess;
+            try
+            {
+                var intro = _contentManagement.GetIntroductionByID(contentID);
+                ViewBag.Content = intro;
+                if (ViewBag.Content == null)
+                {
+                    ViewBag.Mess = "No data";
+                    return View("error");
+                }
+                ViewBag.Mess = mess;
+            }
+            catch (Exception e)
+            {
+                ViewBag.Mess = e.Message;
+                return View("error");
+            }
             return View();
         }
 
         [HttpPost, ValidateInput(false)]
         public ActionResult EditContent(HttpPostedFileBase file, FormCollection collection)
         {
-            string mess = string.Empty;
-            string contentID = collection["id"];
+            string contentID = string.Empty;
             try
             {
+                contentID = collection["id"];
                 string Title = collection["title"];
                 string url = string.Empty;
                 bool status = false;
@@ -447,13 +602,13 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 mess = e.Message;
-               
+                return View("error");
+
             }
             return EditContent(contentID, mess);
         }
-        public ActionResult deleteContent(string contentID)
+        public ActionResult DeleteContent(string contentID)
         {
-            string mess = string.Empty;
             try
             {
                 int result = _contentManagement.deleteIntroductionByID(contentID);
@@ -469,6 +624,7 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
             return ContentManagement(mess);
         }
@@ -484,20 +640,19 @@ namespace CareerTech.Controllers
         }
         public ActionResult AddSolution(HttpPostedFileBase file)
         {
-            string mess = string.Empty;
             try
             {
                 Guid id = Guid.NewGuid();
                 string Name = Request.Form["SolName"].ToString();
-                if (!String.IsNullOrEmpty(Name.Trim()))
+                if (!string.IsNullOrEmpty(Name.Trim()))
                 {
                     string Des = Request.Form["des"].ToString();
-                    if (!String.IsNullOrEmpty(Des.Trim()))
+                    if (!string.IsNullOrEmpty(Des.Trim()))
                     {
                         string url = "";
                         if (file == null)
                         {
-                            mess = "Add Failed! Please add image for your solution";
+                            mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                         }
                         else
                         {
@@ -509,27 +664,28 @@ namespace CareerTech.Controllers
                             int result = _solutionManagementService.AddSolution(id, uID, Name, Des, url);
                             if (result > 0)
                             {
-                                mess = "Add Successfully";
+                                mess = MessageConstant.ADD_SUCCESS;
                             }
                             else
                             {
-                                mess = "Add failed";
+                                mess = MessageConstant.ADD_FAILED;
                             }
                         }
                     }
                     else
                     {
-                        mess = "Add failed! Detail can not be empty";
+                        mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
-                    mess = "Add failed! name can not be empty";
+                    mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
             return SolutionManagement(mess);
         }
@@ -537,24 +693,38 @@ namespace CareerTech.Controllers
         [HttpGet]
         public ActionResult EditSolution(string solID, string mess)
         {
-            var solution = _solutionManagementService.GetSolutionByID(solID);
-            ViewBag.SolInfo = solution;
-            ViewBag.Mess = mess;
+            try
+            {
+                var solution = _solutionManagementService.GetSolutionByID(solID);
+                ViewBag.SolInfo = solution;
+                if (ViewBag.SolInfo == null)
+                {
+                    ViewBag.Mess = "No data";
+                    return View("error");
+                }
+                ViewBag.Mess = mess;
+            }
+            catch (Exception e)
+            {
+                ViewBag.Mess = e.Message;
+                return View("error");
+            }
+
             return View();
 
         }
         [HttpPost]
-        public ActionResult EditSolution(string solID, string Title, string Detail, string url_img, HttpPostedFileBase file)
+        public ActionResult EditSolution(string solID, HttpPostedFileBase file)
         {
-            string mess = string.Empty;
             try
             {
                 solID = Request.Form["id"].ToString();
-                Title = Request.Form["SolName"].ToString();
-                if (!String.IsNullOrEmpty(Title.Trim()))
+                string url_img = string.Empty;
+                string Title = Request.Form["SolName"].ToString();
+                if (!string.IsNullOrEmpty(Title.Trim()))
                 {
-                    Detail = Request.Form["des"].ToString();
-                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    string Detail = Request.Form["des"].ToString();
+                    if (!string.IsNullOrEmpty(Detail.Trim()))
                     {
                         if (file == null)
                         {
@@ -572,34 +742,33 @@ namespace CareerTech.Controllers
                         int result = _solutionManagementService.UpdateSolutionByID(solID, Title, Detail, url_img);
                         if (result > 0)
                         {
-                            mess = "Save changes Successfully";
+                            mess = MessageConstant.UPDATE_SUCCESS;
                             return SolutionManagement(mess);
                         }
                         else
                         {
-                            mess = "Save changes failed";
+                            mess = MessageConstant.UPDATE_FAIL;
                         }
                     }
                     else
                     {
-                        mess = "Save changes failed! Detail can not be empty";
+                        mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
-                    mess = "Save changes failed! Title can not be empty";
+                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
-
+                return View("error");
             }
             return EditSolution(solID, mess);
         }
-        public ActionResult deleteSolution(string solID)
+        public ActionResult DeleteSolution(string solID)
         {
-            string mess = string.Empty;
             try
             {
                 int result = _solutionManagementService.DeleteSolutionByID(solID);
@@ -615,6 +784,8 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 mess = e.Message;
+
+                return View("error");
             }
             return SolutionManagement(mess);
         }
@@ -630,23 +801,22 @@ namespace CareerTech.Controllers
         [HttpPost, ValidateInput(false)]
         public ActionResult AddAbout(FormCollection collection)
         {
-            string mess = string.Empty;
             try
             {
                 Guid id = Guid.NewGuid();
                 string uID = User.Identity.GetUserId();
                 string Title = collection["Title"].ToString();
                 bool status;
-                if (!String.IsNullOrEmpty(Title.Trim()))
+                if (!string.IsNullOrEmpty(Title.Trim()))
                 {
                     string Detail = collection["detail"].ToString();
-                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    if (!string.IsNullOrEmpty(Detail.Trim()))
                     {
                         string Description = collection["Des"];
-                        if (!String.IsNullOrEmpty(Description.Trim()))
+                        if (!string.IsNullOrEmpty(Description.Trim()))
                         {
                             string txtStatus = collection["Status"];
-                            if (!String.IsNullOrEmpty(txtStatus))
+                            if (!string.IsNullOrEmpty(txtStatus))
                             {
 
                                 if (txtStatus.Equals("Public"))
@@ -654,7 +824,7 @@ namespace CareerTech.Controllers
                                     bool checkMainExisted = _aboutManagement.CheckMainStatusExisted();
                                     if (checkMainExisted)
                                     {
-                                        mess = "Add Failed! Main Content Existed";
+                                        mess = MessageConstant.ADD_FAILED + MessageConstant.MAIN_EXISTED;
                                         return AboutManagement(mess);
                                     }
                                     else
@@ -670,64 +840,78 @@ namespace CareerTech.Controllers
                                 int result = _aboutManagement.AddAbout(id, uID, Title, Detail, Description, status);
                                 if (result > 0)
                                 {
-                                    mess = "Add Successfully";
+                                    mess = MessageConstant.ADD_SUCCESS;
                                 }
                                 else
                                 {
-                                    mess = "Add failed";
+                                    mess = MessageConstant.ADD_FAILED;
                                 }
                             }
                             else
                             {
-
+                                mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                             }
                         }
                         else
                         {
-                            mess = "Add failed! Please choose status for about";
+                            mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                         }
                     }
                     else
                     {
-                        mess = "Add failed! Detail can not be empty";
+                        mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
-                    mess = "Add failed! Title can not be Empty";
+                    mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
             return AboutManagement(mess);
         }
         [HttpGet]
         public ActionResult EditAbout(string aboutID, string mess)
         {
-            var about = _aboutManagement.getAboutByID(aboutID);
-            ViewBag.About = about;
-            ViewBag.Mess = mess;
+            try
+            {
+                var about = _aboutManagement.getAboutByID(aboutID);
+                ViewBag.About = about;
+                if (ViewBag.About == null)
+                {
+                    ViewBag.Mess = "No data";
+                    return View("error");
+                }
+                ViewBag.Mess = mess;
+            }
+            catch (Exception e)
+            {
+                ViewBag.Mess = e.Message;
+                return View("error");
+            }
+
             return View("EditAbout");
         }
 
         [HttpPost, ValidateInput(false)]
         public ActionResult EditAbout(FormCollection collection)
         {
-            string mess = string.Empty;
             string aboutID = collection["id"];
-            bool status = false;
             try
             {
                 string Title = collection["Title"];
-                if (!String.IsNullOrEmpty(Title.Trim()))
+                bool status = false;
+                if (!string.IsNullOrEmpty(Title.Trim()))
                 {
                     string Detail = collection["detail"];
-                    if (!String.IsNullOrEmpty(Detail.Trim()))
+                    if (!string.IsNullOrEmpty(Detail.Trim()))
                     {
                         string Desc = collection["des"];
-                        if (!String.IsNullOrEmpty(Desc))
+                        if (!string.IsNullOrEmpty(Desc))
                         {
                             string txtStatus = collection["Status"];
                             if (txtStatus.Equals("Public"))
@@ -735,7 +919,7 @@ namespace CareerTech.Controllers
                                 bool checkMainExisted = _aboutManagement.CheckMainStatusExisted();
                                 if (checkMainExisted)
                                 {
-                                    mess = "Save Changes Failed! Main Content Existed";
+                                    mess = MessageConstant.UPDATE_FAIL + MessageConstant.MAIN_EXISTED;
                                     return EditAbout(aboutID, mess);
                                 }
                                 else
@@ -751,53 +935,54 @@ namespace CareerTech.Controllers
                             int result = _aboutManagement.UpdateAbout(aboutID, Title, Detail, Desc, status);
                             if (result > 0)
                             {
-                                mess = "Save Changes Successfully";
+                                mess = MessageConstant.UPDATE_SUCCESS;
                                 return AboutManagement(mess);
                             }
                             else
                             {
-                                mess = "Save Changes Failed";
+                                mess = MessageConstant.UPDATE_FAIL;
                             }
                         }
                         else
                         {
-                            mess = "Save changes Failed! Description Can Not Be Empty";
+                            mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                         }
                     }
                     else
                     {
-                        mess = "Save Changes Failed! Detail Can Not Be Empty";
+                        mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
-                    mess = "Save Changes Failed! Title Can Not Be Empty";
+                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
             return EditAbout(aboutID, mess);
         }
         public ActionResult DeleteAbout(string aboutID)
         {
-            string mess = string.Empty;
             try
             {
                 int result = _aboutManagement.deleteAboutByID(aboutID);
                 if (result > 0)
                 {
-                    mess = "Delete Succesfully";
+                    mess = MessageConstant.DELETE_SUCCESS;
                 }
                 else
                 {
-                    mess = "Delete Failed";
+                    mess = MessageConstant.DELETE_FAIL;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                return View("error");
             }
             return AboutManagement(mess);
         }

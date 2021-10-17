@@ -53,7 +53,7 @@
                                     <td>
                                         <a href="EditSubscription?subID=@s.ID">Edit</a>
                                     </td>
-                                    <td><a href="deleteSub?subID=@s.ID" onclick="return ConfirmDelete()">Delete</a></td>
+                                    <td><a href="DeleteSub?subID=@s.ID" onclick="return ConfirmDelete()">Delete</a></td>
                                 </tr>
                             }
                         </tbody>
@@ -64,7 +64,7 @@
     </div>
 </main>
 <div id="addSub" class="modal fade" aria-labelledby="addSub">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="min-height=300px;height:475px;overflow:scroll">
         <div class="modal-content">
             @using (Html.BeginForm("AddnewSubscription", "Admin", FormMethod.Post))
             {
@@ -89,6 +89,10 @@
                         <label>Period</label>
                         <input name="period" type="text" class="form-control" required>
                     </div>
+                    <div class="form-group">
+                        <label>Detail</label>
+                        <textarea required name="Des" id="editor1" class="form-control"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -98,3 +102,6 @@
         </div>
     </div>
 </div>
+<script>
+    CKEDITOR.replace('editor1');
+</script>

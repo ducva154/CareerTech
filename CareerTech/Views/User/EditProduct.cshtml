@@ -1,0 +1,92 @@
+﻿@using CareerTech.Models
+@model Product
+@{
+    ViewBag.Title = "EditProduct";
+    Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    Product product = ViewBag.Product;
+}
+<main class="mn-inner inner-active-sidebar">
+    <div class="middle-content">
+        <div class="row no-m-t no-m-b">
+            @Html.Partial("_Portfolio_Menu_Partial")
+            <div class="col s12 m7 l9">
+                <h5>@ViewBag.Portfolio.Name</h5>
+                <div class="card">
+                    <span class="@ViewBag.Type">@ViewBag.Message</span>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="card-content">
+                        @using (Html.BeginForm("EditProductAsync", "User", new { productID = product.ID }, FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                        {
+                            <div id="example_wrapper" class="dataTables_wrapper">
+                                <div class="row">
+                                    @Html.TextBoxFor(m => m.PortfolioID, new { @readonly = "readonly", @class = "form-control hide", @Value = ViewBag.Portfolio.ID })
+                                    <div class="input-field col s12">
+                                        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @Value = product.Name })
+                                        </div>
+                                    </div>
+                                    <div class="file-field input-field col s12">
+                                        <div class="btn teal lighten-1">
+                                            <span>Image</span>
+                                            @Html.TextBox("Url_Image", "", new { type = "file" })
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            @Html.TextBoxFor(m => m.Url_Image, new { @class = "file-path validate", @Value = product.Url_Image })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        @Html.LabelFor(m => m.Company, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Company, new { @class = "form-control", @Value = product.Company })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        @Html.LabelFor(m => m.Domain, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Domain, new { @class = "form-control", @Value = product.Domain })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        @Html.LabelFor(m => m.Skill, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.Skill, new { @class = "form-control", @Value = product.Skill })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col m6 s12">
+                                        @Html.LabelFor(m => m.TeamSize, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.TeamSize, new { @class = "form-control", @Value = product.TeamSize })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col m6 s12">
+                                        @Html.LabelFor(m => m.ProjectRole, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.ProjectRole, new { @class = "form-control", @Value = product.ProjectRole })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        @Html.LabelFor(m => m.ProjectTech, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.ProjectTech, new { @class = "form-control", @Value = product.ProjectTech })
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        @Html.LabelFor(m => m.WorkProces, new { @class = "col-md-2 control-label active" })
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.WorkProces, new { @class = "form-control", @Value = product.WorkProces })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: right">
+                                <input class="waves-effect waves-light btn lighten-1 m-b-xs" value="Save change" type="submit">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

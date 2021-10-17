@@ -76,7 +76,7 @@
                 <div class="input-field col m6 s12">
                     @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label active" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.Address, ViewBag.ListAddress as SelectList, "Select address")
                     </div>
                 </div>
                 <div class="input-field col m6 s12">
@@ -141,110 +141,3 @@
         </div>
     </div>
 </div>
-
-
-@*<script>
-            $(document).ready(function () {
-                LoadData();
-                $('#btnCreate').click(function () {
-                    var title = $('#Title').val();
-                    var address = $('#Address').val();
-                    var salary = $('#Salary').val();
-                    var workingform = $('#Workingform').val();
-                    var amount = $('#Amount').val();
-                    var position = $('#Position').val();
-                    var experience = $('#Experience').val();
-                    var endDate = $('#EndDate').val();
-                    var detailDesc = $('#DetailDesc').val();
-                    var model = {
-                        Title: title,
-                        Address: address,
-                        Salary: salary,
-                        Workingform: workingform,
-                        Amount: amount,
-                        Position: position,
-                        Experience: experience,
-                        EndDate: endDate,
-                        DetailDesc: detailDesc
-                    };
-                    if (Validate()) {
-                        $.ajax({
-                            url: '/Partner/CreateRecruitment',
-                            type: 'POST',
-                            data: model,
-                            success: function (res) {
-                                if (res.success) {
-                                    LoadData();
-                                    //ResetInput();
-                                    //$('#modalCreateUpdate').modal('hide');
-                                }
-                            }
-                        });
-                    }
-
-                });
-
-                function LoadData() {
-                    $.ajax({
-                        url: '/Partner/GetRecruitment',
-                        type: 'GET',
-                        success: function (res) {
-                            if (res.TotalItems > 0) {
-                                var items = res.Data;
-                                var html = "";
-                                for (let i = 0; i < res.TotalItems; i++) {
-                                    html += "<tr>";
-                                    html += "<td>" + items[i].Title +"</td>";
-                                    html += "<td>" + items[i].Address+"</td>";
-                                    html += "<td>" + items[i].Amount + "</td>";
-                                    html += "</tr>";
-                                }
-                                $('#ShowData').html(html);
-                            }
-                        }
-                    });
-                }
-
-                function Validate() {
-                    var check = true;
-                    var title = $('#Title').val();
-                    var address = $('#Address').val();
-                    var salary = $('#Salary').val();
-                    var workingform = $('#Workingform').val();
-                    var amount = $('#Amount').val();
-                    var position = $('#Position').val();
-                    var experience = $('#Experience').val();
-                    var endDate = $('#EndDate').val();
-                    var detailDesc = $('#DetailDesc').val();
-                    if (title === "" || address=== "" || salary===""
-                        || workingform==="" || amount==="" || position===""
-                        || experience==="" || endDate==="" || detailDesc==="" ) {
-                        check = false;
-                    }
-
-                    //if (title === '') {
-                    //    $('#title').next().html('the title is not empty');
-                    //    check = false;
-                    //} else {
-                    //    $('#exampleinputname').next().html('');
-                    //    check = true;
-                    //}
-
-                    //var age = $('#exampleinputage').val();
-                    //if (age === '') {
-                    //    $('#exampleinputage').next().html('bạn chưa tuổi');
-                    //    check = false;
-                    //} else {
-                    //    $('#exampleinputage').next().html('');
-                    //    check = true;
-                    //}
-                    return check;
-                }
-
-                //function ResetInput() {
-                //    $('#exampleInputName').val('');
-                //    $('#exampleInputAge').val('');
-                //    $('#exampleInputClass').val();
-                //}
-            });
-    </script>*@

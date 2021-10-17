@@ -1,13 +1,71 @@
-﻿
+﻿@using CareerTech.Models
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "User Dashboard";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+    List<DashboardRecruitmentViewModel> listRecruitment = ViewBag.ListRecruitmentApplied;
 }
 
 
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
-        <h1>Đây là trang của user</h1>
+        <div class="row no-m-t no-m-b">
+            <div class="col s12 m12 l4">
+                <div class="card stats-card">
+                    <div class="card-content">
+                        <div class="card-options">
+                            <ul>
+                                <li><a href="javascript:void(0)"><i class="material-icons">more_vert</i></a></li>
+                            </ul>
+                        </div>
+                        <span class="card-title">Recruitment pending</span>
+                        <span class="stats-counter"><span class="counter">@ViewBag.NumberRecruitmentPending</span></span>
+                    </div>
+                    <div id="sparkline-line"><canvas width="257" height="45" style="display: inline-block; width: 257px; height: 45px; vertical-align: top;"></canvas></div>
+                </div>
+            </div>
+            <div class="col s12 m12 l4">
+                <div class="card stats-card">
+                    <div class="card-content">
+                        <div class="card-options">
+                            <ul>
+                                <li><a href="javascript:void(0)"><i class="material-icons">more_vert</i></a></li>
+                            </ul>
+                        </div>
+                        <span class="card-title">Recruitment approved</span>
+                        <span class="stats-counter"><span class="counter">@ViewBag.NumberRecruitmentApproved</span></span>
+                    </div>
+                    <div id="sparkline-line"><canvas width="257" height="45" style="display: inline-block; width: 257px; height: 45px; vertical-align: top;"></canvas></div>
+                </div>
+            </div>
+        </div>
+        <div class="row no-m-t no-m-b">
+            <div class="col s12 m12 l12">
+                <div class="card invoices-card">
+                    <div class="card-content">
+                        <span class="card-title">List recruitment applied</span>
+                        <table class="responsive-table bordered">
+                            <thead>
+                                <tr>
+                                    <th data-field="recruitment">Recruitment</th>
+                                    <th data-field="recruitment">Company</th>
+                                    <th data-field="status">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (DashboardRecruitmentViewModel item in listRecruitment)
+                                {
+                                    <tr>
+                                        <td><a href="/recruitment/@item.RecruitmentID" target="_blank" class="heading-title">@item.Title</a></td>
+                                        <td><a href="/company/@item.CompanyProfileID" target="_blank" class="green-text">@item.CompanyName</a></td>
+                                        <td>#@item.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 

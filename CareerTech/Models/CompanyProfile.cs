@@ -47,6 +47,8 @@ namespace CareerTech.Models
         [StringLength(255)]
         public string Url_Background { get; set; }
 
+        public string Status { get; set; }
+
         public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<Recruitment> Recruitments { get; set; }
