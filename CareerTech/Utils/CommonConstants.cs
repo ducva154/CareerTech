@@ -20,5 +20,18 @@ namespace CareerTech.Utils
         public static string PENDING_STATUS = "Pending";
 
         public static string APPROVED_STATUS = "Approved";
+
+        // constant of send email service
+        public static string SMTP_USER_NAME = "MockCareerTech@gmail.com";
+
+        public static string SMTP_PASSWORD = "mockproject@123";
+
+        public static string SMTP_HOST = "smtp.gmail.com";
+
+        public static int SMTP_POST = 587;
+
+        public static string EMAIL_SUBJECT = "Bạn vừa nhận được liên hê từ CareerTech";
+
+        public static string PATH_TEMPLATE_EMAIL = "~/Content/EmailTemplate/Approve.html";
     }
 }

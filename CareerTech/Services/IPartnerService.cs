@@ -38,5 +38,8 @@ namespace CareerTech.Services
         void DeleteCandidateById(string id);
 
         void UpdateCandidateByID(string candidateID);
+
+        int GetServiceTime(string userID);
+
     }
 }

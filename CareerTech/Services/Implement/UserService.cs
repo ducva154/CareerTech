@@ -318,22 +318,36 @@ namespace CareerTech.Services
             List<DashboardRecruitmentViewModel> dashboardRecruitments = new List<DashboardRecruitmentViewModel>();
             foreach (Candidate candidate in candidates)
             {
-                DashboardRecruitmentViewModel dashboardRecruitment = new DashboardRecruitmentViewModel();
-                dashboardRecruitment.RecruitmentID = candidate.RecruitmentID;
                 Recruitment recruitment = _context.Recruitments.Where(r => r.ID == candidate.RecruitmentID).SingleOrDefault();
-                dashboardRecruitment.Title = recruitment.Title;
-                dashboardRecruitment.CompanyProfileID = recruitment.CompanyProfileID;
-                CompanyProfile companyProfile = _context.CompanyProfiles.Where(c => c.ID == recruitment.CompanyProfileID).SingleOrDefault();
-                dashboardRecruitment.CompanyName = companyProfile.CompanyName;
-                dashboardRecruitment.Status = candidate.Status;
-                dashboardRecruitments.Add(dashboardRecruitment);
+                if (GetCompanyStatusByCompanyProfileID(recruitment.CompanyProfileID).Equals(CommonConstants.APPROVED_STATUS))
+                {
+                    DashboardRecruitmentViewModel dashboardRecruitment = new DashboardRecruitmentViewModel();
+                    dashboardRecruitment.RecruitmentID = candidate.RecruitmentID;
+
+                    dashboardRecruitment.Title = recruitment.Title;
+                    dashboardRecruitment.CompanyProfileID = recruitment.CompanyProfileID;
+                    CompanyProfile companyProfile = _context.CompanyProfiles.Where(c => c.ID == recruitment.CompanyProfileID).SingleOrDefault();
+                    dashboardRecruitment.CompanyName = companyProfile.CompanyName;
+                    dashboardRecruitment.Status = candidate.Status;
+                    dashboardRecruitments.Add(dashboardRecruitment);
+                }
             }
             return dashboardRecruitments;
         }
 
         public int CountCandidateByUserIDAndStatus(string userID, string status)
         {
-            return _context.Candidates.Where(c => (c.UserID == userID && c.Status == status)).Count();
+            int count = 0;
+            List<Candidate> candidates = _context.Candidates.Where(c => (c.UserID == userID && c.Status == status)).ToList();
+            foreach (Candidate candidate in candidates)
+            {
+                Recruitment recruitment = _context.Recruitments.Where(r => r.ID == candidate.RecruitmentID).SingleOrDefault();
+                if (GetCompanyStatusByCompanyProfileID(recruitment.CompanyProfileID).Equals(CommonConstants.APPROVED_STATUS))
+                {
+                    count++;
+                }
+            }
+            return count;
         }
 
         public string GetCompanyStatusByCompanyProfileID(string companyProfileID)

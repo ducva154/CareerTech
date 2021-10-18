@@ -1,4 +1,6 @@
 ﻿using CareerTech.Models;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,22 +8,23 @@ namespace CareerTech.Services.Implement
 {
     public class PartnerService : IPartnerService<PartnerService>
     {
-       private readonly ApplicationDbContext dbContext = null;
+        ILog log = LogManager.GetLogger(typeof(PartnerService));
+        private readonly ApplicationDbContext _dbContext = null;
 
         public PartnerService(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         public void AddRecruitment(Recruitment obj)
         {
-            dbContext.Recruitments.Add(obj);
-            dbContext.SaveChanges();
+            _dbContext.Recruitments.Add(obj);
+            _dbContext.SaveChanges();
         }
 
         public bool CheckEmailExist(string email,string userId)
         {
-           List<ApplicationUser> listuser = dbContext.Users.Where(u=> !u.Id.Equals(userId)).ToList();
+           List<ApplicationUser> listuser = _dbContext.Users.Where(u=> !u.Id.Equals(userId)).ToList();
            ApplicationUser user = listuser.Where(u => u.Email.Equals(email)).FirstOrDefault();
            if (user!=null)
            {
@@ -32,29 +35,28 @@ namespace CareerTech.Services.Implement
 
         public void CreateProfileCompany(CompanyProfile company)
         {
-            dbContext.CompanyProfiles.Add(company);
-            dbContext.SaveChanges();
+            _dbContext.CompanyProfiles.Add(company);
+            _dbContext.SaveChanges();
         }
 
         public List<Job> GetAllJobCategory()
         {
-            return dbContext.Jobs.ToList();
+           return _dbContext.Jobs.ToList();
         }
-
 
         public CompanyProfile GetCompanyProfileByPartnerId(string userId)
         {
-            return dbContext.CompanyProfiles.Where(c => c.UserID.Equals(userId)).FirstOrDefault();
+            return _dbContext.CompanyProfiles.Where(c => c.UserID.Equals(userId)).FirstOrDefault();
         }
 
         public ApplicationUser GetPartnerByID(string userID)
         {
-            return dbContext.Users.Where(u => u.Id.Equals(userID)).FirstOrDefault();
+            return _dbContext.Users.Where(u => u.Id.Equals(userID)).FirstOrDefault();
         }
 
         public void UpdateCompany(CompanyProfile company)
         {
-            var companyUpdate = dbContext.CompanyProfiles.Where(c => c.ID.Equals(company.ID)).FirstOrDefault();
+            var companyUpdate = _dbContext.CompanyProfiles.Where(c => c.ID.Equals(company.ID)).FirstOrDefault();
             companyUpdate.CompanyName = company.CompanyName;
             companyUpdate.Address = company.Address;
             companyUpdate.Desc = company.Desc;
@@ -62,38 +64,38 @@ namespace CareerTech.Services.Implement
             companyUpdate.Url_Background = company.Url_Background;
             companyUpdate.Phone = company.Phone;
             companyUpdate.Email = company.Email;
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         public void UpdatePartnerProfile(ApplicationUser partner)
         {
-            var partnerUpdate = dbContext.Users.Where(u => u.Id.Equals(partner.Id)).FirstOrDefault();
+            var partnerUpdate = _dbContext.Users.Where(u => u.Id.Equals(partner.Id)).FirstOrDefault();
             partnerUpdate.FullName = partner.FullName;
             partnerUpdate.Email = partner.Email;
             partnerUpdate.PhoneNumber = partner.PhoneNumber;
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         public void DeleteRecruitmentByID(string recruitmentId)
         {
-            Recruitment recruitment = dbContext.Recruitments.Where(r => r.ID.Equals(recruitmentId)).FirstOrDefault();
-            dbContext.Recruitments.Remove(recruitment);
-            dbContext.SaveChanges();
+            Recruitment recruitment = _dbContext.Recruitments.Where(r => r.ID.Equals(recruitmentId)).FirstOrDefault();
+            _dbContext.Recruitments.Remove(recruitment);
+            _dbContext.SaveChanges();
         }
 
         public CompanyProfile GetCompanyProfileById(string companyId)
         {
-            return dbContext.CompanyProfiles.Where(c => c.ID.Equals(companyId)).FirstOrDefault();
+            return _dbContext.CompanyProfiles.Where(c => c.ID.Equals(companyId)).FirstOrDefault();
         }
 
         public Recruitment GetRecruitmentById(string recruitmentId)
         {
-            return dbContext.Recruitments.Where(r => r.ID.Equals(recruitmentId)).FirstOrDefault();
+            return _dbContext.Recruitments.Where(r => r.ID.Equals(recruitmentId)).FirstOrDefault();      
         }
 
         public void UpdateRecruitment(Recruitment recruitment)
         {
-            Recruitment recruitmentUpdate = dbContext.Recruitments.Where(r => r.ID.Equals(recruitment.ID)).FirstOrDefault();
+            Recruitment recruitmentUpdate = _dbContext.Recruitments.Where(r => r.ID.Equals(recruitment.ID)).FirstOrDefault();
             recruitment.JobID = recruitment.JobID;
             recruitment.Title = recruitment.Title;
             recruitment.Address = recruitment.Address;
@@ -105,21 +107,21 @@ namespace CareerTech.Services.Implement
             recruitment.Gender = recruitment.Gender;
             recruitment.EndDate = recruitment.EndDate;
             recruitment.DetailDesc = recruitment.DetailDesc.ToString();
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         public CompanyProfile GetCompanyProfileByRecruitmentId(string recruitmentId)
         {
-            var recruitment = dbContext.Recruitments.Where(r=>r.ID.Equals(recruitmentId)).FirstOrDefault();
-            return dbContext.CompanyProfiles.Where(c => c.ID.Equals(recruitment.CompanyProfileID)).FirstOrDefault();
+            var recruitment = _dbContext.Recruitments.Where(r=>r.ID.Equals(recruitmentId)).FirstOrDefault();
+            return _dbContext.CompanyProfiles.Where(c => c.ID.Equals(recruitment.CompanyProfileID)).FirstOrDefault();
         }
 
         public List<CandidateViewModel> GetListCandidateByCompanyID(string companyID)
         {
-            var model = from c in dbContext.Candidates
-                        join p in dbContext.Portfolios on c.UserID equals p.UserID
-                        join r in dbContext.Recruitments on c.RecruitmentID equals r.ID
-                        join u in dbContext.Users on c.UserID equals u.Id
+            var model = from c in _dbContext.Candidates
+                        join p in _dbContext.Portfolios on c.UserID equals p.UserID
+                        join r in _dbContext.Recruitments on c.RecruitmentID equals r.ID
+                        join u in _dbContext.Users on c.UserID equals u.Id
                         where r.CompanyProfileID == companyID && p.MainStatus==true && p.PublicStatus == true
                         select new CandidateViewModel
                         {
@@ -138,31 +140,31 @@ namespace CareerTech.Services.Implement
 
         public List<Recruitment> GetListRecruitmentByCompanyID(string companyID)
         {
-            return dbContext.Recruitments.Where(r => r.CompanyProfileID.Equals(companyID)).ToList();
+            return _dbContext.Recruitments.Where(r => r.CompanyProfileID.Equals(companyID)).ToList();
         }
-        public List<Recruitment> GetListRecruitmentabcmpanyID(string companyID)
-        {
-            return dbContext.Recruitments.Where(r => r.Address.ToLower().Contains(companyID.ToLower())).ToList();
-        }
+
 
         public void DeleteCandidateById(string id)
         {
-            var candidate = dbContext.Candidates.Where(c => c.ID.Equals(id)).FirstOrDefault();
-            dbContext.Candidates.Remove(candidate);
-            dbContext.SaveChanges();
+            var candidate = _dbContext.Candidates.Where(c => c.ID.Equals(id)).FirstOrDefault();
+            _dbContext.Candidates.Remove(candidate);
+            _dbContext.SaveChanges();
         }
 
         public void UpdateCandidateByID(string candidateID)
         {
-            var candidateUpdate = dbContext.Candidates.Where(c => c.ID.Equals(candidateID)).FirstOrDefault();
+            var candidateUpdate = _dbContext.Candidates.Where(c => c.ID.Equals(candidateID)).FirstOrDefault();
             candidateUpdate.Status = "Approved";
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
-
-
-
-
-
+        public int GetServiceTime(string userID)
+        {
+            var model = _dbContext.Times.Where(t => t.UserID.Equals(userID)).FirstOrDefault();
+            var endDate = model.EndDate;
+            var remainingTime = DateTime.Now.Date;
+            var serviceTIme = endDate.Subtract(remainingTime).Days;
+            return serviceTIme;
+        }
     }
 }

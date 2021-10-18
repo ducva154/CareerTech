@@ -1,10 +1,14 @@
 ﻿using CareerTech.Services;
 using CareerTech.Services.Implement;
 using CareerTech.Utils;
+using log4net;
 using Microsoft.AspNet.Identity;
 using PayPal.Api;
+using Quartz;
+using Quartz.Impl;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Payment = PayPal.Api.Payment;
 
@@ -18,6 +22,7 @@ namespace CareerTech.Controllers
         private readonly IAboutManagement<AboutService> _aboutManagement;
         private readonly IOrderManagementService<OrderManagementService> _orderManagementService;
         private readonly IPartnerManagementService<PartnerManagementService> _partnerManagementService;
+        ILog log = LogManager.GetLogger(typeof(HomeController));
 
         public HomeController(ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
             ISolutionManagementService<SolutionManagementService> solutionManagementService,
@@ -34,6 +39,16 @@ namespace CareerTech.Controllers
         }
         public ActionResult Index()
         {
+            if (User.Identity.GetUserName() != null)
+            {
+                var username = User.Identity.GetUserName();
+                
+                log.Info(username + " is in HomePage");
+            }
+            else
+            {
+                log.Info("guest is in HomePage");
+            }
             var subscription = _subscriptionManagementService.GetSubscriptions();
             ViewBag.Subs = subscription;
             var solution = _solutionManagementService.GetSolutions();
@@ -47,28 +62,19 @@ namespace CareerTech.Controllers
             {
                 ViewBag.Intro = _contentService.GetIntroduction();
             }
-            /*  string userId = User.Identity.GetUserId();
-              if (userId != null)
-              {
-                  var serviceTime = _partnerManagementService.GetPartnerServiceTime(userId);
-                  if(serviceTime != null)
-                  {
-                      var time = _partnerManagementService.PartnerService(userId);
-                      // time > 0 => now > endDate
-                      // time = 0 => now = endDate
-                      // time < 0 => now < endDate
-                      ViewBag.Time = time;
-                  }
-              }
-              else
-              {
-                  ViewBag.Time = null;
-              }*/
             return View();
         }
-
         public ActionResult About()
         {
+            if (User.Identity.GetUserName() != null)
+            {
+                var username = User.Identity.GetUserName();                
+                log.Info(username + " is in About Page");
+            }
+            else
+            {
+                log.Info("guest is in About Page");
+            }
             var about = _aboutManagement.getMainAbout();
             if (about != null)
             {
@@ -89,19 +95,25 @@ namespace CareerTech.Controllers
 
             return View();
         }
+        [Authorize(Roles = "Partner")]
         public ActionResult SuccessView()
         {
-
+            var username = User.Identity.GetUserName();
+            log4net.GlobalContext.Properties["username"] = username;
+            log.Info(username + " is in Success Payment View");
             return View();
         }
+        [Authorize(Roles = "Partner")]
         public ActionResult FailView()
         {
-
+            var username = User.Identity.GetUserName();
+            log4net.GlobalContext.Properties["username"] = username;
+            log.Info(username + " is in Fail Payment View");
             return View();
         }
         #region Paypal
         [Authorize(Roles = "Partner")]
-        public ActionResult PaymentWithPaypal(string id, string Cancel = null)
+        public ActionResult PaymentWithPaypal(string id)
         {
             //getting the apiContext  
             APIContext apiContext = PayPalService.GetAPIContext();
@@ -119,6 +131,7 @@ namespace CareerTech.Controllers
                     string baseURI = Request.Url.Scheme + "://" + Request.Url.Authority + "/Home/PaymentWithPayPal?";
                     //here we are generating guid for storing the paymentID received in session  
                     //which will be used in the payment execution  
+                    log.Info("Create Payment");
                     var guid = Convert.ToString((new Random()).Next(100000));
                     //CreatePayment function gives us the payment approval url  
                     //on which payer is redirected for paypal account payment  
@@ -149,10 +162,12 @@ namespace CareerTech.Controllers
                     {
                         return View("FailView");
                     }
+                    log.Info("Execute Payment");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error(e.Message + " at Payment With PayPal");
                 return View("FailView");
             }
             string userId = User.Identity.GetUserId();
@@ -271,7 +286,6 @@ namespace CareerTech.Controllers
             string guid = Guid.NewGuid().ToString();
             string userID = User.Identity.GetUserId();
             DateTime orderDate = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"));
-            int period = (int)sub.Period;
             string status = "Pending";
             double price = Double.Parse(amount.total);
             var result = _orderManagementService.AddOrder(guid, id, userID, orderDate, price, status);

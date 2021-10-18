@@ -30,6 +30,9 @@ namespace CareerTech.Models
         public string Phone { get; set; }
         public string Url_Img { get; set; }
         public string Status { get; set; }
+
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
     }
     public class orderDetailViewModel
     {

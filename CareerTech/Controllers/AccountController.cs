@@ -14,12 +14,16 @@ using CareerTech.Services;
 using CareerTech.Services.Implement;
 using CareerTech.Utils;
 using Microsoft.AspNet.Identity.EntityFramework;
+using log4net;
 
 namespace CareerTech.Controllers
 {
+
     [Authorize]
     public class AccountController : Controller
     {
+        ILog log = LogManager.GetLogger(typeof(AccountController));
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private readonly IAccountService<AccountService> accountService =null;
@@ -78,8 +82,10 @@ namespace CareerTech.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            log.Info("User Login");
             if (!ModelState.IsValid)
             {
+                log.Error("Model is invalid!");
                 return View(model);
             }
 
@@ -95,6 +101,10 @@ namespace CareerTech.Controllers
                     Session[SessionConstant.USER_MODEL] = user;
                     Session[SessionConstant.ROLE_NAME] = userRole.Name;
                     Session[SessionConstant.USER_ID] = user.Id;
+                    GlobalContext.Properties["userName"] = user.UserName;
+                    GlobalContext.Properties["roleName"] = userRole.Name;
+                    log.Info("Login success");
+                    
                     if (userRole.Name.Equals(RoleNameConstant.PARTNER))
                     {
                         return RedirectToAction("Index", "Partner");

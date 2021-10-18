@@ -1,8 +1,6 @@
 ﻿using CareerTech.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CareerTech.Services
@@ -17,8 +15,9 @@ namespace CareerTech.Services
         int CompareTime(string userId);
         CompanyProfile getPartnerByID(string comID);
         int ApprovePartner(string comID);
-        int RejectPartner(string comID);
+        Task RejectPartner(string comID);
         int UpdateServiceTime(string userID, DateTime dueDate);
         bool PartnerTimeExisted(string userID);
+        List<PartnerManagementViewModel> getPartnersWithService();
     }
 }

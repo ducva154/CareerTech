@@ -2,6 +2,7 @@
 using CareerTech.Services;
 using CareerTech.Services.Implement;
 using CareerTech.Utils;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,9 +16,9 @@ namespace CareerTech.Controllers
     public class PartnerController : Controller
     {
 
+        ILog log = LogManager.GetLogger(typeof(PartnerController));
         private readonly IPartnerService<PartnerService> _partnerService = null;
         private readonly IUserService<UserService> _userService = null;
-
         public PartnerController(IPartnerService<PartnerService> partnerService, IUserService<UserService> userService)
         {
             _partnerService = partnerService;
@@ -28,14 +29,36 @@ namespace CareerTech.Controllers
         // GET Dashboard page of Partner 
         public ActionResult Index()
         {
-            CompanyProfile company = _partnerService.GetCompanyProfileByPartnerId(Session[SessionConstant.USER_ID].ToString());
-            if (company != null)
+            try
             {
-                Session[SessionConstant.COMPANY_ID] = company.ID;
+                CompanyProfile company = _partnerService.GetCompanyProfileByPartnerId(Session[SessionConstant.USER_ID].ToString());
+                if (company != null)
+                {
+                    Session[SessionConstant.COMPANY_ID] = company.ID;
+                    ViewBag.totalCandidate = _partnerService.GetListCandidateByCompanyID(company.ID).Count;
+                    ViewBag.totalRecruitment = _partnerService.GetListRecruitmentByCompanyID(company.ID).Count;
+                    int serviceTIme = _partnerService.GetServiceTime(Session[SessionConstant.USER_ID].ToString());
+                    if (serviceTIme > 0)
+                    {
+                        ViewBag.serviceTime = serviceTIme;
+                    }
+                    else
+                    {
+                        ViewBag.serviceTime = "Expired";
+                    }
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("CreateCompany", "Partner");
+                }
             }
-            return View();
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
+            }
         }
-
 
         /// <summary>
         /// About profile parner
@@ -55,26 +78,17 @@ namespace CareerTech.Controllers
         {
             string fullname = data["fullname"];
             string phone = data["phone"];
-            string email = data["email"];
             ApplicationUser partner = Session[SessionConstant.USER_MODEL] as ApplicationUser;
             string message;
             string type;
-            if (string.IsNullOrEmpty(fullname)
-                || string.IsNullOrEmpty(phone)
-                || string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(fullname)|| string.IsNullOrEmpty(phone))                
             {
                 message = MessageConstant.DATA_NOT_EMPTY;
-                type = CommonConstants.DANGER;
-            }
-            else if (!_partnerService.CheckEmailExist(email, Session[SessionConstant.USER_ID].ToString()))
-            {
-                message = MessageConstant.EMAIL_EXIST;
                 type = CommonConstants.DANGER;
             }
             else
             {
                 partner.FullName = fullname;
-                partner.Email = email;
                 partner.PhoneNumber = phone;
                 //Update profile
                 _partnerService.UpdatePartnerProfile(partner);
@@ -98,14 +112,14 @@ namespace CareerTech.Controllers
         [Authorize(Roles = "Partner")]
         [HttpGet]
         public ActionResult CompanyProfile()
-        {     
+        {
             ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
             CompanyProfile company = _partnerService.GetCompanyProfileByPartnerId(Session[SessionConstant.USER_ID].ToString());
             if (company != null)
             {
-                if (!company.Status.Equals("Approved"))
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
                 {
-                    ViewBag.approveStatus = "The company is not Approved";
+                    ViewBag.approveStatus = MessageConstant.NOT_APPROVE_YET_COMPANY;
                 }
                 CompanyProfileViewModel companyProfileView = new CompanyProfileViewModel()
                 {
@@ -230,10 +244,23 @@ namespace CareerTech.Controllers
         // GET Introduction company  Page 
         [AllowAnonymous]
         [HandleError]
+        [HttpGet]
         public ActionResult IntroductionCompany(string id)
         {
-            var company = _partnerService.GetCompanyProfileById(id);
-            return View(company);
+            try
+            {
+                CompanyProfile company = _partnerService.GetCompanyProfileById(id);
+                if (company == null)
+                {
+                    throw new Exception();
+                }
+                return View(company);
+            }
+            catch (Exception)
+            {
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_COMPANY;
+                return View("Error");
+            }
         }
 
         #endregion
@@ -252,7 +279,7 @@ namespace CareerTech.Controllers
             else
             {
                 var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
-                if (!company.Status.Equals("Approved"))
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
                 {
                     return RedirectToAction("CompanyProfile", "Partner");
                 }
@@ -278,7 +305,7 @@ namespace CareerTech.Controllers
             else
             {
                 var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
-                if (!company.Status.Equals("Approved"))
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
                 {
                     return RedirectToAction("CompanyProfile", "Partner");
                 }
@@ -301,7 +328,6 @@ namespace CareerTech.Controllers
                     Gender = model.Gender,
                     EndDate = model.EndDate,
                     DetailDesc = model.DetailDesc.ToString()
-
                 };
                 _partnerService.AddRecruitment(recruitment);
                 ViewBag.message = MessageConstant.CREATE_SUCCESS;
@@ -319,41 +345,48 @@ namespace CareerTech.Controllers
         [HttpGet]
         public ActionResult EditRecruitment(string id)
         {
-
-            if (Session[SessionConstant.COMPANY_ID] == null)
+            try
             {
-                return RedirectToAction("CreateCompany", "Partner");
-            }
-            else
-            {
-                var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
-                if (!company.Status.Equals("Approved"))
+                if (Session[SessionConstant.COMPANY_ID] == null)
                 {
-                    return RedirectToAction("CompanyProfile", "Partner");
+                    return RedirectToAction("CreateCompany", "Partner");
                 }
+                else
+                {
+                    var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
+                    if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
+                    {
+                        return RedirectToAction("CompanyProfile", "Partner");
+                    }
 
+                }
+                Recruitment recruitment = _partnerService.GetRecruitmentById(id);
+                RecruitmentViewModel model = new RecruitmentViewModel()
+                {
+                    RecId = recruitment.ID,
+                    JobID = recruitment.JobID,
+                    Title = recruitment.Title,
+                    Address = recruitment.Address,
+                    Salary = recruitment.Salary,
+                    Workingform = recruitment.Workingform,
+                    Amount = recruitment.Amount,
+                    Position = recruitment.Position,
+                    Experience = recruitment.Experience,
+                    Gender = recruitment.Gender,
+                    EndDate = recruitment.EndDate,
+                    DetailDesc = recruitment.DetailDesc.ToString()
+
+                };
+                ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
+                ViewBag.ListJobCategory = new SelectList(_partnerService.GetAllJobCategory(), "ID", "JobName");
+                ViewBag.ListRecruitment = _partnerService.GetListRecruitmentByCompanyID(Session[SessionConstant.COMPANY_ID].ToString());
+                return View(model);
             }
-            Recruitment recruitment = _partnerService.GetRecruitmentById(id);
-            RecruitmentViewModel model = new RecruitmentViewModel()
+            catch (Exception)
             {
-                RecId = recruitment.ID,
-                JobID = recruitment.JobID,
-                Title = recruitment.Title,
-                Address = recruitment.Address,
-                Salary = recruitment.Salary,
-                Workingform = recruitment.Workingform,
-                Amount = recruitment.Amount,
-                Position = recruitment.Position,
-                Experience = recruitment.Experience,
-                Gender = recruitment.Gender,
-                EndDate = recruitment.EndDate,
-                DetailDesc = recruitment.DetailDesc.ToString()
-
-            };
-            ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
-            ViewBag.ListJobCategory = new SelectList(_partnerService.GetAllJobCategory(), "ID", "JobName");
-            ViewBag.ListRecruitment = _partnerService.GetListRecruitmentByCompanyID(Session[SessionConstant.COMPANY_ID].ToString());
-            return View(model);
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_RECRUITMENT;
+                return View("Error");
+            }
         }
 
         [Authorize(Roles = "Partner")]
@@ -381,7 +414,6 @@ namespace CareerTech.Controllers
             }
             ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
             ViewBag.ListJobCategory = new SelectList(_partnerService.GetAllJobCategory(), "ID", "JobName");
-            //   ViewBag.ListRecruitment = partnerService.GetAllRecruitment();
             return View(model);
         }
 
@@ -394,9 +426,6 @@ namespace CareerTech.Controllers
             {
                 _partnerService.DeleteRecruitmentByID(recruitmentId);
             }
-            //ViewBag.ListJobCategory = new SelectList(partnerService.GetAddJobCategory(), "ID", "JobName");
-            //ViewBag.ListRecruitment = partnerService.GetAllRecruitment();
-            //return View("RecruitmentManage");
             return RedirectToAction("RecruitmentManage", "Partner");
         }
 
@@ -404,19 +433,27 @@ namespace CareerTech.Controllers
         [HandleError]
         public ActionResult JobDetail(string id, string message)
         {
-            ViewBag.Message = message;
-            var recruitment = _partnerService.GetRecruitmentById(id);
-            var company = _partnerService.GetCompanyProfileById(recruitment.CompanyProfileID);
-            if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
+            try
             {
-                ViewBag.ErrorMessage = "The recruitment not found";
+                ViewBag.Message = message;
+                var recruitment = _partnerService.GetRecruitmentById(id);
+                var company = _partnerService.GetCompanyProfileById(recruitment.CompanyProfileID);
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
+                {
+                    throw new Exception();
+                }
+                ViewBag.company = company;
+                return View(recruitment);
+            }
+            catch (Exception e)
+            {
+                //ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_RECRUITMENT;
+                log.Error("JobDetail:" + e.Message);
+                ViewBag.ErrorMessage = e.Message;
                 return View("Error");
             }
-            ViewBag.company = company;
-            return View(recruitment);
         }
         #endregion
-
 
 
         #region Candidate
@@ -432,7 +469,7 @@ namespace CareerTech.Controllers
             else
             {
                 var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
-                if (!company.Status.Equals("Approved"))
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
                 {
                     return RedirectToAction("CompanyProfile", "Partner");
                 }
@@ -455,7 +492,7 @@ namespace CareerTech.Controllers
             else
             {
                 var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
-                if (!company.Status.Equals("Approved"))
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
                 {
                     return RedirectToAction("CompanyProfile", "Partner");
                 }
@@ -477,7 +514,7 @@ namespace CareerTech.Controllers
             else
             {
                 var company = _partnerService.GetCompanyProfileById(Session[SessionConstant.COMPANY_ID].ToString());
-                if (!company.Status.Equals("Approved"))
+                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
                 {
                     return RedirectToAction("CompanyProfile", "Partner");
                 }
@@ -488,7 +525,6 @@ namespace CareerTech.Controllers
             return View("CandidateManage", listCandidate);
         }
 
-
         [Authorize(Roles = "Partner")]
         [HandleError]
         [HttpPost]
@@ -498,12 +534,12 @@ namespace CareerTech.Controllers
             {
                 return RedirectToAction("CreateCompany", "Partner");
             }
-         
+
             string companyId = Session[SessionConstant.COMPANY_ID].ToString();
             var profile = _userService.GetProfileByPortfolioID(portfolioID);
             var company = _partnerService.GetCompanyProfileById(companyId);
-   
-            if (!company.Status.Equals("Approved"))
+
+            if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
             {
                 return RedirectToAction("CompanyProfile", "Partner");
             }
@@ -514,30 +550,30 @@ namespace CareerTech.Controllers
                 partner = Session[SessionConstant.USER_MODEL] as ApplicationUser;
             }
 
-            string smtpUserName = "MockCareerTech@gmail.com";
-            string smtpPassword = "mockproject@123";
-            string smtpHost = "smtp.gmail.com";
-            int smtpPort = 587;
+            // set info of email
             string emailTo = toEmail;
-
-            string subject = "Bạn vừa nhận được liên hê từ CareerTech";
-            string body = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailTemplate/Approve.html"));
+            string subject = CommonConstants.EMAIL_SUBJECT;
+            string body = System.IO.File.ReadAllText(Server.MapPath(CommonConstants.PATH_TEMPLATE_EMAIL));
             body = body.Replace("{{CandidateName}}", profile.Name);
             body = body.Replace("{{CompanyName}}", company.CompanyName);
             body = body.Replace("{{PartnerName}}", partner.FullName);
             body = body.Replace("{{Phone}}", partner.PhoneNumber);
             body = body.Replace("{{Email}}", partner.Email);
             body = body.Replace("{{RecruitmentID}}", recruitmentID);
-            bool result = CommonService.Send(smtpUserName, smtpPassword, smtpHost, smtpPort, emailTo, subject, body);
+
+            // send email
+            bool result = CommonService.Send(emailTo, subject, body);
             string message;
+
+            // check result email if true update status approve candidate
             if (result == true)
             {
                 _partnerService.UpdateCandidateByID(candidateID);
-                message = "Approve success";
+                message = MessageConstant.APPROVE_SUCCESS;
             }
             else
             {
-                message = "Candidate information was wrong!";
+                message = MessageConstant.WRONG_INFO_CANDIDATE;
             }
             ViewBag.message = message;
             List<CandidateViewModel> listCandidate = _partnerService.GetListCandidateByCompanyID(companyId);

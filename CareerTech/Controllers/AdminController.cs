@@ -1,19 +1,21 @@
 ﻿using CareerTech.Services;
 using CareerTech.Services.Implement;
 using CareerTech.Utils;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
+using log4net;
 using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using static CareerTech.Utils.CloudDiaryService;
 
 namespace CareerTech.Controllers
 {
+
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
@@ -24,6 +26,8 @@ namespace CareerTech.Controllers
         private readonly IContentService<ContentService> _contentManagement;
         private readonly IAboutManagement<AboutService> _aboutManagement;
         private readonly IOrderManagementService<OrderManagementService> _orderManagementService;
+        ILog log = LogManager.GetLogger(typeof(AdminController));
+
         public AdminController(IUserManagmentService<UserManagementService> UserManagmentService,
             IPartnerManagementService<PartnerManagementService> PartnerManagementService,
             ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
@@ -46,36 +50,22 @@ namespace CareerTech.Controllers
         {
             try
             {
-                ViewBag.NOUser = _UserManagmentService.countNumerOfUser();
-                ViewBag.NOPartner = _PartnerManagementService.CountNoOfPartners();
+                int NoOfUser = _UserManagmentService.countNumerOfUser();
+                ViewBag.NOUser = NoOfUser;
+                int NoOfPartner = _PartnerManagementService.CountNoOfPartners();
+                ViewBag.NOPartner = NoOfPartner;
                 if (ViewBag.NOUser == null || ViewBag.NOPartner == null)
                 {
+                    log.Error("No Data");
                     return View("error");
                 }
-                var partners = _PartnerManagementService.getPartners();
-                foreach (var p in partners)
-                {
-                    if (_PartnerManagementService.GetPartnerServiceTime(p.Id) != null)
-                    {
-                        int compare = _PartnerManagementService.CompareTime(p.Id);
-                        if (compare == 0)
-                        {
-                            ViewBag.Mess = "account " + p.Email + "will be expired after today";
-                        }
-                        else if (compare > 0)
-                        {
-                            ViewBag.Mess = "account " + p.Email + "has expired";
-                        }
-                        else
-                        {
-
-                        }
-                    }
-
-                }
+                log.Info("Number of user " + NoOfUser);
+                log.Info("Number of partner " + NoOfPartner);
+                log.Info("Admin Access To Admin Dashboard");
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -156,11 +146,12 @@ namespace CareerTech.Controllers
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                 Response.AddHeader("content-disposition", "attachment: filename=" + "UserInfor.xlxs");
                 Response.BinaryWrite(excelPackage.GetAsByteArray());
+                log.Info("Download All User Info");
                 Response.End();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                log.Info(e.Message);
 
             }
 
@@ -187,10 +178,6 @@ namespace CareerTech.Controllers
         {
             var partnersWithCompany = _PartnerManagementService.getAllPartners();
             var partners = _PartnerManagementService.getPartners();
-            /* foreach (var p in p1)
-             {
-                 var com = p.CompanyProfiles.Where(cc => cc.UserID == p.Id).FirstOrDefault();
-             }*/
             ViewBag.Partners = partnersWithCompany;
             ViewBag.Partners2 = partners;
             ViewBag.Mess = mess;
@@ -201,6 +188,7 @@ namespace CareerTech.Controllers
             try
             {
                 int result = _PartnerManagementService.ApprovePartner(id);
+                log.Info("Approved Partner " + id);
                 if (result > 0)
                 {
                     mess = MessageConstant.APPROVE_SUCCESS;
@@ -212,23 +200,16 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
             }
             return PartnerManagement(mess);
         }
-        public ActionResult RejectPartner(string id)
+        public async Task<ActionResult> RejectPartner(string id)
         {
             try
             {
-                int result = _PartnerManagementService.RejectPartner(id);
-                if (result > 0)
-                {
-                    mess = MessageConstant.REJECT_SUCCESS;
-                }
-                else
-                {
-                    mess = MessageConstant.REJECT_FAILED;
-                }
+                await _PartnerManagementService.RejectPartner(id);
             }
             catch (Exception e)
             {
@@ -271,40 +252,49 @@ namespace CareerTech.Controllers
                                     int result = _subscriptionManagementService.AddNewSubscription(id, Name, Price, Type, Period, detailDescription);
                                     if (result > 0)
                                     {
+                                        
+                                        log.Info("Success at Add new Subscription" + Name);
                                         mess = MessageConstant.ADD_SUCCESS;
                                     }
                                     else
                                     {
+                                        log.Info("Failed at Add new Subscription" + Name);
                                         mess = MessageConstant.ADD_FAILED;
                                     }
                                 }
                                 else
                                 {
+                                    log.Info("Failed at Add new Subscription" + Name);
                                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                                 }
                             }
                             else
                             {
+                                log.Info("Failed at Add new Subscription" + Name);
                                 mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                             }
                         }
                         else
                         {
+                            log.Info("Failed at Add new Subscription" + Name);
                             mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                         }
                     }
                     else
                     {
+                        log.Info("Failed at Add new Subscription" + Name);
                         mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                     }
                 }
                 else
                 {
+                    log.Info("Failed at Add new Subscription - Name Empty");
                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
                 }
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
             }
             return SubscriptionManagement(mess);
@@ -325,6 +315,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -335,7 +326,7 @@ namespace CareerTech.Controllers
         [HttpPost, ValidateInput(false)]
         public ActionResult EditSubscription(FormCollection collection)
         {
-            string ID = string.Empty;
+            string ID;
             try
             {
                 ID = collection["id"].ToString();
@@ -359,6 +350,7 @@ namespace CareerTech.Controllers
                                     int edit = _subscriptionManagementService.UpdateSubscriptionByID(ID, Name, Price, Type, Period, Desc);
                                     if (edit > 0)
                                     {
+                                        log.Info("Update Subscription " + Name);
                                         mess = MessageConstant.UPDATE_SUCCESS;
                                         return SubscriptionManagement(mess);
                                     }
@@ -394,6 +386,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
                 return View("error");
             }
@@ -406,6 +399,7 @@ namespace CareerTech.Controllers
                 var del = _subscriptionManagementService.DeleteSubscriptionByID(subID);
                 if (del > 0)
                 {
+                    log.Info("Delete Subscription" + subID);
                     mess = MessageConstant.DELETE_SUCCESS;
                 }
                 else
@@ -431,7 +425,7 @@ namespace CareerTech.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult AddContent(HttpPostedFileBase file, FormCollection collection)
+        public async Task<ActionResult> AddContent(HttpPostedFileBase file, FormCollection collection)
         {
             try
             {
@@ -454,9 +448,11 @@ namespace CareerTech.Controllers
                                 bool checkMainExisted = _contentManagement.CheckMainExisted();
                                 if (checkMainExisted)
                                 {
+                                    log.Info("Main Status Existed");
                                     mess = "Add Failed! Main Content Existed";
                                     return ContentManagement(mess);
                                 }
+
                                 else
                                 {
                                     status = true;
@@ -475,11 +471,12 @@ namespace CareerTech.Controllers
                                 string _FileName = Path.GetFileName(file.FileName);
                                 string _path = Path.Combine(Server.MapPath("~/Content/Home/img"), _FileName);
                                 file.SaveAs(_path);
-                                url = CloudinaryUpload(_path, _FileName);
+                                url = await CloudinaryUpload(_path, 200, 300);
                                 int result = _contentManagement.addContent(id, uID, Title, Detail, url, status);
                                 if (result > 0)
                                 {
                                     mess = "Add Successfully";
+                                    log.Info("Add COntent");
                                 }
                                 else
                                 {
@@ -505,6 +502,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
                 ViewBag.Mess = "No data";
             }
@@ -527,6 +525,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -534,9 +533,9 @@ namespace CareerTech.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult EditContent(HttpPostedFileBase file, FormCollection collection)
+        public async Task<ActionResult> EditContent(HttpPostedFileBase file, FormCollection collection)
         {
-            string contentID = string.Empty;
+            string contentID;
             try
             {
                 contentID = collection["id"];
@@ -555,6 +554,7 @@ namespace CareerTech.Controllers
                             if (checkMainExisted)
                             {
                                 mess = "Save Changes Failed!! Main Content Existed";
+                                log.Info("Update Content");
                                 return EditContent(contentID, mess);
                             }
                             else
@@ -576,7 +576,7 @@ namespace CareerTech.Controllers
                             string _FileName = Path.GetFileName(file.FileName);
                             string _path = Path.Combine(Server.MapPath("~/Content/Home/img"), _FileName);
                             file.SaveAs(_path);
-                            url = CloudinaryUpload(_path, _FileName);
+                            url = await CloudinaryUpload(_path, 200, 200);
                         }
 
                         int result = _contentManagement.updateContent(contentID, Title, Detail, url, status);
@@ -601,6 +601,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
                 return View("error");
 
@@ -638,7 +639,7 @@ namespace CareerTech.Controllers
 
             return View("SolutionManagement");
         }
-        public ActionResult AddSolution(HttpPostedFileBase file)
+        public async Task<ActionResult> AddSolution(HttpPostedFileBase file)
         {
             try
             {
@@ -659,11 +660,12 @@ namespace CareerTech.Controllers
                             string _FileName = Path.GetFileName(file.FileName);
                             string _path = Path.Combine(Server.MapPath("~/Content/Home/img/services"), _FileName);
                             file.SaveAs(_path);
-                            url = CloudinaryUpload(_path, _FileName);
+                            url = await CloudinaryUpload(_path, 200, 200);
                             string uID = User.Identity.GetUserId();
                             int result = _solutionManagementService.AddSolution(id, uID, Name, Des, url);
                             if (result > 0)
                             {
+                                log.Info("Add Solution");
                                 mess = MessageConstant.ADD_SUCCESS;
                             }
                             else
@@ -684,6 +686,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
                 return View("error");
             }
@@ -706,6 +709,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message + "at Edit Solution");
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -714,8 +718,9 @@ namespace CareerTech.Controllers
 
         }
         [HttpPost]
-        public ActionResult EditSolution(string solID, HttpPostedFileBase file)
+        public async Task<ActionResult> EditSolution(HttpPostedFileBase file)
         {
+            string solID;
             try
             {
                 solID = Request.Form["id"].ToString();
@@ -736,12 +741,13 @@ namespace CareerTech.Controllers
                             string _FileName = Path.GetFileName(file.FileName);
                             string _path = Path.Combine(Server.MapPath("~/Content/Home/img/services"), _FileName);
                             file.SaveAs(_path);
-                            url_img = CloudinaryUpload(_path, _FileName);
+                            url_img = await CloudinaryUpload(_path, 200, 200);
                         }
 
                         int result = _solutionManagementService.UpdateSolutionByID(solID, Title, Detail, url_img);
                         if (result > 0)
                         {
+                            log.Info("Update Solution");
                             mess = MessageConstant.UPDATE_SUCCESS;
                             return SolutionManagement(mess);
                         }
@@ -762,6 +768,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message + " at Edit Solution");
                 mess = e.Message;
                 return View("error");
             }
@@ -784,7 +791,7 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 mess = e.Message;
-
+                log.Error(e.Message);
                 return View("error");
             }
             return SolutionManagement(mess);
@@ -840,6 +847,7 @@ namespace CareerTech.Controllers
                                 int result = _aboutManagement.AddAbout(id, uID, Title, Detail, Description, status);
                                 if (result > 0)
                                 {
+                                    log.Info("Add About");
                                     mess = MessageConstant.ADD_SUCCESS;
                                 }
                                 else
@@ -869,6 +877,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
                 return View("error");
             }
@@ -890,6 +899,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message + "at Edit About");
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -935,6 +945,7 @@ namespace CareerTech.Controllers
                             int result = _aboutManagement.UpdateAbout(aboutID, Title, Detail, Desc, status);
                             if (result > 0)
                             {
+                                log.Info("Update About");
                                 mess = MessageConstant.UPDATE_SUCCESS;
                                 return AboutManagement(mess);
                             }
@@ -961,6 +972,7 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 mess = e.Message;
+                log.Error(e.Message + "at Update about");
                 return View("error");
             }
             return EditAbout(aboutID, mess);
@@ -981,28 +993,11 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message + " at Delete About");
                 mess = e.Message;
                 return View("error");
             }
             return AboutManagement(mess);
-        }
-        #endregion
-        #region Upload Cloudinary
-        public string CloudinaryUpload(string img_path, string Name)
-        {
-            Account account = new Account(
-          "dathm",
-          "815564641783264",
-          "NdzOfyAMMdTGE3GlfjU5hg8Kc3o");
-            Cloudinary cloudinary = new Cloudinary(account);
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(@"" + img_path),
-                PublicId = Name
-            };
-            var uploadResult = cloudinary.Upload(uploadParams);
-            var uploadPath = uploadResult.Url.AbsoluteUri;
-            return uploadPath;
         }
         #endregion
     }

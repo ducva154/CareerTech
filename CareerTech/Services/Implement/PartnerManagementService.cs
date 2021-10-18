@@ -1,7 +1,11 @@
 ﻿using CareerTech.Models;
+using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace CareerTech.Services.Implement
@@ -35,8 +39,8 @@ namespace CareerTech.Services.Implement
                             Address = com.Address
                         };
 
-            var rs = query.ToList();
-            return rs;
+            var result = query.ToList();
+            return result;
         }
 
         public int CountNoOfPartners()
@@ -106,12 +110,11 @@ namespace CareerTech.Services.Implement
             return result;
         }
 
-        public int RejectPartner(string comID)
+        public async Task RejectPartner(string comID)
         {
             var com = getPartnerByID(comID);
             com.Status = "Pending";
-            int result = _applicationDbContext.SaveChanges();
-            return result;
+            await _applicationDbContext.SaveChangesAsync();
         }
 
         public int UpdateServiceTime(string userID, DateTime dueDate)
@@ -133,6 +136,55 @@ namespace CareerTech.Services.Implement
             {
                 return false;
             }
+        }
+
+        /*      public Task Execute(IJobExecutionContext context)
+              {
+                  var task = Task.Run(() =>
+                  {
+                      StartService();
+
+                  });
+                  return task;
+              }
+
+              public void StartService()
+              {
+                  var partnerService = getPartnersWithService();
+                  partnerService.ForEach(async ps =>
+                  {
+                      if(ps.endDate <= DateTime.Now)
+                      {
+                         var ExpiredPartner =  getPartnerByID(ps.CompanyID);
+                          ExpiredPartner.Status = "Pending";
+                          await _applicationDbContext.SaveChangesAsync();
+                          return;
+                      }
+                  });
+                  Debug.WriteLine("Service running: " + DateTime.Now);
+              }
+      */
+        public List<PartnerManagementViewModel> getPartnersWithService()
+        {
+            var query = from u in _applicationDbContext.Users
+                        join com in _applicationDbContext.CompanyProfiles on u.Id equals com.UserID
+                        join time in _applicationDbContext.Times on u.Id equals time.UserID
+                        select new PartnerManagementViewModel
+                        {
+                            UserID = u.Id,
+                            UserName = u.FullName,
+                            CompanyName = com.CompanyName,
+                            CompanyID = com.ID,
+                            Phone = u.PhoneNumber,
+                            Email = u.Email,
+                            Status = com.Status,
+                            Url_Img = com.Url_Avatar,
+                            Address = com.Address,
+                            startDate = time.StartDate,
+                            endDate = time.EndDate
+                        };
+
+            return query.ToList();
         }
     }
 }

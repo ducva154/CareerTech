@@ -2,6 +2,7 @@
 using CareerTech.Services;
 using CareerTech.Services.Implement;
 using CareerTech.Utils;
+using log4net;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -88,27 +89,34 @@ namespace CareerTech.Controllers
             {
                 string message = "";
                 ApplicationUser user = Session[SessionConstant.USER_MODEL] as ApplicationUser;
-                _userService.GetCandidateByUserIDAndRecruitmentID(user.Id, id);
-                if (_userService.GetCandidateByUserIDAndRecruitmentID(user.Id, id) != null)
+                if (_userService.GetMainPortfolioByUser(user.Id) == null)
                 {
-                    message = MessageConstant.APPLY_ALREADY;
+                    message = MessageConstant.NULL_MAIN_PORTFOLIO;
                 }
                 else
                 {
-                    Candidate candidate = new Candidate();
-                    candidate.ID = Guid.NewGuid().ToString();
-                    candidate.RecruitmentID = id;
-                    candidate.UserID = user.Id;
-                    candidate.DateApply = DateTime.Now;
-                    candidate.Status = CommonConstants.PENDING_STATUS;
-                    int checkSuccess = _userService.ApplyRecruitment(candidate);
-                    if (checkSuccess > 0)
+                    _userService.GetCandidateByUserIDAndRecruitmentID(user.Id, id);
+                    if (_userService.GetCandidateByUserIDAndRecruitmentID(user.Id, id) != null)
                     {
-                        message = MessageConstant.APPLY_SUCCESS;
+                        message = MessageConstant.APPLY_ALREADY;
                     }
                     else
                     {
-                        message = MessageConstant.APPLY_FAIL;
+                        Candidate candidate = new Candidate();
+                        candidate.ID = Guid.NewGuid().ToString();
+                        candidate.RecruitmentID = id;
+                        candidate.UserID = user.Id;
+                        candidate.DateApply = DateTime.Now;
+                        candidate.Status = CommonConstants.PENDING_STATUS;
+                        int checkSuccess = _userService.ApplyRecruitment(candidate);
+                        if (checkSuccess > 0)
+                        {
+                            message = MessageConstant.APPLY_SUCCESS;
+                        }
+                        else
+                        {
+                            message = MessageConstant.APPLY_FAIL;
+                        }
                     }
                 }
                 return RedirectToAction("JobDetail", "Partner", new { id = id, message = message });
@@ -293,7 +301,7 @@ namespace CareerTech.Controllers
                     portfolio.Name = portfolioName;
                     portfolio.PublicStatus = false;
                     portfolio.MainStatus = false;
-                    portfolio.Url_Domain = "/User/Portfolio/" + portfolio.ID;
+                    portfolio.Url_Domain = "/portfolio/" + portfolio.ID;
                     int checkSuccess = _userService.InsertPortfolio(portfolio);
                     if (checkSuccess > 0)
                     {

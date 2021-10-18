@@ -27,8 +27,12 @@ namespace CareerTech.Utils
             return list;
         }
 
-        public static bool Send(string smtpUserName, string smtpPassword, string smtpHost, int smtpPort, string toEmail, string subject, string body)
+        public static bool Send(string toEmail, string subject, string body)
         {
+            string smtpUserName = CommonConstants.SMTP_USER_NAME;
+            string smtpPassword = CommonConstants.SMTP_PASSWORD;
+            string smtpHost = CommonConstants.SMTP_HOST;
+            int smtpPort = CommonConstants.SMTP_POST;
             try
             {
                 using (var smtpClient = new SmtpClient())

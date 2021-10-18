@@ -20,7 +20,7 @@
 </li>
 <li class="no-padding active">
     <a class="waves-effect waves-grey " href="~/Partner/CandidateManage">
-        <i class="material-icons">star_border</i>Candidate Manage
+        <i class="material-icons">star_border</i>Apply Candidate Manage
     </a>
 </li>
 <li class="no-padding active">
@@ -33,12 +33,6 @@
         <i class="material-icons">account_circle</i>Profile
     </a>
 </li>
-@*<li class="no-padding active">
-        <a class="waves-effect waves-grey " href="javascript:document.getElementById('logoutForm').submit()">
-            <i class="material-icons">exit_to_app</i>Sign Out
-        </a>
-    </li>*@
-
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
