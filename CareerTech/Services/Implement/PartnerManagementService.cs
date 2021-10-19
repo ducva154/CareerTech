@@ -1,4 +1,5 @@
 ﻿using CareerTech.Models;
+using log4net;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -7,13 +8,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-
+using static CareerTech.Utils.LogConstants;
 namespace CareerTech.Services.Implement
 {
     public class PartnerManagementService : IPartnerManagementService<PartnerManagementService>
     {
         private readonly ApplicationDbContext _applicationDbContext = null;
-
+        private readonly ILog log = LogManager.GetLogger(typeof(PartnerManagementService));
         public PartnerManagementService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
@@ -38,7 +39,7 @@ namespace CareerTech.Services.Implement
                             Url_Img = com.Url_Avatar,
                             Address = com.Address
                         };
-
+            log.Info(LOG_GET_PARTNERWITHCOMPANY);
             var result = query.ToList();
             return result;
         }
@@ -50,6 +51,7 @@ namespace CareerTech.Services.Implement
                         join r in _applicationDbContext.Roles on ur.RoleId equals r.Id
                         where r.Name == "Partner"
                         select u;
+            log.Info(LOG_NUMBER_OF_USER);
             return query.Count();
         }
 
@@ -60,6 +62,7 @@ namespace CareerTech.Services.Implement
                         join r in _applicationDbContext.Roles on ur.RoleId equals r.Id
                         where r.Name == "Partner"
                         select u;
+            log.Info(LOG_GET_PARTNER);
             return query.ToList();
         }
         public int addServiceTime(string id, string userId, DateTime startDate, DateTime endDate)
@@ -70,6 +73,7 @@ namespace CareerTech.Services.Implement
             serviceTime.StartDate = startDate;
             serviceTime.EndDate = endDate;
             _applicationDbContext.Times.Add(serviceTime);
+            log.Info($"{LOG_ADD_SERVICE_TIME}: id:{serviceTime.ID},userID:{serviceTime.UserID},startDate:{serviceTime.StartDate},endDate:{serviceTime.EndDate}");
             int result = _applicationDbContext.SaveChanges();
             return result;
         }
@@ -80,6 +84,7 @@ namespace CareerTech.Services.Implement
                         where t.UserID == userID
                         select t;
             var partnerTime = query.FirstOrDefault();
+            log.Info($"{LOG_GET_SERVICE_TIME}: id:{partnerTime.ID},userID:{partnerTime.UserID},startDate:{partnerTime.StartDate},endDate:{partnerTime.EndDate}");
             return partnerTime;
         }
 
@@ -90,6 +95,7 @@ namespace CareerTech.Services.Implement
             //result > 0 => datetime.now > endDate
             //result = 0 => datetime.now = endDate
             //result < 0 => datetime.now < endDate
+            log.Info(LOG_COMPARE_ENDDATE_NOW);
             return result;
         }
 
@@ -99,6 +105,7 @@ namespace CareerTech.Services.Implement
                         where p.ID == comID
                         select p;
             var partner = query.FirstOrDefault();
+            log.Info($"{LOG_GET_PARTNERWITHCOMPANY_BYID}: id{partner.UserID},comID:{partner.ID},companyName{partner.CompanyName}");
             return partner;
         }
 
@@ -106,6 +113,7 @@ namespace CareerTech.Services.Implement
         {
             var com = getPartnerByID(comID);
             com.Status = "Approved";
+            log.Info($"{APPROVE_PARTNER}: id{com.UserID},comID:{com.ID},companyName{com.CompanyName}");
             int result = _applicationDbContext.SaveChanges();
             return result;
         }
@@ -114,6 +122,7 @@ namespace CareerTech.Services.Implement
         {
             var com = getPartnerByID(comID);
             com.Status = "Pending";
+            log.Info($"{REJECT_PARTNER}: id{com.UserID},comID:{com.ID},companyName{com.CompanyName}");
             await _applicationDbContext.SaveChangesAsync();
         }
 
@@ -130,6 +139,7 @@ namespace CareerTech.Services.Implement
             var time = GetPartnerServiceTime(userID);
             if (time != null)
             {
+                log.Info(PARTNER_TIME_EXISED);
                 return true;
             }
             else
@@ -138,32 +148,7 @@ namespace CareerTech.Services.Implement
             }
         }
 
-        /*      public Task Execute(IJobExecutionContext context)
-              {
-                  var task = Task.Run(() =>
-                  {
-                      StartService();
 
-                  });
-                  return task;
-              }
-
-              public void StartService()
-              {
-                  var partnerService = getPartnersWithService();
-                  partnerService.ForEach(async ps =>
-                  {
-                      if(ps.endDate <= DateTime.Now)
-                      {
-                         var ExpiredPartner =  getPartnerByID(ps.CompanyID);
-                          ExpiredPartner.Status = "Pending";
-                          await _applicationDbContext.SaveChangesAsync();
-                          return;
-                      }
-                  });
-                  Debug.WriteLine("Service running: " + DateTime.Now);
-              }
-      */
         public List<PartnerManagementViewModel> getPartnersWithService()
         {
             var query = from u in _applicationDbContext.Users
@@ -183,7 +168,7 @@ namespace CareerTech.Services.Implement
                             startDate = time.StartDate,
                             endDate = time.EndDate
                         };
-
+            log.Info(GET_ALL_PARTNER_WITH_SERVICE);
             return query.ToList();
         }
     }

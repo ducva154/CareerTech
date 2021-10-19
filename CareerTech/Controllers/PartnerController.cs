@@ -16,7 +16,7 @@ namespace CareerTech.Controllers
     public class PartnerController : Controller
     {
 
-        ILog log = LogManager.GetLogger(typeof(PartnerController));
+       private readonly ILog log = LogManager.GetLogger(typeof(PartnerController));
         private readonly IPartnerService<PartnerService> _partnerService = null;
         private readonly IUserService<UserService> _userService = null;
         public PartnerController(IPartnerService<PartnerService> partnerService, IUserService<UserService> userService)
@@ -56,6 +56,7 @@ namespace CareerTech.Controllers
             catch (Exception e)
             {
                 ViewBag.ErrorMessage = e.Message;
+                log.Error(e.Message);
                 return View("Error");
             }
         }
@@ -68,39 +69,57 @@ namespace CareerTech.Controllers
         [Authorize(Roles = "Partner")]
         public ActionResult PartnerProfile()
         {
-            ApplicationUser partner = Session[SessionConstant.USER_MODEL] as ApplicationUser;
-            return View(partner);
+            try
+            {
+                ApplicationUser partner = Session[SessionConstant.USER_MODEL] as ApplicationUser;
+                return View(partner);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                log.Error(e.Message);
+                return View("Error");
+            }
         }
 
         [Authorize(Roles = "Partner")]
         [HttpPost]
         public ActionResult UpdateProfile(FormCollection data)
         {
-            string fullname = data["fullname"];
-            string phone = data["phone"];
-            ApplicationUser partner = Session[SessionConstant.USER_MODEL] as ApplicationUser;
-            string message;
-            string type;
-            if (string.IsNullOrEmpty(fullname)|| string.IsNullOrEmpty(phone))                
+            try
             {
-                message = MessageConstant.DATA_NOT_EMPTY;
-                type = CommonConstants.DANGER;
-            }
-            else
-            {
-                partner.FullName = fullname;
-                partner.PhoneNumber = phone;
-                //Update profile
-                _partnerService.UpdatePartnerProfile(partner);
-                //Update information in session
-                Session[SessionConstant.USER_MODEL] = partner;
+                string fullname = data["fullname"];
+                string phone = data["phone"];
+                ApplicationUser partner = Session[SessionConstant.USER_MODEL] as ApplicationUser;
+                string message;
+                string type;
+                if (string.IsNullOrEmpty(fullname) || string.IsNullOrEmpty(phone))
+                {
+                    message = MessageConstant.DATA_NOT_EMPTY;
+                    type = CommonConstants.DANGER;
+                }
+                else
+                {
+                    partner.FullName = fullname;
+                    partner.PhoneNumber = phone;
+                    //Update profile
+                    _partnerService.UpdatePartnerProfile(partner);
+                    //Update information in session
+                    Session[SessionConstant.USER_MODEL] = partner;
 
-                message = MessageConstant.UPDATE_SUCCESS;
-                type = CommonConstants.SUCCESS;
+                    message = MessageConstant.UPDATE_SUCCESS;
+                    type = CommonConstants.SUCCESS;
+                }
+                ViewBag.message = message;
+                ViewBag.type = type;
+                return View("PartnerProfile", partner);
             }
-            ViewBag.message = message;
-            ViewBag.type = type;
-            return View("PartnerProfile", partner);
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                log.Error(e.Message);
+                return View("Error");
+            }
         }
 
         #endregion
@@ -113,35 +132,53 @@ namespace CareerTech.Controllers
         [HttpGet]
         public ActionResult CompanyProfile()
         {
-            ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
-            CompanyProfile company = _partnerService.GetCompanyProfileByPartnerId(Session[SessionConstant.USER_ID].ToString());
-            if (company != null)
+            try
             {
-                if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
+                ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
+                CompanyProfile company = _partnerService.GetCompanyProfileByPartnerId(Session[SessionConstant.USER_ID].ToString());
+                if (company != null)
                 {
-                    ViewBag.approveStatus = MessageConstant.NOT_APPROVE_YET_COMPANY;
+                    if (!company.Status.Equals(CommonConstants.APPROVED_STATUS))
+                    {
+                        ViewBag.approveStatus = MessageConstant.NOT_APPROVE_YET_COMPANY;
+                    }
+                    CompanyProfileViewModel companyProfileView = new CompanyProfileViewModel()
+                    {
+                        CompanyName = company.CompanyName,
+                        Address = company.Address,
+                        Desc = company.Desc,
+                        Url_Avatar = company.Url_Avatar,
+                        Url_Background = company.Url_Background,
+                        Phone = company.Phone,
+                        Email = company.Email
+                    };
+                    return View(companyProfileView);
                 }
-                CompanyProfileViewModel companyProfileView = new CompanyProfileViewModel()
-                {
-                    CompanyName = company.CompanyName,
-                    Address = company.Address,
-                    Desc = company.Desc,
-                    Url_Avatar = company.Url_Avatar,
-                    Url_Background = company.Url_Background,
-                    Phone = company.Phone,
-                    Email = company.Email
-                };
-                return View(companyProfileView);
+                return RedirectToAction("Index", "Partner");
             }
-            return RedirectToAction("Index", "Partner");
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                log.Error(e.Message);
+                return View("Error");
+            }
         }
 
         [Authorize(Roles = "Partner")]
         [HttpGet]
         public ActionResult CreateCompany()
         {
-            ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
-            return View();
+            try
+            {
+                ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
+                return View();
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                log.Error(e.Message);
+                return View("Error");
+            }
         }
 
         [Authorize(Roles = "Partner")]
@@ -172,6 +209,10 @@ namespace CareerTech.Controllers
                 _partnerService.UpdateCompany(company);
                 ViewBag.message = MessageConstant.UPDATE_SUCCESS;
                 ViewBag.type = CommonConstants.SUCCESS;
+            }
+            else
+            {
+                log.Error(LogConstants.MODEL_INVALID);
             }
             return View("CompanyProfile", model);
         }
@@ -218,6 +259,7 @@ namespace CareerTech.Controllers
             }
             else
             {
+                log.Error(LogConstants.MODEL_INVALID);
                 return View("CreateCompany", model);
             }
         }
@@ -259,6 +301,7 @@ namespace CareerTech.Controllers
             catch (Exception)
             {
                 ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_COMPANY;
+                log.Error(MessageConstant.NOT_FOUND_COMPANY);
                 return View("Error");
             }
         }
@@ -334,6 +377,10 @@ namespace CareerTech.Controllers
                 ViewBag.type = CommonConstants.SUCCESS;
 
             }
+            else
+            {
+                log.Error(LogConstants.MODEL_INVALID);
+            }
             ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
             ViewBag.ListJobCategory = new SelectList(_partnerService.GetAllJobCategory(), "ID", "JobName");
             ViewBag.ListRecruitment = _partnerService.GetListRecruitmentByCompanyID(Session[SessionConstant.COMPANY_ID].ToString());
@@ -382,9 +429,10 @@ namespace CareerTech.Controllers
                 ViewBag.ListRecruitment = _partnerService.GetListRecruitmentByCompanyID(Session[SessionConstant.COMPANY_ID].ToString());
                 return View(model);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_RECRUITMENT;
+                log.Error(e.Message);
                 return View("Error");
             }
         }
@@ -411,6 +459,10 @@ namespace CareerTech.Controllers
                 _partnerService.UpdateRecruitment(recruitment);
                 ViewBag.message = MessageConstant.UPDATE_SUCCESS;
                 ViewBag.type = CommonConstants.SUCCESS;
+            }
+            else
+            {
+                log.Error(LogConstants.MODEL_INVALID);
             }
             ViewBag.ListAddress = new SelectList(CommonService.GetAddresses());
             ViewBag.ListJobCategory = new SelectList(_partnerService.GetAllJobCategory(), "ID", "JobName");
@@ -445,11 +497,10 @@ namespace CareerTech.Controllers
                 ViewBag.company = company;
                 return View(recruitment);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                //ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_RECRUITMENT;
-                log.Error("JobDetail:" + e.Message);
-                ViewBag.ErrorMessage = e.Message;
+                ViewBag.ErrorMessage = MessageConstant.NOT_FOUND_RECRUITMENT;
+                log.Error(MessageConstant.NOT_FOUND_RECRUITMENT);              
                 return View("Error");
             }
         }

@@ -4,11 +4,8 @@ using CareerTech.Utils;
 using log4net;
 using Microsoft.AspNet.Identity;
 using PayPal.Api;
-using Quartz;
-using Quartz.Impl;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Payment = PayPal.Api.Payment;
 
@@ -22,7 +19,7 @@ namespace CareerTech.Controllers
         private readonly IAboutManagement<AboutService> _aboutManagement;
         private readonly IOrderManagementService<OrderManagementService> _orderManagementService;
         private readonly IPartnerManagementService<PartnerManagementService> _partnerManagementService;
-        ILog log = LogManager.GetLogger(typeof(HomeController));
+        private readonly ILog log = LogManager.GetLogger(typeof(HomeController));
 
         public HomeController(ISubscriptionManagementService<SubscriptionManagementService> subscriptionManagementService,
             ISolutionManagementService<SolutionManagementService> solutionManagementService,
@@ -42,7 +39,7 @@ namespace CareerTech.Controllers
             if (User.Identity.GetUserName() != null)
             {
                 var username = User.Identity.GetUserName();
-                
+
                 log.Info(username + " is in HomePage");
             }
             else
@@ -68,7 +65,7 @@ namespace CareerTech.Controllers
         {
             if (User.Identity.GetUserName() != null)
             {
-                var username = User.Identity.GetUserName();                
+                var username = User.Identity.GetUserName();
                 log.Info(username + " is in About Page");
             }
             else
@@ -289,8 +286,12 @@ namespace CareerTech.Controllers
             string status = "Pending";
             double price = Double.Parse(amount.total);
             var result = _orderManagementService.AddOrder(guid, id, userID, orderDate, price, status);
-            var order = _orderManagementService.getOrderByID(guid);
-            HttpContext.Session.Add("order", order);
+            if (result > 0)
+            {
+                var order = _orderManagementService.GetOrderByID(guid);
+                HttpContext.Session.Add("order", order);
+            }
+
             // Create a payment using a APIContext  
             return this.payment.Create(apiContext);
         }

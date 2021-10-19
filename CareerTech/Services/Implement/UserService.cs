@@ -1,15 +1,16 @@
 ﻿using CareerTech.Models;
 using CareerTech.Utils;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace CareerTech.Services
 {
     public class UserService : IUserService<UserService>
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILog log = LogManager.GetLogger(typeof(UserService));
         public UserService(ApplicationDbContext context)
         {
             _context = context;
@@ -19,6 +20,7 @@ namespace CareerTech.Services
         {
             education.ID = Guid.NewGuid().ToString();
             _context.Educations.Add(education);
+            log.Info($"{LogConstants.LOG_ADD_EDUCATION}: id: {education.ID}, time: {education.Time}, detail: {education.Detail}");
             return _context.SaveChanges();
         }
 
@@ -26,6 +28,7 @@ namespace CareerTech.Services
         {
             experience.ID = Guid.NewGuid().ToString();
             _context.Experiences.Add(experience);
+            log.Info($"{LogConstants.LOG_ADD_EXPERIENCE}: id: {experience.ID}, time: {experience.Time}, detail: {experience.Detail}");
             return _context.SaveChanges();
         }
 
@@ -33,6 +36,10 @@ namespace CareerTech.Services
         {
             product.ID = Guid.NewGuid().ToString();
             _context.Products.Add(product);
+            log.Info($"{LogConstants.LOG_ADD_PRODUCT}: id: {product.ID}, portfolioId: {product.PortfolioID}, " +
+                $"image: {product.Url_Image}, name: {product.Name}, skill: {product.Skill}, domain: {product.Domain}, " +
+                $"teamSize: {product.TeamSize}, projectTech: {product.ProjectTech}, workProcess: {product.WorkProces}, " +
+                $"company: {product.Company}, projectRole: {product.ProjectRole}");
             return _context.SaveChanges();
         }
 
@@ -40,6 +47,7 @@ namespace CareerTech.Services
         {
             skill.ID = Guid.NewGuid().ToString();
             _context.Skills.Add(skill);
+            log.Info($"{LogConstants.LOG_ADD_SKILL}: id: {skill.ID}, skillName: {skill.SkillName}, skillLevel: {skill.SkillLevel}");
             return _context.SaveChanges();
         }
 
@@ -47,6 +55,10 @@ namespace CareerTech.Services
         {
             profile.ID = Guid.NewGuid().ToString();
             _context.Profiles.Add(profile);
+            log.Info($"{LogConstants.LOG_CREATE_PROFILE_PORTFOLIO}: id: {profile.ID}, portfolioID: {profile.PortfolioID}, name: {profile.Name}, " +
+                $"position: {profile.Position}, desc: {profile.Desc}, address: {profile.Address}, age: {profile.Age}, gender: {profile.Gender}, " +
+                $"phone: {profile.Phone}, email: {profile.Email}, avatar: {profile.Url_avatar}, facebook: {profile.Facebook_url}, " +
+                $"instagram: {profile.Instagram_url}, youtube: {profile.Youtube_url}, twitter: {profile.Twitter_url}");
             return _context.SaveChanges();
         }
 
@@ -54,6 +66,7 @@ namespace CareerTech.Services
         {
             var deleteEducation = GetEducationByID(educationID);
             _context.Educations.Remove(deleteEducation);
+            log.Info($"{LogConstants.LOG_DELETE_EDUCATION}: id: {deleteEducation.ID}, time: {deleteEducation.Time}, detail: {deleteEducation.Detail}");
             return _context.SaveChanges();
         }
 
@@ -61,6 +74,7 @@ namespace CareerTech.Services
         {
             var deleteExperience = GetExperienceByID(experienceID);
             _context.Experiences.Remove(deleteExperience);
+            log.Info($"{LogConstants.LOG_DELETE_EXPERIENCE}: id: {deleteExperience.ID}, time: {deleteExperience.Time}, detail: {deleteExperience.Detail}");
             return _context.SaveChanges();
         }
 
@@ -68,6 +82,7 @@ namespace CareerTech.Services
         {
             var deletePortfolio = _context.Portfolios.Where(p => p.ID == portfolioID).SingleOrDefault();
             _context.Portfolios.Remove(deletePortfolio);
+            log.Info($"{LogConstants.LOG_DELETE_PORTFOLIO}: id: {deletePortfolio.ID}, name: {deletePortfolio.Name}");
             return _context.SaveChanges();
         }
 
@@ -75,6 +90,10 @@ namespace CareerTech.Services
         {
             var deleteProduct = _context.Products.Where(p => p.ID == productID).SingleOrDefault();
             _context.Products.Remove(deleteProduct);
+            log.Info($"{LogConstants.LOG_DELETE_PRODUCT}: id: {deleteProduct.ID}, portfolioId: {deleteProduct.PortfolioID}, " +
+                $"image: {deleteProduct.Url_Image}, name: {deleteProduct.Name}, skill: {deleteProduct.Skill}, domain: {deleteProduct.Domain}, " +
+                $"teamSize: {deleteProduct.TeamSize}, projectTech: {deleteProduct.ProjectTech}, workProcess: {deleteProduct.WorkProces}, " +
+                $"company: {deleteProduct.Company}, projectRole: {deleteProduct.ProjectRole}");
             return _context.SaveChanges();
         }
 
@@ -82,6 +101,7 @@ namespace CareerTech.Services
         {
             var deleteSkill = GetSkillByID(skillID);
             _context.Skills.Remove(deleteSkill);
+            log.Info($"{LogConstants.LOG_DELETE_SKILL}: id: {deleteSkill.ID}, skillName: {deleteSkill.SkillName}, skillLevel: {deleteSkill.SkillLevel}");
             return _context.SaveChanges();
         }
 
@@ -90,6 +110,7 @@ namespace CareerTech.Services
             Education oldEducation = GetEducationByID(educationID);
             oldEducation.Time = education.Time;
             oldEducation.Detail = education.Detail;
+            log.Info($"{LogConstants.LOG_EDIT_EDUCATION}: id: {oldEducation.ID}, time: {oldEducation.Time}, detail: {oldEducation.Detail}");
             return _context.SaveChanges();
         }
 
@@ -98,6 +119,7 @@ namespace CareerTech.Services
             Experience oldExperience = GetExperienceByID(experienceID);
             oldExperience.Time = experience.Time;
             oldExperience.Detail = experience.Detail;
+            log.Info($"{LogConstants.LOG_EDIT_EXPERIENCE}: id: {oldExperience.ID}, time: {oldExperience.Time}, detail: {oldExperience.Detail}");
             return _context.SaveChanges();
         }
 
@@ -105,7 +127,9 @@ namespace CareerTech.Services
         {
             Portfolio portfolio = GetPortfolioByID(portfolioID);
             portfolio.PublicStatus = !portfolio.PublicStatus;
+            log.Info($"{LogConstants.LOG_CHANGE_PUBLIC_STATUS}: id: {portfolio.ID}, name: {portfolio.Name}, publicStatus: {portfolio.PublicStatus}");
             _context.SaveChanges();
+            log.Info(LogConstants.LOG_SUCCESS);
         }
 
         public int EditProduct(string productID, Product product)
@@ -120,6 +144,10 @@ namespace CareerTech.Services
             oldProduct.ProjectTech = product.ProjectTech;
             oldProduct.WorkProces = product.WorkProces;
             oldProduct.ProjectRole = product.ProjectRole;
+            log.Info($"{LogConstants.LOG_EDIT_PRODUCT}: id: {oldProduct.ID}, portfolioId: {oldProduct.PortfolioID}, " +
+                $"image: {oldProduct.Url_Image}, name: {oldProduct.Name}, skill: {oldProduct.Skill}, domain: {oldProduct.Domain}, " +
+                $"teamSize: {oldProduct.TeamSize}, projectTech: {oldProduct.ProjectTech}, workProcess: {oldProduct.WorkProces}, " +
+                $"company: {oldProduct.Company}, projectRole: {oldProduct.ProjectRole}");
             return _context.SaveChanges();
         }
 
@@ -140,6 +168,10 @@ namespace CareerTech.Services
             profile.Twitter_url = profile.Twitter_url;
             profile.Youtube_url = profile.Youtube_url;
             profile.Instagram_url = profile.Instagram_url;
+            log.Info($"{LogConstants.LOG_EDIT_PROFILE_PORTFOLIO}: id: {oldProfile.ID}, portfolioID: {oldProfile.PortfolioID}, name: {oldProfile.Name}, " +
+                $"position: {oldProfile.Position}, desc: {oldProfile.Desc}, address: {oldProfile.Address}, age: {oldProfile.Age}, gender: {oldProfile.Gender}, " +
+                $"phone: {oldProfile.Phone}, email: {oldProfile.Email}, avatar: {oldProfile.Url_avatar}, facebook: {oldProfile.Facebook_url}, " +
+                $"instagram: {oldProfile.Instagram_url}, youtube: {oldProfile.Youtube_url}, twitter: {oldProfile.Twitter_url}");
             return _context.SaveChanges();
         }
 
@@ -148,82 +180,121 @@ namespace CareerTech.Services
             Skill oldSkill = GetSkillByID(skillID);
             oldSkill.SkillName = skill.SkillName;
             oldSkill.SkillLevel = skill.SkillLevel;
+            log.Info($"{LogConstants.LOG_EDIT_SKILL}: id: {oldSkill.ID}, name: {oldSkill.SkillName}, level: {oldSkill.SkillLevel}");
             return _context.SaveChanges();
         }
 
         public Education GetEducationByID(string educationID)
         {
-            return _context.Educations.Where(e => e.ID == educationID).SingleOrDefault();
+            var education = _context.Educations.Where(e => e.ID == educationID).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_EDUCATION}: id: {education.ID}, time: {education.Time}, detail: {education.Detail}");
+            return education;
         }
 
         public ICollection<Education> GetEducationByPortfolioID(string portfolioID)
         {
-            return GetPortfolioByID(portfolioID).Educations.ToList();
+            ICollection<Education> educations = GetPortfolioByID(portfolioID).Educations.ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_EDUCATION} by portfolioId: {portfolioID}");
+            return educations;
         }
 
         public Experience GetExperienceByID(string experienceID)
         {
-            return _context.Experiences.Where(e => e.ID == experienceID).SingleOrDefault();
+            var experience = _context.Experiences.Where(e => e.ID == experienceID).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_EXPERIENCE}: id: {experience.ID}, time: {experience.Time}, detail: {experience.Detail}");
+            return experience;
         }
 
         public ICollection<Experience> GetExperienceByPortfolioID(string portfolioID)
         {
-            return GetPortfolioByID(portfolioID).Experiences.ToList();
+            ICollection<Experience> experiences = GetPortfolioByID(portfolioID).Experiences.ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_EXPERIENCE} by portfolioId: {portfolioID}");
+            return experiences;
         }
 
         public Portfolio GetPortfolioByID(string portfolioID)
         {
-            return _context.Portfolios.Where(p => p.ID == portfolioID).SingleOrDefault();
+            var portfolio = _context.Portfolios.Where(p => p.ID == portfolioID).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_PORTFOLIO}: id: {portfolio.ID}, name: {portfolio.Name}, publicStatus: {portfolio.PublicStatus}, mainStatus: {portfolio.MainStatus}");
+            return portfolio;
         }
 
         public ICollection<Portfolio> GetPortfolioByNameAndUser(string portfolioName, string userID)
         {
-            return _context.Portfolios.Where(p => (p.UserID == userID && p.Name == portfolioName)).ToList();
+            ICollection<Portfolio> portfolios = _context.Portfolios.Where(p => (p.UserID == userID && p.Name == portfolioName)).ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_PORTFOLIO} by portfolioName: {portfolioName} and userId: {userID}");
+            return portfolios;
         }
 
         public ICollection<Portfolio> GetPortfolioByUser(string userID)
         {
-            return _context.Portfolios.Where(p => p.UserID == userID).ToList();
+            ICollection<Portfolio> portfolios = _context.Portfolios.Where(p => p.UserID == userID).ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_PORTFOLIO} by userId: {userID}");
+            return portfolios;
         }
 
         public Product GetProductByID(string productID)
         {
-            return _context.Products.Where(p => p.ID == productID).SingleOrDefault();
+            var product = _context.Products.Where(p => p.ID == productID).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_PRODUCT}: id: {product.ID}, portfolioId: {product.PortfolioID}, " +
+                $"image: {product.Url_Image}, name: {product.Name}, skill: {product.Skill}, domain: {product.Domain}, " +
+                $"teamSize: {product.TeamSize}, projectTech: {product.ProjectTech}, workProcess: {product.WorkProces}, " +
+                $"company: {product.Company}, projectRole: {product.ProjectRole}");
+            return product;
         }
 
         public Product GetProductByNameAndPortfolioID(string productName, string portfolioID)
         {
-            return _context.Products.Where(p => (p.Name == productName && p.PortfolioID == portfolioID)).SingleOrDefault();
+            Product product = _context.Products.Where(p => (p.Name == productName && p.PortfolioID == portfolioID)).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_PRODUCT}: id: {product.ID}, portfolioId: {product.PortfolioID}, " +
+                $"image: {product.Url_Image}, name: {product.Name}, skill: {product.Skill}, domain: {product.Domain}, " +
+                $"teamSize: {product.TeamSize}, projectTech: {product.ProjectTech}, workProcess: {product.WorkProces}, " +
+                $"company: {product.Company}, projectRole: {product.ProjectRole}");
+            return product;
         }
 
         public ICollection<Product> GetProductByPortfolioID(string portfolioID)
         {
-            return GetPortfolioByID(portfolioID).Products.ToList();
+            ICollection<Product> products = GetPortfolioByID(portfolioID).Products.ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_PRODUCT} by portfolioId: {portfolioID}");
+            return products;
         }
 
         public Profile GetProfileByPortfolioID(string portfolioID)
         {
-            return GetPortfolioByID(portfolioID).Profiles.FirstOrDefault();
+            Profile profile = GetPortfolioByID(portfolioID).Profiles.FirstOrDefault();
+            log.Info($"{LogConstants.LOG_GET_PROFILE_PORTFOLIO}: id: {profile.ID}, portfolioID: {profile.PortfolioID}, name: {profile.Name}, " +
+                $"position: {profile.Position}, desc: {profile.Desc}, address: {profile.Address}, age: {profile.Age}, gender: {profile.Gender}, " +
+                $"phone: {profile.Phone}, email: {profile.Email}, avatar: {profile.Url_avatar}, facebook: {profile.Facebook_url}, " +
+                $"instagram: {profile.Instagram_url}, youtube: {profile.Youtube_url}, twitter: {profile.Twitter_url}");
+            return profile;
         }
 
         public Skill GetSkillByID(string skillID)
         {
-            return _context.Skills.Where(s => s.ID == skillID).FirstOrDefault();
+            Skill skill = _context.Skills.Where(s => s.ID == skillID).FirstOrDefault();
+            log.Info($"{LogConstants.LOG_GET_SKILL}: id: {skill.ID}, name: {skill.SkillName}, level: {skill.SkillLevel}");
+            return skill;
         }
 
         public Skill GetSkillByNameAndPortfolioID(string skillName, string portfolioID)
         {
-            return _context.Skills.Where(s => (s.SkillName == skillName && s.PortfolioID == portfolioID)).SingleOrDefault();
+            Skill skill = _context.Skills.Where(s => (s.SkillName == skillName && s.PortfolioID == portfolioID)).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_SKILL}: id: {skill.ID}, name: {skill.SkillName}, level: {skill.SkillLevel}");
+            return skill;
         }
 
         public ICollection<Skill> GetSkillByPortfolioID(string portfolioID)
         {
-            return GetPortfolioByID(portfolioID).Skills.ToList();
+            ICollection<Skill> skills = GetPortfolioByID(portfolioID).Skills.ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_SKILL} by portfolioId: {portfolioID}");
+            return skills;
         }
 
         public int InsertPortfolio(Portfolio portfolio)
         {
             _context.Portfolios.Add(portfolio);
+            log.Info($"{LogConstants.LOG_CREATE_PORTFOLIO}: id: {portfolio.ID}, name: {portfolio.Name}, publicStatus: {portfolio.PublicStatus}, mainStatus: {portfolio.MainStatus}");
             return _context.SaveChanges();
         }
 
@@ -232,17 +303,22 @@ namespace CareerTech.Services
             ApplicationUser oldUser = _context.Users.Where(u => u.Id == userID).SingleOrDefault();
             oldUser.FullName = user.FullName;
             oldUser.PhoneNumber = user.PhoneNumber;
+            log.Info($"{LogConstants.LOG_EDIT_USER_PROFILE}: userId: {oldUser.Id}, email: {oldUser.Email}, fullName: {oldUser.FullName}, phone: {oldUser.PhoneNumber}");
             return _context.SaveChanges();
         }
 
         public ICollection<Portfolio> GetPublicPortfolioByUser(string userID)
         {
-            return GetPortfolioByUser(userID).Where(p => p.PublicStatus == true).ToList();
+            ICollection<Portfolio> portfolios = GetPortfolioByUser(userID).Where(p => p.PublicStatus == true).ToList();
+            log.Info($"{LogConstants.LOG_GET_LIST_PORTFOLIO} by userId: {userID} and publicStatus: {true}");
+            return portfolios;
         }
 
         public Portfolio GetMainPortfolioByUser(string userID)
         {
-            return GetPublicPortfolioByUser(userID).Where(p => p.MainStatus == true).SingleOrDefault();
+            Portfolio portfolio = GetPublicPortfolioByUser(userID).Where(p => p.MainStatus == true).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_PORTFOLIO}: id: {portfolio.ID}, name: {portfolio.Name}, publicStatus: {portfolio.PublicStatus}, mainStatus: {portfolio.MainStatus}");
+            return portfolio;
         }
 
         public int EditMainStatus(string portfolioID, string userID)
@@ -259,6 +335,7 @@ namespace CareerTech.Services
                     portfolio.MainStatus = false;
                 }
             }
+            log.Info($"{LogConstants.LOG_SET_MAIN_PORTFOLIO}: id: {portfolioID}");
             return _context.SaveChanges();
         }
 
@@ -284,6 +361,7 @@ namespace CareerTech.Services
                     searchRecruitments.Add(searchRecruitment);
                 }
             }
+            log.Info(LogConstants.LOG_GET_LIST_SEARCH_RECRUITMENT);
             return searchRecruitments;
         }
 
@@ -298,18 +376,24 @@ namespace CareerTech.Services
             {
                 list = list.Where(i => i.JobID.Equals(jobID)).ToList();
             }
+            log.Info($"{LogConstants.LOG_GET_LIST_SEARCH_RECRUITMENT} by address: {address} and jobId: {jobID}");
             return list;
         }
 
         public int ApplyRecruitment(Candidate candidate)
         {
             _context.Candidates.Add(candidate);
+            log.Info($"{LogConstants.LOG_ADD_CANDIDATE}: id:{candidate.ID}, userId: {candidate.UserID}, recruitmentId: {candidate.RecruitmentID}, " +
+                $"dateApply: {candidate.DateApply}, status: {candidate.Status}");
             return _context.SaveChanges();
         }
 
         public Candidate GetCandidateByUserIDAndRecruitmentID(string userID, string recruitmentID)
         {
-            return _context.Candidates.Where(c => (c.UserID == userID && c.RecruitmentID == recruitmentID)).SingleOrDefault();
+            Candidate candidate = _context.Candidates.Where(c => (c.UserID == userID && c.RecruitmentID == recruitmentID)).SingleOrDefault();
+            log.Info($"{LogConstants.LOG_GET_CANDIDATE}: id:{candidate.ID}, userId: {candidate.UserID}, recruitmentId: {candidate.RecruitmentID}, " +
+                $"dateApply: {candidate.DateApply}, status: {candidate.Status}");
+            return candidate;
         }
 
         public List<DashboardRecruitmentViewModel> GetDashboardRecruitmentByUserIDAndStatus(string userID)
@@ -332,11 +416,13 @@ namespace CareerTech.Services
                     dashboardRecruitments.Add(dashboardRecruitment);
                 }
             }
+            log.Info(LogConstants.LOG_GET_LIST_DASHBOARD_RECRUITMENT);
             return dashboardRecruitments;
         }
 
         public int CountCandidateByUserIDAndStatus(string userID, string status)
         {
+            log.Info($"{LogConstants.LOG_COUNT_CANDIDATE} by userId: {userID} and status: {status}");
             int count = 0;
             List<Candidate> candidates = _context.Candidates.Where(c => (c.UserID == userID && c.Status == status)).ToList();
             foreach (Candidate candidate in candidates)
@@ -347,12 +433,15 @@ namespace CareerTech.Services
                     count++;
                 }
             }
+            log.Info(count);
             return count;
         }
 
         public string GetCompanyStatusByCompanyProfileID(string companyProfileID)
         {
+            log.Info($"{LogConstants.LOG_GET_COMPANY_STATUS} by companyProfileId: {companyProfileID}");
             CompanyProfile company = _context.CompanyProfiles.Where(c => c.ID.Equals(companyProfileID)).FirstOrDefault();
+            log.Info(company.Status);
             return company.Status;
         }
     }

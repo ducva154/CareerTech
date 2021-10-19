@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using static CareerTech.Utils.CloudDiaryService;
+using static CareerTech.Utils.LogConstants;
 
 namespace CareerTech.Controllers
 {
@@ -26,7 +27,7 @@ namespace CareerTech.Controllers
         private readonly IContentService<ContentService> _contentManagement;
         private readonly IAboutManagement<AboutService> _aboutManagement;
         private readonly IOrderManagementService<OrderManagementService> _orderManagementService;
-        ILog log = LogManager.GetLogger(typeof(AdminController));
+        private readonly ILog log = LogManager.GetLogger(typeof(AdminController));
 
         public AdminController(IUserManagmentService<UserManagementService> UserManagmentService,
             IPartnerManagementService<PartnerManagementService> PartnerManagementService,
@@ -59,9 +60,6 @@ namespace CareerTech.Controllers
                     log.Error("No Data");
                     return View("error");
                 }
-                log.Info("Number of user " + NoOfUser);
-                log.Info("Number of partner " + NoOfPartner);
-                log.Info("Admin Access To Admin Dashboard");
             }
             catch (Exception e)
             {
@@ -95,6 +93,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message);
                 mess = e.Message;
                 return View("error");
             }
@@ -146,12 +145,12 @@ namespace CareerTech.Controllers
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                 Response.AddHeader("content-disposition", "attachment: filename=" + "UserInfor.xlxs");
                 Response.BinaryWrite(excelPackage.GetAsByteArray());
-                log.Info("Download All User Info");
+                log.Info(DOWNLOAD_USER_INFO);
                 Response.End();
             }
             catch (Exception e)
             {
-                log.Info(e.Message);
+                log.Info(e.Message + " while exporting");
 
             }
 
@@ -161,14 +160,14 @@ namespace CareerTech.Controllers
         #region PaymentManagement
         public ActionResult PaymentManagement()
         {
-            var paymentDetail = _orderManagementService.getAllOrderDetail();
+            var paymentDetail = _orderManagementService.GetAllOrderDetail();
             ViewBag.Payment = paymentDetail;
             return View();
         }
         [HttpGet]
         public ActionResult OrderDetail(string id)
         {
-            var orderDetail = _orderManagementService.getOrderDetail(id);
+            var orderDetail = _orderManagementService.GetOrderDetail(id);
             ViewBag.Order = orderDetail;
             return View();
         }
@@ -200,7 +199,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at ApprovePartner");
                 mess = e.Message;
             }
             return PartnerManagement(mess);
@@ -213,6 +212,7 @@ namespace CareerTech.Controllers
             }
             catch (Exception e)
             {
+                log.Error(e.Message + " at RejectPartner");
                 mess = e.Message;
             }
             return PartnerManagement(mess);
@@ -252,49 +252,61 @@ namespace CareerTech.Controllers
                                     int result = _subscriptionManagementService.AddNewSubscription(id, Name, Price, Type, Period, detailDescription);
                                     if (result > 0)
                                     {
-                                        
-                                        log.Info("Success at Add new Subscription" + Name);
+
                                         mess = MessageConstant.ADD_SUCCESS;
+                                        log.Error(mess);
                                     }
                                     else
                                     {
-                                        log.Info("Failed at Add new Subscription" + Name);
+
                                         mess = MessageConstant.ADD_FAILED;
+                                        log.Error(mess);
+
                                     }
                                 }
                                 else
                                 {
-                                    log.Info("Failed at Add new Subscription" + Name);
+
                                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                                    log.Error(mess);
+
                                 }
                             }
                             else
                             {
-                                log.Info("Failed at Add new Subscription" + Name);
+
                                 mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                                log.Error(mess);
+
                             }
                         }
                         else
                         {
-                            log.Info("Failed at Add new Subscription" + Name);
+
                             mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                            log.Error(mess);
+
                         }
                     }
                     else
                     {
-                        log.Info("Failed at Add new Subscription" + Name);
+
                         mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
-                    log.Info("Failed at Add new Subscription - Name Empty");
+
                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at Add Subscription");
                 mess = e.Message;
             }
             return SubscriptionManagement(mess);
@@ -309,13 +321,14 @@ namespace CareerTech.Controllers
                 if (ViewBag.SubInfo == null)
                 {
                     ViewBag.Mess = "No data";
+                    log.Error(ViewBag.Mess);
                     return View("error");
                 }
                 ViewBag.Mess = mess;
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at EditSubscription");
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -350,43 +363,53 @@ namespace CareerTech.Controllers
                                     int edit = _subscriptionManagementService.UpdateSubscriptionByID(ID, Name, Price, Type, Period, Desc);
                                     if (edit > 0)
                                     {
-                                        log.Info("Update Subscription " + Name);
                                         mess = MessageConstant.UPDATE_SUCCESS;
                                         return SubscriptionManagement(mess);
                                     }
                                     else
                                     {
                                         mess = MessageConstant.UPDATE_FAIL;
+                                        log.Error(mess);
                                     }
                                 }
                                 else
                                 {
                                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                                    log.Error(mess);
+
                                 }
                             }
                             else
                             {
                                 mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                                log.Error(mess);
+
                             }
                         }
                         else
                         {
                             mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                            log.Error(mess);
+
                         }
                     }
                     else
                     {
                         mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at EditSubscription");
                 mess = e.Message;
                 return View("error");
             }
@@ -399,17 +422,18 @@ namespace CareerTech.Controllers
                 var del = _subscriptionManagementService.DeleteSubscriptionByID(subID);
                 if (del > 0)
                 {
-                    log.Info("Delete Subscription" + subID);
                     mess = MessageConstant.DELETE_SUCCESS;
                 }
                 else
                 {
                     mess = MessageConstant.DELETE_FAIL;
+                    log.Error(mess);
+
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                log.Error(e.Message);
                 return View("error");
             }
             return SubscriptionManagement(mess);
@@ -448,8 +472,8 @@ namespace CareerTech.Controllers
                                 bool checkMainExisted = _contentManagement.CheckMainExisted();
                                 if (checkMainExisted)
                                 {
-                                    log.Info("Main Status Existed");
-                                    mess = "Add Failed! Main Content Existed";
+                                    mess = MessageConstant.ADD_FAILED + MessageConstant.MAIN_EXISTED;
+                                    log.Info(mess);
                                     return ContentManagement(mess);
                                 }
 
@@ -475,34 +499,37 @@ namespace CareerTech.Controllers
                                 int result = _contentManagement.addContent(id, uID, Title, Detail, url, status);
                                 if (result > 0)
                                 {
-                                    mess = "Add Successfully";
-                                    log.Info("Add COntent");
+                                    mess = MessageConstant.ADD_SUCCESS;
                                 }
                                 else
                                 {
-                                    mess = "Add failed";
+                                    mess = MessageConstant.ADD_FAILED;
+                                    log.Error(mess);
                                 }
                             }
 
                         }
                         else
                         {
-                            mess = "Add failed! Please choose status for content";
+                            mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                            log.Error(mess);
                         }
                     }
                     else
                     {
-                        mess = "Add failed! Detail can not be empty";
+                        mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                        log.Error(mess);
                     }
                 }
                 else
                 {
-                    mess = "Add failed! Title can not be Empty";
+                    mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                    log.Error(mess);
                 }
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + "at AddContent");
                 mess = e.Message;
                 ViewBag.Mess = "No data";
             }
@@ -519,13 +546,14 @@ namespace CareerTech.Controllers
                 if (ViewBag.Content == null)
                 {
                     ViewBag.Mess = "No data";
+                    log.Error(ViewBag.Mess);
                     return View("error");
                 }
                 ViewBag.Mess = mess;
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at EditContent");
                 ViewBag.Mess = e.Message;
                 return View("error");
             }
@@ -553,8 +581,8 @@ namespace CareerTech.Controllers
                             bool checkMainExisted = _contentManagement.CheckMainExisted();
                             if (checkMainExisted)
                             {
-                                mess = "Save Changes Failed!! Main Content Existed";
-                                log.Info("Update Content");
+                                mess = MessageConstant.UPDATE_FAIL + MessageConstant.MAIN_EXISTED;
+                                log.Error(mess);
                                 return EditContent(contentID, mess);
                             }
                             else
@@ -582,26 +610,30 @@ namespace CareerTech.Controllers
                         int result = _contentManagement.updateContent(contentID, Title, Detail, url, status);
                         if (result > 0)
                         {
-                            mess = "Save Changes Successfully";
+                            mess = MessageConstant.UPDATE_SUCCESS;
                         }
                         else
                         {
-                            mess = "Save Changes failed";
+                            mess = MessageConstant.UPDATE_FAIL;
+                            log.Error(mess);
                         }
                     }
                     else
                     {
-                        mess = "Save changes failed! Detail can not be empty";
+                        mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
-                    mess = "Save changes failed! Title can not be empty";
+                    mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                    log.Error(mess);
                 }
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at EditContent");
                 mess = e.Message;
                 return View("error");
 
@@ -615,16 +647,17 @@ namespace CareerTech.Controllers
                 int result = _contentManagement.deleteIntroductionByID(contentID);
                 if (result > 0)
                 {
-                    mess = "Delete Sucessfully";
+                    mess = MessageConstant.DELETE_SUCCESS;
                 }
                 else
                 {
-                    mess = "Delete Failed";
+                    mess = MessageConstant.DELETE_FAIL;
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
+                log.Error(mess + " at DeleteContent");
                 return View("error");
             }
             return ContentManagement(mess);
@@ -665,28 +698,33 @@ namespace CareerTech.Controllers
                             int result = _solutionManagementService.AddSolution(id, uID, Name, Des, url);
                             if (result > 0)
                             {
-                                log.Info("Add Solution");
                                 mess = MessageConstant.ADD_SUCCESS;
                             }
                             else
                             {
                                 mess = MessageConstant.ADD_FAILED;
+                                log.Error(mess);
+
                             }
                         }
                     }
                     else
                     {
                         mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
                     mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + " at AddSolution");
                 mess = e.Message;
                 return View("error");
             }
@@ -703,6 +741,8 @@ namespace CareerTech.Controllers
                 if (ViewBag.SolInfo == null)
                 {
                     ViewBag.Mess = "No data";
+                    log.Error(ViewBag.Mess);
+
                     return View("error");
                 }
                 ViewBag.Mess = mess;
@@ -747,23 +787,28 @@ namespace CareerTech.Controllers
                         int result = _solutionManagementService.UpdateSolutionByID(solID, Title, Detail, url_img);
                         if (result > 0)
                         {
-                            log.Info("Update Solution");
+
                             mess = MessageConstant.UPDATE_SUCCESS;
                             return SolutionManagement(mess);
                         }
                         else
                         {
                             mess = MessageConstant.UPDATE_FAIL;
+                            log.Error(mess);
                         }
                     }
                     else
                     {
                         mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)
@@ -781,17 +826,18 @@ namespace CareerTech.Controllers
                 int result = _solutionManagementService.DeleteSolutionByID(solID);
                 if (result > 0)
                 {
-                    mess = "Delete Successfully";
+                    mess = MessageConstant.DELETE_SUCCESS;
                 }
                 else
                 {
-                    mess = "Delete failed";
+                    mess = MessageConstant.DELETE_FAIL;
+                    log.Error(mess);
                 }
             }
             catch (Exception e)
             {
                 mess = e.Message;
-                log.Error(e.Message);
+                log.Error(e.Message + "at DeleteSolution ");
                 return View("error");
             }
             return SolutionManagement(mess);
@@ -832,6 +878,7 @@ namespace CareerTech.Controllers
                                     if (checkMainExisted)
                                     {
                                         mess = MessageConstant.ADD_FAILED + MessageConstant.MAIN_EXISTED;
+                                        log.Error(mess);
                                         return AboutManagement(mess);
                                     }
                                     else
@@ -847,37 +894,47 @@ namespace CareerTech.Controllers
                                 int result = _aboutManagement.AddAbout(id, uID, Title, Detail, Description, status);
                                 if (result > 0)
                                 {
-                                    log.Info("Add About");
+
                                     mess = MessageConstant.ADD_SUCCESS;
                                 }
                                 else
                                 {
                                     mess = MessageConstant.ADD_FAILED;
+                                    log.Error(mess);
+
                                 }
                             }
                             else
                             {
                                 mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                                log.Error(mess);
+
                             }
                         }
                         else
                         {
                             mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                            log.Error(mess);
+
                         }
                     }
                     else
                     {
                         mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
                     mess = MessageConstant.ADD_FAILED_DATA_EMPTY;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)
             {
-                log.Error(e.Message);
+                log.Error(e.Message + "at Add About");
                 mess = e.Message;
                 return View("error");
             }
@@ -945,28 +1002,36 @@ namespace CareerTech.Controllers
                             int result = _aboutManagement.UpdateAbout(aboutID, Title, Detail, Desc, status);
                             if (result > 0)
                             {
-                                log.Info("Update About");
+
                                 mess = MessageConstant.UPDATE_SUCCESS;
                                 return AboutManagement(mess);
                             }
                             else
                             {
                                 mess = MessageConstant.UPDATE_FAIL;
+                                log.Error(mess);
+
                             }
                         }
                         else
                         {
                             mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                            log.Error(mess);
+
                         }
                     }
                     else
                     {
                         mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                        log.Error(mess);
+
                     }
                 }
                 else
                 {
                     mess = MessageConstant.UPDATE_FAILED_DATA_EMPTY;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)
@@ -989,6 +1054,8 @@ namespace CareerTech.Controllers
                 else
                 {
                     mess = MessageConstant.DELETE_FAIL;
+                    log.Error(mess);
+
                 }
             }
             catch (Exception e)

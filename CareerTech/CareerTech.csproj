@@ -395,6 +395,7 @@
     <Compile Include="Utils\CloudDiaryService.cs" />
     <Compile Include="Utils\CommonConstants.cs" />
     <Compile Include="Utils\CommonService.cs" />
+    <Compile Include="Utils\LogConstants.cs" />
     <Compile Include="Utils\PageConstant.cs" />
     <Compile Include="Utils\MessageConstant.cs" />
     <Compile Include="Utils\PayPalService.cs" />
