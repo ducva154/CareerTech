@@ -60,7 +60,15 @@ namespace CareerTech.Services.Implement
                         where sub.ID == subscriptionID
                         select sub;
             var subscription = query.FirstOrDefault();
-            log.Info($"{LOG_GET_SUBSCIPTION_BYID}: id:{subscription.ID},name:{subscription.Name}, price:{subscription.Price},type:{subscription.Type},period:{subscription.Period}");
+            if (subscription != null)
+            {
+                log.Info($"{LOG_GET_SUBSCIPTION_BYID}: id:{subscription.ID},name:{subscription.Name}, price:{subscription.Price},type:{subscription.Type},period:{subscription.Period}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+            }
             return subscription;
         }
 

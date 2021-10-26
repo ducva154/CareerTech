@@ -60,7 +60,16 @@ namespace CareerTech.Services.Implement
                         where o.ID == orderID
                         select o;
             var order = query.FirstOrDefault();
-            log.Info($"{LOG_GET_ORDER_BYID}: id: {order.ID},subID:{order.SubscriptionID},orderDate:{order.OrderDate},Price:{order.TotalPrice}");
+            if (order != null)
+            {
+                log.Info($"{LOG_GET_ORDER_BYID}: id: {order.ID},subID:{order.SubscriptionID},orderDate:{order.OrderDate},Price:{order.TotalPrice}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return order;
         }
 

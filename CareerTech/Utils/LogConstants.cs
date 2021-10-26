@@ -129,7 +129,7 @@ namespace CareerTech.Utils
         public static string PARTNER_TIME_EXISED = "Partner Time Existed";
         public static string PARTNER_NOT_TIME_EXISED = "Partner Time Doesnt Existed";
         public static string GET_ALL_PARTNER_WITH_SERVICE = "GET ALL PARTNERS_WITH SERVICE";
-
+        public static string LOG_NULL_VALUE = "Null value";
 
     }
 }

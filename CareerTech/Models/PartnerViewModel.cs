@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace CareerTech.Models
 {
     public class CompanyProfileViewModel
-    {
+    {      
         [Required]
         [Display(Name = "Company Name")]
         public string CompanyName { get; set; }

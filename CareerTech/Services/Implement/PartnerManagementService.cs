@@ -84,7 +84,15 @@ namespace CareerTech.Services.Implement
                         where t.UserID == userID
                         select t;
             var partnerTime = query.FirstOrDefault();
-            log.Info($"{LOG_GET_SERVICE_TIME}: id:{partnerTime.ID},userID:{partnerTime.UserID},startDate:{partnerTime.StartDate},endDate:{partnerTime.EndDate}");
+            if (partnerTime != null)
+            {
+                log.Info($"{LOG_GET_SERVICE_TIME}: id:{partnerTime.ID},userID:{partnerTime.UserID},startDate:{partnerTime.StartDate},endDate:{partnerTime.EndDate}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+            }
             return partnerTime;
         }
 
@@ -105,7 +113,14 @@ namespace CareerTech.Services.Implement
                         where p.ID == comID
                         select p;
             var partner = query.FirstOrDefault();
-            log.Info($"{LOG_GET_PARTNERWITHCOMPANY_BYID}: id{partner.UserID},comID:{partner.ID},companyName{partner.CompanyName}");
+            if (partner != null)
+            {
+                log.Info($"{LOG_GET_PARTNERWITHCOMPANY_BYID}: id{partner.UserID},comID:{partner.ID},companyName{partner.CompanyName}");
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+            }
             return partner;
         }
 

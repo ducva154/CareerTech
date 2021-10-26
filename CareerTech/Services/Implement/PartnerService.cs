@@ -56,14 +56,14 @@ namespace CareerTech.Services.Implement
 
         public CompanyProfile GetCompanyProfileByPartnerId(string userId)
         {
-            var model = _dbContext.CompanyProfiles.Where(c => c.UserID.Equals(userId)).FirstOrDefault();
-            log.Info(model.CompanyName);
+            CompanyProfile model = _dbContext.CompanyProfiles.Where(c => c.UserID.Equals(userId)).FirstOrDefault();
+            log.Info("Get company profile");
             return model;
         }
 
         public ApplicationUser GetPartnerByID(string userID)
         {
-            var partner = _dbContext.Users.Where(u => u.Id.Equals(userID)).FirstOrDefault();
+            ApplicationUser partner = _dbContext.Users.Where(u => u.Id.Equals(userID)).FirstOrDefault();
             log.Info(partner.FullName);
             return partner;
         }
@@ -232,12 +232,20 @@ namespace CareerTech.Services.Implement
 
         public int GetServiceTime(string userID)
         {
-            var model = _dbContext.Times.Where(t => t.UserID.Equals(userID)).FirstOrDefault();
-            var endDate = model.EndDate;
-            var remainingTime = DateTime.Now.Date;
-            var serviceTime = endDate.Subtract(remainingTime).Days;
-            log.Info("servicetime:"+serviceTime);
-            return serviceTime;
+            try
+            {
+                var model = _dbContext.Times.Where(t => t.UserID.Equals(userID)).FirstOrDefault();
+                var endDate = model.EndDate;
+                var remainingTime = DateTime.Now.Date;
+                var serviceTime = endDate.Subtract(remainingTime).Days;
+                log.Info("servicetime:" + serviceTime);
+                return serviceTime;
+            }
+            catch (Exception)
+            {
+
+                return -1;
+            }
         }
     }
 }

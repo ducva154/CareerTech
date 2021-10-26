@@ -161,51 +161,52 @@ namespace CareerTech.Controllers
                     }
                     log.Info("Execute Payment");
                 }
+                string userId = User.Identity.GetUserId();
+                if (Session["order"] != null)
+                {
+                    Models.Order order = (Models.Order)Session["order"];
+                    string orderId = order.ID;
+                    DateTime orderDate = order.OrderDate;
+                    var subs = _subscriptionManagementService.GetSubscriptionByID(order.SubscriptionID);
+                    int period = (int)subs.Period;
+                    DateTime dueDate = DateTime.Parse(orderDate.AddMonths(period).ToString("MM/dd/yyyy HH:mm:ss"));
+                    var UpdateOrder = _orderManagementService.UpdateOrder(orderId, "Paid");
+                    if (UpdateOrder > 0)
+                    {
+                        //add to TIme
+                        string timeId = Guid.NewGuid().ToString();
+                        string paymentId = Guid.NewGuid().ToString();
+                        bool partnerTimeExisted = _partnerManagementService.PartnerTimeExisted(userId);
+                        if (partnerTimeExisted)
+                        {
+                            int compare = _partnerManagementService.CompareTime(userId);
+                            if (compare < 0)
+                            {
+                                var time = _partnerManagementService.GetPartnerServiceTime(userId);
+                                DateTime endDate = time.EndDate.AddMonths(period);
+                                _partnerManagementService.UpdateServiceTime(userId, endDate);
+                            }
+                            else
+                            {
+                                _partnerManagementService.addServiceTime(timeId, userId, orderDate, dueDate);
+                            }
+                        }
+                        else
+                        {
+                            _partnerManagementService.addServiceTime(timeId, userId, orderDate, dueDate);
+                        }
+                        //add  to Payment
+                        _orderManagementService.AddPaymentDB(orderId, paymentId);
+                    }
+                    Session.Remove("order");
+                }
             }
             catch (Exception e)
             {
                 log.Error(e.Message + " at Payment With PayPal");
                 return View("FailView");
             }
-            string userId = User.Identity.GetUserId();
-            if (Session["order"] != null)
-            {
-                Models.Order order = (Models.Order)Session["order"];
-                string orderId = order.ID;
-                DateTime orderDate = order.OrderDate;
-                var subs = _subscriptionManagementService.GetSubscriptionByID(order.SubscriptionID);
-                int period = (int)subs.Period;
-                DateTime dueDate = DateTime.Parse(orderDate.AddMonths(period).ToString("MM/dd/yyyy HH:mm:ss"));
-                var UpdateOrder = _orderManagementService.UpdateOrder(orderId, "Paid");
-                if (UpdateOrder > 0)
-                {
-                    //add to TIme
-                    string timeId = Guid.NewGuid().ToString();
-                    string paymentId = Guid.NewGuid().ToString();
-                    bool partnerTimeExisted = _partnerManagementService.PartnerTimeExisted(userId);
-                    if (partnerTimeExisted)
-                    {
-                        int compare = _partnerManagementService.CompareTime(userId);
-                        if (compare < 0)
-                        {
-                            var time = _partnerManagementService.GetPartnerServiceTime(userId);
-                            DateTime endDate = time.EndDate.AddMonths(period);
-                            _partnerManagementService.UpdateServiceTime(userId, endDate);
-                        }
-                        else
-                        {
-                            _partnerManagementService.addServiceTime(timeId, userId, orderDate, dueDate);
-                        }
-                    }
-                    else
-                    {
-                        _partnerManagementService.addServiceTime(timeId, userId, orderDate, dueDate);
-                    }
-                    //add  to Payment
-                    _orderManagementService.AddPaymentDB(orderId, paymentId);
-                }
-                Session.Remove("order");
-            }
+
             //on successful payment, show success page to user.  
             return View("SuccessView");
         }

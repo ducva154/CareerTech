@@ -507,7 +507,6 @@ namespace CareerTech.Controllers
                                     log.Error(mess);
                                 }
                             }
-
                         }
                         else
                         {
@@ -611,6 +610,7 @@ namespace CareerTech.Controllers
                         if (result > 0)
                         {
                             mess = MessageConstant.UPDATE_SUCCESS;
+                            return ContentManagement(mess);
                         }
                         else
                         {

@@ -46,7 +46,16 @@ namespace CareerTech.Services.Implement
                         where i.Main == true
                         select i;
             var intro = query.FirstOrDefault();
-            log.Info($"{LOG_MAIN_CONTENT}: id: {intro.ID}, title: {intro.Title}, detail:{intro.Detail},img: {intro.Url_Image}, MainStatus: {intro.Main}");
+            if (intro != null)
+            {
+                log.Info($"{LOG_MAIN_CONTENT}: id: {intro.ID}, title: {intro.Title}, detail:{intro.Detail},img: {intro.Url_Image}, MainStatus: {intro.Main}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return intro;
         }
 
@@ -80,7 +89,16 @@ namespace CareerTech.Services.Implement
                         where i.ID == id
                         select i;
             var intro = query.FirstOrDefault();
-            log.Info($"{LOG_GET_CONTENT_BYID}: id: {intro.ID}, title: {intro.Title}, detail:{intro.Detail},img: {intro.Url_Image}, MainStatus: {intro.Main}");
+            if (intro != null)
+            {
+                log.Info($"{LOG_MAIN_CONTENT}: id: {intro.ID}, title: {intro.Title}, detail:{intro.Detail},img: {intro.Url_Image}, MainStatus: {intro.Main}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return intro;
         }
         public Introduction GetIntroduction()
@@ -88,7 +106,16 @@ namespace CareerTech.Services.Implement
             var query = from i in _applicationDbContext.Introductions
                         select i;
             var intro = query.FirstOrDefault();
-            log.Info($"{LOG_GET_CONTENT}: id: {intro.ID}, title: {intro.Title}, detail:{intro.Detail},img: {intro.Url_Image}, MainStatus: {intro.Main}");
+            if (intro != null)
+            {
+                log.Info($"{LOG_MAIN_CONTENT}: id: {intro.ID}, title: {intro.Title}, detail:{intro.Detail},img: {intro.Url_Image}, MainStatus: {intro.Main}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return intro;
         }
 

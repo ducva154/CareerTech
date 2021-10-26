@@ -45,7 +45,15 @@ namespace CareerTech.Services.Implement
                         where sol.ID == solID
                         select sol;
             var solution = query.FirstOrDefault();
-            log.Info($"{LOG_GET_SOLUTION_BYID}: {solution.ID},title:{solution.Title},img:{solution.Url_image}");
+            if (solution != null)
+            {
+                log.Info($"{LOG_GET_SOLUTION_BYID}: {solution.ID},title:{solution.Title},img:{solution.Url_image}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+            }
             return solution;
         }
 

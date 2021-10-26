@@ -39,7 +39,7 @@
                                     <td>@(p.FullName==null?"No data": p.FullName)</td>
                                     <td>@(p.Email==null?"No data":p.Email)</td>
                                     <td>@(p.PhoneNumber == null ? "No data" : p.PhoneNumber)</td>
-                                    <td><a href="OrderDetail?id=@p.Id">View Order Detail</a></td>
+                                    <td><a href="OrderDetail?id=@p.Id" target="_blank">View Order Detail</a></td>
                                 </tr>
                             }
                         </tbody>
@@ -93,8 +93,8 @@
                                     <td>@(partner.Address == null ? "No data" : partner.Address)</td>
                                     <td>@(partner.Email==null?"No data":partner.Email)</td>
                                     <td>@(partner.Phone == null ?"No data":partner.Phone)</td>
-                                    <td><a href="~/company/@partner.CompanyID">View Profile</a></td>
-                                    <td><a href="OrderDetail?id=@partner.UserID">View Order Detail</a></td>
+                                    <td><a href="~/company/@partner.CompanyID" target="_blank">View Profile</a></td>
+                                    <td><a href="OrderDetail?id=@partner.UserID"target="_blank">View Order Detail</a></td>
                                     @if (partner.Status == "Approved")
                                     {
                                         <td><p>Approved</p> | <a href="RejectPartner?id=@partner.CompanyID" onclick="return ConfirmReject()"> Reject</a></td>

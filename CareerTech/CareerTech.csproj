@@ -2076,6 +2076,7 @@
     <Content Include="Content\Portfolio\assets\fonts\themify.eot" />
     <Content Include="Content\Portfolio\assets\fonts\themify.ttf" />
     <Content Include="Content\Portfolio\assets\fonts\themify.woff" />
+    <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

@@ -44,7 +44,7 @@ namespace CareerTech.Controllers
                     }
                     else
                     {
-                        ViewBag.serviceTime = "Expired";
+                        ViewBag.serviceTime = 0;
                     }
                     return View();
                 }

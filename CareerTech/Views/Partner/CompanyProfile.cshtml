@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "Company Profile";
     Layout = "~/Views/Shared/_Layout_DashBoard.cshtml";
+
 }
+
 @model CareerTech.Models.CompanyProfileViewModel
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
@@ -12,6 +14,9 @@
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title">Edit Your Profile Company</span><br>
+                        <div class="btn btn-info">
+                            <a style="color:white;" href="~/company/@Session[CareerTech.Utils.SessionConstant.COMPANY_ID].ToString()" target="_blank">View Company Profile</a>
+                            </div><br>
                         <span class="@ViewBag.type">@ViewBag.message</span>
                         @Html.ValidationSummary("", new { @class = "message-danger" })
                         <div class="row">
@@ -24,7 +29,7 @@
                                             <div class="file-field input-field">
                                                 <div class="btn teal lighten-1">
                                                     <span>File</span>
-                                                    @Html.TextBoxFor(m => m.Url_Background, new {Name= "imgCover", type = "file" })
+                                                    @Html.TextBoxFor(m => m.Url_Background, new { Name = "imgCover", type = "file" })
                                                 </div>
                                                 <div class="file-path-wrapper">
                                                     <input class="file-path validate" type="text" placeholder="Change Cover">
@@ -38,7 +43,7 @@
                                             <div class="file-field input-field">
                                                 <div class="btn teal lighten-1">
                                                     <span>File</span>
-                                                    @Html.TextBoxFor(m => m.Url_Avatar, new {Name= "imgAvatar", type = "file" })
+                                                    @Html.TextBoxFor(m => m.Url_Avatar, new { Name = "imgAvatar", type = "file" })
                                                 </div>
                                                 <div class="file-path-wrapper">
                                                     <input class="file-path validate" type="text" placeholder="Change avatar">

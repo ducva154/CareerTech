@@ -242,8 +242,9 @@ namespace CareerTech.Controllers
                 if (profile == null)
                 {
                     log.Error(LogConstants.LOG_NULL_PROFILE_PORTFOLIO);
-                    ViewBag.ErrorMessage = MessageConstant.NULL_PROFILE_PORTFOLIO;
-                    return View("Error");
+                    //ViewBag.ErrorMessage = MessageConstant.NULL_PROFILE_PORTFOLIO;
+                    //return View("Error");
+                    return RedirectToAction("EditProfilePortfolio","User", new { id = id});
                 }
                 ViewBag.Profile = _userService.GetProfileByPortfolioID(id);
                 ViewBag.Skill = _userService.GetSkillByPortfolioID(id);

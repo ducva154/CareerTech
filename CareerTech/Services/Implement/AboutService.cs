@@ -68,7 +68,15 @@ namespace CareerTech.Services.Implement
                         where ab.ID == aboutID
                         select ab;
             var about = query.FirstOrDefault();
-            log.Info($"{ LOG_GET_ABOUT_BYID} id: {about.ID},title: {about.Title},detail: {about.Detail},desc: {about.Desc}");
+            if (about != null)
+            {
+                log.Info($"{ LOG_GET_ABOUT_BYID} id: {about.ID},title: {about.Title},detail: {about.Detail},desc: {about.Desc}");
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return about;
         }
 
@@ -90,7 +98,16 @@ namespace CareerTech.Services.Implement
                         where a.Main == true
                         select a;
             var about = query.FirstOrDefault();
-            log.Info($"{LOG_MAIN_ABOUT}: id: {about.ID},title: {about.Title},detail: {about.Detail},desc: {about.Desc}, status: {about.Main}");
+            if (about != null)
+            {
+                log.Info($"{LOG_MAIN_ABOUT}: id: {about.ID},title: {about.Title},detail: {about.Detail},desc: {about.Desc}, status: {about.Main}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return about;
         }
 
@@ -108,7 +125,16 @@ namespace CareerTech.Services.Implement
             var query = from a in _applicationDbContext.Abouts
                         select a;
             var about = query.FirstOrDefault();
-            log.Info($"{LOG_GET_ABOUT}id: {about.ID},title: {about.Title},detail: {about.Detail},desc: {about.Desc}, status: {about.Main}");
+            if (about != null)
+            {
+                log.Info($"{LOG_GET_ABOUT}id: {about.ID},title: {about.Title},detail: {about.Detail},desc: {about.Desc}, status: {about.Main}");
+
+            }
+            else
+            {
+                log.Error(LOG_NULL_VALUE);
+
+            }
             return about;
         }
     }
