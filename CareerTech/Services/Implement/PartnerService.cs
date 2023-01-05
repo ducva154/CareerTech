@@ -243,7 +243,6 @@ namespace CareerTech.Services.Implement
             }
             catch (Exception)
             {
-
                 return -1;
             }
         }

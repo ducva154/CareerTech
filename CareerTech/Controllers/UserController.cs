@@ -1000,7 +1000,7 @@ namespace CareerTech.Controllers
                 else
                 {
                     ViewBag.Portfolio = _userService.GetPortfolioByID(model.PortfolioID);
-                    ViewBag.CurrentPage = PageConstant.EDUCATION_PORTFOLIO;
+                    ViewBag.CurrentPage = PageConstant.EXPERIENCE_PORTFOLIO;
                     string detail = collection["Detail"];
                     model.Detail = detail;
                     int checkSuccess = _userService.EditExperience(experienceID, model);
@@ -1048,7 +1048,7 @@ namespace CareerTech.Controllers
                 {
                     string portfolioID = experience.PortfolioID;
                     ViewBag.Portfolio = _userService.GetPortfolioByID(portfolioID);
-                    ViewBag.CurrentPage = PageConstant.EDUCATION_PORTFOLIO;
+                    ViewBag.CurrentPage = PageConstant.EXPERIENCE_PORTFOLIO;
                     int checkSuccess = _userService.DeleteExperience(experienceID);
                     if (checkSuccess > 0)
                     {
